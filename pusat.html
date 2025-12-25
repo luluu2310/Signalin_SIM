@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Pusat Bantuan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #F5F5F5;
+            --primary-gray: #808080;
+            --primary-gray-dark: #333333;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --text-main: #1A1A1A;
+            --text-secondary: #666666;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --whatsapp-green: #25D366;
+            --whatsapp-green-dark: #128C7E;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-white);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+        
+        /* NAVBAR MODERN */
+        .navbar {
+            width: 100%;
+            background: var(--primary-white);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            overflow: hidden;
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-white);
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0 16px;
+            position: relative;
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+        
+        .navbar-menu {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .navbar-menu li {
+            position: relative;
+        }
+        
+        .navbar-menu a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .navbar-menu a:hover {
+            background: var(--accent-gold);
+            color: var(--primary-white);
+        }
+        
+        .navbar-menu a.active {
+            background: var(--accent-gold);
+            color: var(--primary-white);
+        }
+        
+        /* MAIN CONTAINER */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* HEADER HERO SECTION */
+        .help-hero {
+            margin: 30px 0;
+            padding: 40px;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            color: var(--primary-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-dark);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+        }
+        
+        .help-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            z-index: 0;
+        }
+        
+        .help-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .help-hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--accent-gold);
+        }
+        
+        .help-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .hero-search {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .hero-search input {
+            width: 100%;
+            padding: 18px 25px 18px 55px;
+            border-radius: 50px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-white);
+            font-size: 1rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .hero-search input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .hero-search i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+        
+        /* HELP SECTIONS */
+        .help-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .help-card {
+            background: var(--primary-white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+        
+        .help-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-dark);
+            border-color: rgba(212, 175, 55, 0.2);
+        }
+        
+        .help-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: var(--primary-black);
+        }
+        
+        .help-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-black);
+        }
+        
+        .help-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .help-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .help-link:hover {
+            gap: 12px;
+            color: var(--accent-gold-dark);
+        }
+        
+        /* FAQ SECTION */
+        .faq-section {
+            margin: 50px 0;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-black);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--accent-gold);
+        }
+        
+        .faq-container {
+            background: var(--primary-white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-fast);
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: var(--primary-white);
+            transition: all var(--transition-fast);
+        }
+        
+        .faq-question:hover {
+            background: var(--primary-gray-light);
+        }
+        
+        .faq-question h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            flex: 1;
+        }
+        
+        .faq-toggle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-gray-dark);
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+            margin-left: 15px;
+        }
+        
+        .faq-item.active .faq-toggle {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            background: var(--primary-gray-light);
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 30px 25px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .faq-answer ul {
+            margin: 10px 0 10px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .faq-answer li {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        /* CONTACT SECTION */
+        .contact-section {
+            margin: 50px 0;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .contact-card {
+            background: var(--primary-white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            text-align: center;
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
+        }
+        
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: var(--primary-black);
+        }
+        
+        .whatsapp-icon {
+            background: linear-gradient(135deg, var(--whatsapp-green), var(--whatsapp-green-dark));
+        }
+        
+        .contact-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-black);
+        }
+        
+        .contact-info {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .contact-btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            margin-top: auto;
+        }
+        
+        .whatsapp-btn {
+            background: var(--whatsapp-green);
+            color: var(--primary-white);
+        }
+        
+        .whatsapp-btn:hover {
+            background: var(--whatsapp-green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+        
+        .email-btn {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+        }
+        
+        .email-btn:hover {
+            background: var(--accent-gold-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .call-btn {
+            background: var(--primary-gray-dark);
+            color: var(--primary-white);
+        }
+        
+        .call-btn:hover {
+            background: var(--primary-black);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* TICKET SECTION */
+        .ticket-section {
+            margin: 50px 0;
+        }
+        
+        .ticket-form {
+            background: var(--primary-white);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-black);
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            background: var(--primary-gray-light);
+            font-size: 0.95rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+            background: var(--primary-white);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .submit-btn {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 16px 40px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px auto 0;
+        }
+        
+        .submit-btn:hover {
+            background: var(--accent-gold-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* DOCK / FOOTER */
+        .dock-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 900;
+            pointer-events: none;
+        }
+        
+        .dock-bar {
+            background: var(--primary-black);
+            padding: 15px 30px;
+            border-radius: 40px;
+            display: flex;
+            gap: 35px;
+            box-shadow: var(--shadow-dark);
+            pointer-events: auto;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .dock-icon {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.3rem;
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+        
+        .dock-icon:hover {
+            color: var(--accent-gold);
+            transform: translateY(-3px);
+        }
+        
+        .dock-icon.active {
+            color: var(--accent-gold);
+        }
+        
+        .dock-icon.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+        
+        /* SIDEBAR MOBILE */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-white);
+            z-index: 1000;
+            padding: 30px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--primary-gray-light);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-black);
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-gray);
+            transition: color var(--transition-fast);
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all var(--transition-fast);
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .sidebar-submenu a {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: var(--primary-gray-light);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-fast);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-dark);
+            z-index: 9999;
+            font-weight: 600;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+            max-width: 300px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .navbar-menu {
+                gap: 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .navbar-menu {
+                display: none;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .help-hero {
+                padding: 30px 20px;
+            }
+            
+            .help-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .help-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .help-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .help-hero p {
+                font-size: 1rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .faq-question {
+                padding: 20px;
+            }
+            
+            .faq-question h4 {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 15px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+                margin: 0 10px;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .help-hero {
+                margin: 20px 0;
+                padding: 25px 15px;
+            }
+            
+            .help-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .help-card {
+                padding: 25px 20px;
+            }
+            
+            .ticket-form {
+                padding: 25px 20px;
+            }
+            
+            .dock-bar {
+                padding: 12px 25px;
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .help-hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .help-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .contact-card {
+                padding: 25px 20px;
+            }
+            
+            .contact-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Berhasil</div>
+            <div class="notification-message" id="notificationMessage">Pesan berhasil dikirim!</div>
+        </div>
+    </div>
+    
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        <div class="navbar-brand">Signalin</div>
+        
+        <ul class="navbar-menu">
+            <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="internet.html"><i class="fas fa-wifi"></i> Produk</a></li>
+            <li><a href="voucher.html"><i class="fas fa-ticket-alt"></i> Voucher</a></li>
+            <li><a href="pusat.html" class="active"><i class="fas fa-life-ring"></i> Pusat Bantuan</a></li>
+        </ul>
+    </nav>
+    
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Produk</a>
+            <a href="voucher.html"><i class="fas fa-ticket-alt"></i> Voucher</a>
+            <a href="pusat.html" class="active"><i class="fas fa-life-ring"></i> Pusat Bantuan</a>
+            <a href="kebijakan.html"><i class="fas fa-shield-alt"></i> Kebijakan Privasi</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- HEADER HERO -->
+        <section class="help-hero">
+            <div class="help-hero-content">
+                <h1>Pusat Bantuan Signalin</h1>
+                <p>Kami siap membantu Anda! Temukan solusi untuk masalah Anda atau hubungi tim support kami.</p>
+                <div class="hero-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="helpSearch" placeholder="Cari solusi untuk masalah Anda...">
+                </div>
+            </div>
+        </section>
+        
+        <!-- HELP SECTIONS -->
+        <div class="help-sections">
+            <div class="help-card">
+                <div class="help-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3>FAQ & Panduan</h3>
+                <p>Temukan jawaban untuk pertanyaan umum tentang layanan Signalin, cara penggunaan, dan troubleshooting.</p>
+                <a href="#faq" class="help-link">
+                    Lihat FAQ <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="help-card">
+                <div class="help-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Hubungi Support</h3>
+                <p>Butuh bantuan langsung? Hubungi tim support kami melalui WhatsApp untuk bantuan cepat dan personal.</p>
+                <a href="#contact" class="help-link">
+                    Hubungi Kami <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="help-card">
+                <div class="help-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <h3>Kirim Tiket</h3>
+                <p>Kirim tiket dukungan untuk masalah yang kompleks. Tim kami akan meninjau dan merespons dalam 24 jam.</p>
+                <a href="#ticket" class="help-link">
+                    Buat Tiket <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- FAQ SECTION -->
+        <section class="faq-section" id="faq">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-question-circle"></i>
+                    Pertanyaan Umum (FAQ)
+                </div>
+            </div>
+            
+            <div class="faq-container">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Bagaimana cara melakukan top up saldo di Signalin?</h4>
+                        <div class="faq-toggle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Anda dapat melakukan top up saldo dengan beberapa cara:</p>
+                        <ul>
+                            <li>Transfer bank ke rekening Signalin</li>
+                            <li>Pembayaran via e-wallet (OVO, GoPay, Dana)</li>
+                            <li>Pembayaran via minimarket (Alfamart, Indomaret)</li>
+                            <li>Pembayaran via virtual account</li>
+                        </ul>
+                        <p>Setelah pembayaran berhasil, saldo akan otomatis terupdate dalam 1-5 menit.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Mengapa pembelian paket data saya gagal?</h4>
+                        <div class="faq-toggle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Pembelian paket data bisa gagal karena beberapa alasan:</p>
+                        <ul>
+                            <li>Saldo tidak mencukupi</li>
+                            <li>Nomor tujuan tidak valid</li>
+                            <li>Gangguan sistem operator</li>
+                            <li>Pemeliharaan sistem</li>
+                        </ul>
+                        <p>Jika pembelian gagal, saldo akan dikembalikan otomatis dalam 1-2 jam kerja.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Berapa lama waktu aktifasi paket data setelah pembelian?</h4>
+                        <div class="faq-toggle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Waktu aktifasi paket data bervariasi:</p>
+                        <ul>
+                            <li>Instan: 1-5 menit (80% kasus)</li>
+                            <li>Normal: 5-30 menit</li>
+                            <li>Maksimal: 2 jam kerja</li>
+                        </ul>
+                        <p>Jika lebih dari 2 jam belum aktif, silakan hubungi customer service.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Bagaimana cara mengajukan refund/pengembalian dana?</h4>
+                        <div class="faq-toggle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Anda dapat mengajukan refund jika:</p>
+                        <ul>
+                            <li>Pembelian gagal tetapi saldo terpotong</li>
+                            <li>Paket data tidak aktif dalam 24 jam</li>
+                            <li>Terjadi kesalahan nominal</li>
+                        </ul>
+                        <p>Hubungi customer service via WhatsApp dengan menyertakan bukti transaksi.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Apa saja metode pembayaran yang tersedia?</h4>
+                        <div class="faq-toggle">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Signalin mendukung berbagai metode pembayaran:</p>
+                        <ul>
+                            <li>Transfer Bank (BCA, BNI, BRI, Mandiri)</li>
+                            <li>E-Wallet (OVO, GoPay, Dana, ShopeePay)</li>
+                            <li>Minimarket (Alfamart, Indomaret, Alfamidi)</li>
+                            <li>QRIS</li>
+                            <li>Virtual Account</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CONTACT SECTION -->
+        <section class="contact-section" id="contact">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-headset"></i>
+                    Hubungi Kami
+                </div>
+            </div>
+            
+            <div class="contact-grid">
+                <!-- WhatsApp -->
+                <div class="contact-card">
+                    <div class="contact-icon whatsapp-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h3>WhatsApp Support</h3>
+                    <p class="contact-info">Fast Response 24/7</p>
+                    <p>Dapatkan bantuan langsung via WhatsApp. Tim kami siap membantu Anda kapan saja.</p>
+                    <button class="contact-btn whatsapp-btn" onclick="openWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> Chat via WhatsApp
+                    </button>
+                </div>
+                
+                <!-- Email -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Support</h3>
+                    <p class="contact-info">support@signalin.co.id</p>
+                    <p>Kirim email untuk masalah yang membutuhkan investigasi lebih lanjut atau pengajuan formal.</p>
+                    <button class="contact-btn email-btn" onclick="sendEmail()">
+                        <i class="fas fa-envelope"></i> Kirim Email
+                    </button>
+                </div>
+                
+                <!-- Telepon -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Call Center</h3>
+                    <p class="contact-info">1500-123</p>
+                    <p>Hubungi call center kami pada jam kerja (08:00 - 17:00 WIB) untuk bantuan langsung.</p>
+                    <button class="contact-btn call-btn" onclick="makeCall()">
+                        <i class="fas fa-phone"></i> Hubungi Sekarang
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- TICKET SECTION -->
+        <section class="ticket-section" id="ticket">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-ticket-alt"></i>
+                    Buat Tiket Dukungan
+                </div>
+            </div>
+            
+            <form class="ticket-form" id="supportForm" onsubmit="submitTicket(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Nama Lengkap *</label>
+                        <input type="text" id="name" name="name" required placeholder="Masukkan nama lengkap Anda">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="contoh@email.com">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Nomor Telepon *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="0812-3456-7890">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Kategori Masalah *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="billing">Masalah Pembayaran</option>
+                            <option value="technical">Masalah Teknis</option>
+                            <option value="product">Masalah Produk</option>
+                            <option value="account">Masalah Akun</option>
+                            <option value="other">Lainnya</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subjek *</label>
+                    <input type="text" id="subject" name="subject" required placeholder="Ringkasan masalah Anda">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Deskripsi Masalah *</label>
+                    <textarea id="message" name="message" rows="6" required placeholder="Jelaskan masalah Anda secara detail. Sertakan nomor transaksi jika ada."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attachment">Lampiran (Opsional)</label>
+                    <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+                    <small style="display: block; margin-top: 5px; color: var(--text-secondary);">
+                        Unggah bukti transaksi atau screenshot (maks. 5MB)
+                    </small>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Kirim Tiket
+                </button>
+            </form>
+        </section>
+    </div>
+    
+    <!-- DOCK / FOOTER -->
+    <div class="dock-container">
+        <div class="dock-bar">
+            <a href="home.html" class="dock-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="internet.html" class="dock-icon">
+                <i class="fas fa-wifi"></i>
+            </a>
+            <a href="pulsa.html" class="dock-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </a>
+            <a href="voucher.html" class="dock-icon">
+                <i class="fas fa-gift"></i>
+            </a>
+            <a href="pusat.html" class="dock-icon active">
+                <i class="fas fa-life-ring"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- SCRIPT -->
+    <script>
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Initialize FAQ functionality
+            initFAQ();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Initialize navbar scroll effect
+            initNavbarScroll();
+            
+            // Initialize search functionality
+            initSearch();
+            
+            // Pre-fill user data in form
+            prefillUserData();
+        });
+        
+        // ==================== LOGIN STATUS CHECK ====================
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (!isLoggedIn && !isRegistered) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // ==================== PRE-FILL USER DATA ====================
+        function prefillUserData() {
+            const userName = localStorage.getItem('user_name') || '';
+            const userEmail = localStorage.getItem('user_email') || '';
+            const userPhone = localStorage.getItem('user_phone') || '';
+            
+            // Fill form fields if available
+            if (userName) document.getElementById('name').value = userName;
+            if (userEmail) document.getElementById('email').value = userEmail;
+            if (userPhone) document.getElementById('phone').value = userPhone;
+        }
+        
+        // ==================== FAQ FUNCTIONALITY ====================
+        function initFAQ() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const toggle = item.querySelector('.faq-toggle');
+                
+                question.addEventListener('click', () => {
+                    // Close all other FAQ items
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.faq-toggle i').className = 'fas fa-plus';
+                        }
+                    });
+                    
+                    // Toggle current item
+                    item.classList.toggle('active');
+                    
+                    // Update toggle icon
+                    const icon = toggle.querySelector('i');
+                    if (item.classList.contains('active')) {
+                        icon.className = 'fas fa-times';
+                    } else {
+                        icon.className = 'fas fa-plus';
+                    }
+                });
+            });
+        }
+        
+        // ==================== SEARCH FUNCTIONALITY ====================
+        function initSearch() {
+            const searchInput = document.getElementById('helpSearch');
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query.length === 0) {
+                    // Show all FAQ items
+                    faqItems.forEach(item => {
+                        item.style.display = 'block';
+                    });
+                    return;
+                }
+                
+                // Search in FAQ items
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question h4').textContent.toLowerCase();
+                    const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                    
+                    if (question.includes(query) || answer.includes(query)) {
+                        item.style.display = 'block';
+                        
+                        // Auto expand matching items
+                        if (!item.classList.contains('active')) {
+                            item.classList.add('active');
+                            item.querySelector('.faq-toggle i').className = 'fas fa-times';
+                        }
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // ==================== CONTACT FUNCTIONS ====================
+        function openWhatsApp() {
+            // WhatsApp phone number (replace with actual number)
+            const phoneNumber = '6281234567890';
+            
+            // Default message
+            const defaultMessage = 'Halo, saya butuh bantuan dengan Signalin.';
+            
+            // Get user info if available
+            const userName = localStorage.getItem('user_name') || '';
+            const userPhone = localStorage.getItem('user_phone') || '';
+            
+            let message = defaultMessage;
+            if (userName || userPhone) {
+                message += `\n\nInformasi pengguna:`;
+                if (userName) message += `\nNama: ${userName}`;
+                if (userPhone) message += `\nNomor: ${userPhone}`;
+            }
+            
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Open WhatsApp
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+        
+        function sendEmail() {
+            const email = 'support@signalin.co.id';
+            const subject = 'Bantuan Signalin';
+            
+            // Get user info if available
+            const userName = localStorage.getItem('user_name') || '';
+            const userPhone = localStorage.getItem('user_phone') || '';
+            
+            let body = 'Halo Tim Support Signalin,\n\nSaya butuh bantuan dengan:\n\n[Deskripsi masalah Anda]\n\n';
+            if (userName || userPhone) {
+                body += `Informasi pengguna:\n`;
+                if (userName) body += `Nama: ${userName}\n`;
+                if (userPhone) body += `Nomor Telepon: ${userPhone}\n`;
+            }
+            body += '\nTerima kasih.';
+            
+            const encodedBody = encodeURIComponent(body);
+            const encodedSubject = encodeURIComponent(subject);
+            
+            window.location.href = `mailto:${email}?subject=${encodedSubject}&body=${encodedBody}`;
+        }
+        
+        function makeCall() {
+            const phoneNumber = '1500123';
+            window.location.href = `tel:${phoneNumber}`;
+        }
+        
+        // ==================== TICKET SUBMISSION ====================
+        function submitTicket(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                category: document.getElementById('category').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toISOString(),
+                ticketId: 'TKT-' + Date.now() + '-' + Math.floor(Math.random() * 1000)
+            };
+            
+            // Save to localStorage (simulating backend)
+            const tickets = JSON.parse(localStorage.getItem('support_tickets') || '[]');
+            tickets.push(formData);
+            localStorage.setItem('support_tickets', JSON.stringify(tickets));
+            
+            // Show success notification
+            showNotification('success', 'Tiket Terkirim!', `Tiket Anda telah dikirim. ID Tiket: ${formData.ticketId}. Kami akan menghubungi Anda dalam 24 jam.`);
+            
+            // Auto-open WhatsApp with ticket info
+            setTimeout(() => {
+                const phoneNumber = '6281234567890';
+                const message = `Halo, saya baru saja mengirim tiket dukungan.\nID Tiket: ${formData.ticketId}\nKategori: ${formData.category}\nSubjek: ${formData.subject}`;
+                const encodedMessage = encodeURIComponent(message);
+                window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+            }, 2000);
+            
+            // Reset form
+            document.getElementById('supportForm').reset();
+            
+            // Re-prefill user data
+            prefillUserData();
+        }
+        
+        // ==================== MOBILE MENU ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+        }
+        
+        // ==================== NAVBAR SCROLL EFFECT ====================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
+        function logout() {
+            // Clear all user data from localStorage
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password', 'support_tickets'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Show notification
+            showNotification('success', 'Logout Berhasil', 'Anda telah keluar dari akun.');
+            
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // ==================== NOTIFICATION SYSTEM ====================
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Set type styling
+            notification.className = 'notification';
+            if (type === 'success') {
+                notification.style.background = 'var(--accent-gold)';
+                notification.style.color = 'var(--primary-black)';
+                notificationIcon.className = 'fas fa-check-circle';
+            } else if (type === 'info') {
+                notification.style.background = 'var(--primary-gray-dark)';
+                notification.style.color = 'var(--primary-white)';
+                notificationIcon.className = 'fas fa-info-circle';
+            }
+            
+            // Show notification
+            notification.style.display = 'flex';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ==================== SMOOTH SCROLL ====================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

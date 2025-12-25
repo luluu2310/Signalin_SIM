@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Edit Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #F5F5F7;
+            --primary-gray: #8E8E93;
+            --primary-gray-dark: #1C1C1E;
+            --accent-yellow: #FFD700;
+            --accent-yellow-dark: #FFB800;
+            --accent-yellow-light: #FFF9C4;
+            --text-main: #1A1A1A;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-gray-light);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+        
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            background: var(--primary-black);
+            box-shadow: var(--shadow-medium);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            min-height: 80px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary-white);
+            font-size: 1.2rem;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-yellow);
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--accent-yellow);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0 16px;
+            position: relative;
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
+        
+        /* EDIT CONTAINER */
+        .edit-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* EDIT CARD */
+        .edit-card {
+            background: var(--primary-white);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 30px;
+        }
+        
+        .edit-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .edit-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
+        
+        .edit-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-yellow), var(--accent-yellow-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary-black);
+            font-size: 32px;
+        }
+        
+        .edit-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-black);
+            margin-bottom: 10px;
+        }
+        
+        .edit-subtitle {
+            font-size: 1rem;
+            color: var(--primary-gray);
+        }
+        
+        /* FORM STYLES */
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-label i {
+            color: var(--accent-yellow);
+        }
+        
+        .form-input {
+            padding: 16px 20px;
+            border: 2px solid var(--primary-gray-light);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            background: var(--primary-gray-light);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
+            background: var(--primary-white);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+        
+        .form-input:disabled {
+            background: var(--primary-gray-light);
+            color: var(--primary-gray);
+            cursor: not-allowed;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gray);
+            cursor: pointer;
+        }
+        
+        .password-toggle {
+            background: none;
+            border: none;
+            color: var(--primary-gray);
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .form-help {
+            font-size: 0.85rem;
+            color: var(--primary-gray);
+            margin-top: 4px;
+        }
+        
+        .form-error {
+            font-size: 0.85rem;
+            color: var(--error-color);
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .form-error.show {
+            display: block;
+        }
+        
+        /* FORM ACTIONS */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 30px;
+        }
+        
+        .form-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-cancel {
+            background: var(--primary-gray-light);
+            color: var(--text-main);
+        }
+        
+        .btn-cancel:hover {
+            background: var(--primary-gray);
+            color: var(--primary-white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-save {
+            background: var(--accent-yellow);
+            color: var(--primary-black);
+        }
+        
+        .btn-save:hover {
+            background: var(--accent-yellow-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-save:disabled {
+            background: var(--primary-gray);
+            color: var(--primary-white);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            min-width: 320px;
+            padding: 18px 24px;
+            border-radius: var(--border-radius);
+            background: var(--primary-white);
+            box-shadow: var(--shadow-dark);
+            border-left: 5px solid var(--accent-yellow);
+            display: none;
+            animation: slideInRight 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        .notification.show {
+            display: flex;
+            align-items: center;
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            border-left-color: var(--error-color);
+        }
+        
+        .notification.success {
+            border-left-color: var(--success-color);
+        }
+        
+        .notification.info {
+            border-left-color: #007bff;
+        }
+        
+        .notification-icon {
+            margin-right: 15px;
+            font-size: 1.8rem;
+            color: var(--accent-yellow);
+        }
+        
+        .notification.error .notification-icon {
+            color: var(--error-color);
+        }
+        
+        .notification.success .notification-icon {
+            color: var(--success-color);
+        }
+        
+        .notification.info .notification-icon {
+            color: #007bff;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-black);
+            margin-bottom: 4px;
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--primary-gray-dark);
+            line-height: 1.4;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--primary-gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.3s;
+        }
+        
+        .notification-close:hover {
+            color: var(--accent-yellow);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .edit-container {
+                padding: 0 16px;
+            }
+            
+            .edit-card {
+                padding: 30px 20px;
+            }
+            
+            .edit-title {
+                font-size: 1.5rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .notification {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                min-width: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .edit-icon-wrapper {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            
+            .edit-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="profile.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="navbar-brand">Signalin</div>
+        <div></div> <!-- Spacer untuk alignment -->
+    </nav>
+    
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Success</div>
+            <div class="notification-message" id="notificationMessage">Operation completed successfully.</div>
+        </div>
+        <button class="notification-close" onclick="hideNotification()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <div class="edit-container">
+        <div class="edit-card">
+            <div class="edit-header">
+                <div class="edit-icon-wrapper">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h1 class="edit-title">Edit Profile</h1>
+                <p class="edit-subtitle">Perbarui informasi profil Anda di bawah ini</p>
+            </div>
+            
+            <form class="edit-form" id="editForm">
+                <!-- Nama Lengkap -->
+                <div class="form-group">
+                    <label for="fullName" class="form-label">
+                        <i class="fas fa-user"></i>
+                        Nama Lengkap
+                    </label>
+                    <input 
+                        type="text" 
+                        id="fullName" 
+                        name="fullName" 
+                        class="form-input" 
+                        placeholder="Masukkan nama lengkap Anda"
+                        required
+                    >
+                    <div class="form-error" id="fullNameError">Nama lengkap harus diisi (minimal 3 karakter)</div>
+                </div>
+                
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="contoh@email.com"
+                        required
+                    >
+                    <div class="form-error" id="emailError">Masukkan alamat email yang valid</div>
+                </div>
+                
+                <!-- Nomor Telepon -->
+                <div class="form-group">
+                    <label for="phone" class="form-label">
+                        <i class="fas fa-phone"></i>
+                        Nomor Telepon
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        class="form-input" 
+                        placeholder="0812xxxxxxx"
+                        required
+                        pattern="[0-9]{10,13}"
+                    >
+                    <div class="form-help">Format: 10-13 digit angka</div>
+                    <div class="form-error" id="phoneError">Nomor telepon harus 10-13 digit angka</div>
+                </div>
+                
+                <!-- Password Saat Ini -->
+                <div class="form-group">
+                    <label for="currentPassword" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password Saat Ini
+                    </label>
+                    <div class="input-with-icon">
+                        <input 
+                            type="password" 
+                            id="currentPassword" 
+                            name="currentPassword" 
+                            class="form-input" 
+                            placeholder="Masukkan password saat ini"
+                            required
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('currentPassword', 'currentPasswordToggle')">
+                            <i class="fas fa-eye" id="currentPasswordToggle"></i>
+                        </button>
+                    </div>
+                    <div class="form-error" id="currentPasswordError">Password saat ini harus diisi</div>
+                </div>
+                
+                <!-- Password Baru -->
+                <div class="form-group">
+                    <label for="newPassword" class="form-label">
+                        <i class="fas fa-key"></i>
+                        Password Baru (Opsional)
+                    </label>
+                    <div class="input-with-icon">
+                        <input 
+                            type="password" 
+                            id="newPassword" 
+                            name="newPassword" 
+                            class="form-input" 
+                            placeholder="Masukkan password baru"
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('newPassword', 'newPasswordToggle')">
+                            <i class="fas fa-eye" id="newPasswordToggle"></i>
+                        </button>
+                    </div>
+                    <div class="form-help">Kosongkan jika tidak ingin mengubah password</div>
+                    <div class="form-error" id="newPasswordError">Password baru minimal 6 karakter</div>
+                </div>
+                
+                <!-- Konfirmasi Password Baru -->
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">
+                        <i class="fas fa-key"></i>
+                        Konfirmasi Password Baru
+                    </label>
+                    <div class="input-with-icon">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            class="form-input" 
+                            placeholder="Konfirmasi password baru"
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', 'confirmPasswordToggle')">
+                            <i class="fas fa-eye" id="confirmPasswordToggle"></i>
+                        </button>
+                    </div>
+                    <div class="form-error" id="confirmPasswordError">Konfirmasi password tidak cocok</div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" class="form-btn btn-cancel" onclick="cancelEdit()">
+                        <i class="fas fa-times"></i>
+                        Batal
+                    </button>
+                    <button type="submit" class="form-btn btn-save" id="saveButton">
+                        <i class="fas fa-save"></i>
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== NOTIFICATION SYSTEM ====================
+        let notificationTimeout;
+        
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Set type styling
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notification.classList.add('show');
+            
+            // Set icon based on type
+            switch(type) {
+                case 'success':
+                    notificationIcon.className = 'fas fa-check-circle';
+                    break;
+                case 'error':
+                    notificationIcon.className = 'fas fa-exclamation-circle';
+                    break;
+                case 'info':
+                    notificationIcon.className = 'fas fa-info-circle';
+                    break;
+            }
+            
+            // Auto hide after 5 seconds
+            clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+        
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
+        
+        // ==================== PASSWORD VISIBILITY TOGGLE ====================
+        function togglePasswordVisibility(passwordFieldId, toggleIconId) {
+            const passwordField = document.getElementById(passwordFieldId);
+            const toggleIcon = document.getElementById(toggleIconId);
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+        
+        // ==================== VALIDATION FUNCTIONS ====================
+        function validateFullName() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const errorElement = document.getElementById('fullNameError');
+            
+            if (fullName.length < 3) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validateEmail() {
+            const email = document.getElementById('email').value.trim();
+            const errorElement = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validatePhone() {
+            const phone = document.getElementById('phone').value.trim();
+            const errorElement = document.getElementById('phoneError');
+            const phoneRegex = /^[0-9]{10,13}$/;
+            
+            if (!phoneRegex.test(phone)) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validateCurrentPassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const errorElement = document.getElementById('currentPasswordError');
+            
+            if (currentPassword.length === 0) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validateNewPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const errorElement = document.getElementById('newPasswordError');
+            
+            // Jika password baru diisi, harus minimal 6 karakter
+            if (newPassword.length > 0 && newPassword.length < 6) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validateConfirmPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            // Jika password baru diisi, konfirmasi password harus cocok
+            if (newPassword.length > 0 && newPassword !== confirmPassword) {
+                errorElement.classList.add('show');
+                return false;
+            }
+            
+            errorElement.classList.remove('show');
+            return true;
+        }
+        
+        function validateForm() {
+            const validations = [
+                validateFullName(),
+                validateEmail(),
+                validatePhone(),
+                validateCurrentPassword(),
+                validateNewPassword(),
+                validateConfirmPassword()
+            ];
+            
+            return validations.every(validation => validation === true);
+        }
+        
+        // ==================== LOAD USER DATA ====================
+        function loadUserData() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (isLoggedIn !== 'true' && isRegistered !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Get current user data from localStorage
+            const userName = localStorage.getItem('user_name') || 'Pengguna';
+            const userEmail = localStorage.getItem('user_email') || 'email@contoh.com';
+            const userPhone = localStorage.getItem('user_phone') || '';
+            const userPassword = localStorage.getItem('user_password') || '';
+            
+            // Populate form fields with current data
+            document.getElementById('fullName').value = userName;
+            document.getElementById('email').value = userEmail;
+            document.getElementById('phone').value = userPhone;
+            
+            // Store original password for verification
+            window.originalPassword = userPassword;
+            
+            // Store original email for checking uniqueness
+            window.originalEmail = userEmail;
+        }
+        
+        // ==================== SAVE USER DATA ====================
+        function saveUserData(event) {
+            event.preventDefault();
+            
+            // Validate form
+            if (!validateForm()) {
+                showNotification('error', 'Validasi Gagal', 'Harap periksa kembali data yang Anda masukkan.');
+                return;
+            }
+            
+            // Get form values
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            
+            // Verify current password
+            const originalPassword = window.originalPassword;
+            if (currentPassword !== originalPassword) {
+                showNotification('error', 'Password Salah', 'Password saat ini tidak sesuai.');
+                return;
+            }
+            
+            // Check if email is already used by another account
+            // (In a real app, this would be checked against a database)
+            // For demo, we'll just check against the original email
+            if (email !== window.originalEmail) {
+                // In a real app, you would check if email exists in database
+                // For now, we'll just show a warning
+                showNotification('info', 'Email Diubah', 'Email telah diubah. Pastikan email baru aktif.');
+            }
+            
+            // Save updated data to localStorage
+            localStorage.setItem('user_name', fullName);
+            localStorage.setItem('user_email', email);
+            localStorage.setItem('user_phone', phone);
+            
+            // Update password if new password is provided
+            if (newPassword.length > 0) {
+                localStorage.setItem('user_password', newPassword);
+            }
+            
+            // Update timestamp
+            localStorage.setItem('user_last_updated', new Date().toISOString());
+            
+            // Show success notification
+            showNotification('success', 'Profil Diperbarui', 'Data profil Anda telah berhasil disimpan.');
+            
+            // Disable save button temporarily to prevent multiple submissions
+            const saveButton = document.getElementById('saveButton');
+            saveButton.disabled = true;
+            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            
+            // Redirect back to profile page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'profile.html?edit=success';
+            }, 2000);
+        }
+        
+        // ==================== CANCEL EDIT ====================
+        function cancelEdit() {
+            // Ask for confirmation if there are unsaved changes
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            
+            const originalName = localStorage.getItem('user_name') || '';
+            const originalEmail = localStorage.getItem('user_email') || '';
+            const originalPhone = localStorage.getItem('user_phone') || '';
+            
+            const hasChanges = 
+                fullName !== originalName ||
+                email !== originalEmail ||
+                phone !== originalPhone ||
+                newPassword.length > 0;
+            
+            if (hasChanges) {
+                if (confirm('Anda memiliki perubahan yang belum disimpan. Yakin ingin membatalkan?')) {
+                    window.location.href = 'profile.html';
+                }
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+        
+        // ==================== REAL-TIME VALIDATION ====================
+        function setupRealTimeValidation() {
+            // Add input event listeners for real-time validation
+            document.getElementById('fullName').addEventListener('input', validateFullName);
+            document.getElementById('email').addEventListener('input', validateEmail);
+            document.getElementById('phone').addEventListener('input', validatePhone);
+            document.getElementById('currentPassword').addEventListener('input', validateCurrentPassword);
+            document.getElementById('newPassword').addEventListener('input', function() {
+                validateNewPassword();
+                validateConfirmPassword();
+            });
+            document.getElementById('confirmPassword').addEventListener('input', validateConfirmPassword);
+        }
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data
+            loadUserData();
+            
+            // Setup form submission
+            document.getElementById('editForm').addEventListener('submit', saveUserData);
+            
+            // Setup real-time validation
+            setupRealTimeValidation();
+            
+            // Check if redirected from profile with success message
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('edit') === 'success') {
+                showNotification('success', 'Profil Diperbarui', 'Data profil Anda telah berhasil disimpan.');
+            }
+        });
+        
+        // Auto-hide notification on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideNotification();
+            }
+        });
+        
+        // Warn user if they try to leave with unsaved changes
+        window.addEventListener('beforeunload', function(e) {
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            
+            const originalName = localStorage.getItem('user_name') || '';
+            const originalEmail = localStorage.getItem('user_email') || '';
+            const originalPhone = localStorage.getItem('user_phone') || '';
+            
+            const hasChanges = 
+                fullName !== originalName ||
+                email !== originalEmail ||
+                phone !== originalPhone ||
+                newPassword.length > 0;
+            
+            if (hasChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>

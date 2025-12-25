@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Game Capit Voucher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-white: #FFFFFF;
+            --primary-yellow: #FFC107;
+            --primary-yellow-dark: #FFA000;
+            --primary-yellow-light: #FFF9C4;
+            --primary-yellow-pale: #FFFDE7;
+            --secondary-gray: #F5F5F5;
+            --secondary-gray-light: #FAFAFA;
+            --secondary-gray-dark: #757575;
+            --accent-gold: #FFD700;
+            --accent-orange: #FF9800;
+            --text-dark: #212121;
+            --text-medium: #616161;
+            --text-light: #9E9E9E;
+            
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.1);
+            --shadow-yellow: 0 0 20px rgba(255, 193, 7, 0.3);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            background: var(--primary-white);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            min-height: 80px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            text-decoration: none;
+            color: var(--primary-yellow-dark);
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: 12px;
+            transition: all var(--transition-fast);
+            background: var(--primary-white);
+            border: 2px solid var(--primary-yellow);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-yellow);
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--primary-yellow-dark), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0 16px;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-yellow), var(--accent-orange));
+            border-radius: 2px;
+        }
+        
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* HEADER */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-white) 0%, var(--primary-yellow-pale) 100%);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-medium);
+            border: 3px solid var(--primary-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-yellow), var(--accent-orange), var(--accent-gold));
+        }
+        
+        .page-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-yellow-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .page-title i {
+            color: var(--primary-yellow-dark);
+            font-size: 3rem;
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+        }
+        
+        .page-subtitle {
+            color: var(--text-medium);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        
+        .game-rules {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            color: var(--primary-yellow-dark);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-top: 10px;
+            border: 2px solid var(--primary-yellow);
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* MAIN CONTENT */
+        .game-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        @media (max-width: 1024px) {
+            .game-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* MESIN CAPIT */
+        .claw-machine-container {
+            background: linear-gradient(135deg, var(--primary-white) 0%, var(--secondary-gray) 100%);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--primary-yellow);
+            transition: all var(--transition-normal);
+        }
+        
+        .claw-machine-container:hover {
+            box-shadow: var(--shadow-yellow);
+            transform: translateY(-5px);
+        }
+        
+        .machine-header {
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            color: var(--primary-yellow-dark);
+            padding: 20px 30px;
+            border-radius: 15px 15px 0 0;
+            margin: -30px -30px 30px -30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+        
+        .machine-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .machine-title i {
+            font-size: 1.8rem;
+            color: var(--primary-yellow-dark);
+        }
+        
+        .machine-status {
+            background: var(--primary-yellow-light);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 2px solid var(--primary-yellow);
+            color: var(--primary-yellow-dark);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .machine-body {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(180deg, #FFF9C4 0%, #FFFDE7 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 10px solid var(--primary-yellow);
+            box-shadow: 
+                inset 0 0 40px rgba(0, 0, 0, 0.05),
+                0 0 30px rgba(255, 193, 7, 0.1);
+        }
+        
+        /* CLAW MECHANISM */
+        .claw-mechanism {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            height: 350px;
+            z-index: 10;
+            transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .claw-arm {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 200px;
+            background: linear-gradient(to bottom, var(--accent-gold), var(--primary-yellow));
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+        }
+        
+        .claw-head {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            border-radius: 15px 15px 5px 5px;
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .claw-finger {
+            width: 24px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--primary-yellow-dark), var(--accent-orange));
+            border-radius: 8px;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .claw-finger.left {
+            transform-origin: top left;
+        }
+        
+        .claw-finger.right {
+            transform-origin: top right;
+        }
+        
+        .claw-open .claw-finger.left {
+            transform: rotate(-30deg);
+        }
+        
+        .claw-open .claw-finger.right {
+            transform: rotate(30deg);
+        }
+        
+        .claw-close .claw-finger.left {
+            transform: rotate(10deg);
+        }
+        
+        .claw-close .claw-finger.right {
+            transform: rotate(-10deg);
+        }
+        
+        /* BALLS CONTAINER */
+        .balls-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 220px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            padding: 25px;
+        }
+        
+        .voucher-ball {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.1),
+                inset 0 4px 10px rgba(255, 255, 255, 0.5);
+            animation: float 3s ease-in-out infinite;
+            border: 3px solid var(--primary-yellow);
+        }
+        
+        .voucher-ball:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.15),
+                inset 0 4px 15px rgba(255, 255, 255, 0.7),
+                0 0 20px rgba(255, 193, 7, 0.3);
+        }
+        
+        .ball-1 { background: linear-gradient(135deg, var(--primary-yellow), #FFD54F); animation-delay: 0s; }
+        .ball-2 { background: linear-gradient(135deg, var(--primary-white), #FFF59D); animation-delay: 0.5s; }
+        .ball-3 { background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange)); animation-delay: 1s; }
+        .ball-4 { background: linear-gradient(135deg, var(--primary-white), #FFECB3); animation-delay: 1.5s; }
+        .ball-5 { background: linear-gradient(135deg, var(--primary-yellow), #FFB300); animation-delay: 2s; }
+        .ball-6 { background: linear-gradient(135deg, var(--primary-white), #FFE082); animation-delay: 2.5s; }
+        .ball-7 { background: linear-gradient(135deg, var(--primary-yellow), #FF8F00); animation-delay: 3s; }
+        .ball-8 { background: linear-gradient(135deg, var(--primary-white), #FFD180); animation-delay: 3.5s; }
+        
+        .ball-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            background: var(--primary-white);
+            padding: 4px 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+            font-weight: 600;
+            border: 2px solid var(--primary-yellow);
+            color: var(--primary-yellow-dark);
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* CONTROL PANEL */
+        .control-panel {
+            background: linear-gradient(135deg, var(--primary-white) 0%, var(--secondary-gray) 100%);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            margin-top: 30px;
+            border: 3px solid var(--primary-yellow);
+        }
+        
+        .control-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-yellow-dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .control-title i {
+            color: var(--primary-yellow-dark);
+        }
+        
+        /* COIN SYSTEM */
+        .coin-system {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 3px solid var(--primary-yellow);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .coin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .coin-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .coin-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .coin-count {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-yellow-dark);
+        }
+        
+        .coin-label {
+            font-size: 0.9rem;
+            color: var(--text-medium);
+        }
+        
+        .btn-insert-coin {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            color: var(--text-dark);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .btn-insert-coin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+            background: linear-gradient(135deg, var(--accent-orange), var(--primary-yellow));
+        }
+        
+        .btn-insert-coin:active {
+            transform: translateY(-1px);
+        }
+        
+        /* CONTROL BUTTONS */
+        .control-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-btn {
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: var(--shadow-light);
+            border: 2px solid transparent;
+        }
+        
+        .btn-left { 
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            color: var(--primary-yellow-dark);
+            border-color: var(--primary-yellow);
+        }
+        
+        .btn-right { 
+            background: linear-gradient(135deg, var(--primary-yellow-light), var(--primary-white));
+            color: var(--primary-yellow-dark);
+            border-color: var(--primary-yellow);
+        }
+        
+        .btn-claw { 
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            color: var(--text-dark);
+            grid-column: span 2;
+            border-color: var(--primary-white);
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-yellow);
+        }
+        
+        .control-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .control-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .control-hint {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        /* VOUCHER COLLECTION */
+        .voucher-collection {
+            background: linear-gradient(135deg, var(--primary-white) 0%, var(--secondary-gray) 100%);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            border: 3px solid var(--primary-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .voucher-collection::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary-yellow), var(--accent-orange));
+        }
+        
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+        
+        .collection-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary-yellow-dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .collection-title i {
+            color: var(--primary-yellow-dark);
+        }
+        
+        .collection-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .collection-count {
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .btn-view-vouchers {
+            background: var(--primary-white);
+            color: var(--primary-yellow-dark);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            border: 2px solid var(--primary-yellow);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-view-vouchers:hover {
+            background: var(--primary-yellow);
+            color: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-yellow);
+        }
+        
+        /* VOUCHER CARDS GRID */
+        .voucher-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .voucher-card {
+            background: linear-gradient(135deg, var(--primary-white) 0%, var(--primary-yellow-light) 100%);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            transition: all var(--transition-normal);
+            border: 3px solid var(--primary-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .voucher-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-yellow);
+            border-color: var(--accent-orange);
+        }
+        
+        .voucher-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            border-radius: 0 0 0 100%;
+        }
+        
+        .voucher-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-white);
+            color: var(--primary-yellow-dark);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--primary-yellow);
+        }
+        
+        .voucher-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            border: 2px solid var(--primary-white);
+        }
+        
+        .voucher-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-yellow-dark);
+            margin-bottom: 10px;
+        }
+        
+        .voucher-description {
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .voucher-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid var(--primary-yellow);
+        }
+        
+        .voucher-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-yellow-dark), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-claim {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            border: 2px solid var(--primary-white);
+        }
+        
+        .btn-claim:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            border-radius: var(--border-radius);
+            border: 3px dashed var(--primary-yellow);
+            grid-column: 1 / -1;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--primary-yellow);
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 1.2rem;
+            color: var(--primary-yellow-dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes clawMove {
+            0% {
+                left: 50%;
+            }
+            50% {
+                left: 20%;
+            }
+            100% {
+                left: 80%;
+            }
+        }
+        
+        @keyframes clawDown {
+            0% {
+                top: 50px;
+            }
+            100% {
+                top: 250px;
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+        
+        .claw-moving {
+            animation: clawMove 2s infinite alternate;
+        }
+        
+        .claw-dropping {
+            animation: clawDown 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .ball-captured {
+            animation: celebrate 0.5s ease 3;
+        }
+        
+        .machine-shake {
+            animation: shake 0.5s ease;
+        }
+        
+        .coin-pulse {
+            animation: pulse 0.5s ease;
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            z-index: 9999;
+            min-width: 350px;
+            padding: 20px 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light));
+            box-shadow: var(--shadow-dark);
+            display: none;
+            animation: slideInRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-left: 5px solid var(--primary-yellow);
+            color: var(--text-dark);
+            border: 2px solid var(--primary-yellow);
+        }
+        
+        .notification.show {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            border-left-color: var(--primary-yellow);
+        }
+        
+        .notification.error {
+            border-left-color: #F44336;
+        }
+        
+        .notification.info {
+            border-left-color: var(--accent-orange);
+        }
+        
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+            border: 2px solid var(--primary-white);
+        }
+        
+        .notification.success .notification-icon {
+            background: linear-gradient(135deg, var(--primary-yellow), var(--accent-orange));
+        }
+        
+        .notification.error .notification-icon {
+            background: linear-gradient(135deg, #F44336, #D32F2F);
+        }
+        
+        .notification.info .notification-icon {
+            background: linear-gradient(135deg, var(--accent-orange), var(--primary-yellow-dark));
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-yellow-dark);
+            margin-bottom: 5px;
+        }
+        
+        .notification-message {
+            font-size: 0.95rem;
+            color: var(--text-medium);
+            line-height: 1.4;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* CONFETTI */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            display: none;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: var(--primary-yellow);
+            top: 0;
+            opacity: 0;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .machine-body {
+                height: 400px;
+            }
+            
+            .control-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-claw {
+                grid-column: span 1;
+            }
+            
+            .voucher-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .collection-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .collection-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 20px 15px;
+            }
+            
+            .page-title {
+                font-size: 1.6rem;
+            }
+            
+            .claw-machine-container,
+            .voucher-collection {
+                padding: 20px;
+            }
+            
+            .machine-body {
+                height: 350px;
+            }
+            
+            .balls-container {
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .voucher-ball {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="home.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="navbar-brand">Signalin</div>
+        <div></div>
+    </nav>
+    
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-gift"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Selamat!</div>
+            <div class="notification-message" id="notificationMessage">Voucher berhasil didapatkan!</div>
+        </div>
+    </div>
+    
+    <!-- CONFETTI -->
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <div class="container">
+        <!-- HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-gamepad"></i>
+                Game Capit Voucher
+            </h1>
+            <p class="page-subtitle">Mainkan mesin capit untuk mendapatkan voucher spesial yang bisa digunakan untuk potongan harga dan promo menarik di semua paket provider!</p>
+            <div class="game-rules">
+                <i class="fas fa-info-circle"></i>
+                1 Koin = 1 Permainan • Voucher bisa digunakan di halaman pembelian
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="game-section">
+            <!-- MESIN CAPIT -->
+            <div class="claw-machine-container">
+                <div class="machine-header">
+                    <div class="machine-title">
+                        <i class="fas fa-gamepad"></i>
+                        Mesin Capit Voucher
+                    </div>
+                    <div class="machine-status" id="machineStatus">
+                        Siap Bermain
+                    </div>
+                </div>
+                
+                <div class="machine-body" id="machineBody">
+                    <!-- CLAW MECHANISM -->
+                    <div class="claw-mechanism" id="clawMechanism">
+                        <div class="claw-arm"></div>
+                        <div class="claw-head" id="clawHead">
+                            <div class="claw-finger left"></div>
+                            <div class="claw-finger right"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- BALLS -->
+                    <div class="balls-container">
+                        <div class="voucher-ball ball-1" data-voucher="1">
+                            <i class="fas fa-percentage"></i>
+                            <span class="ball-label">Diskon 50%</span>
+                        </div>
+                        <div class="voucher-ball ball-2" data-voucher="2">
+                            <i class="fas fa-tags"></i>
+                            <span class="ball-label">Cashback 30%</span>
+                        </div>
+                        <div class="voucher-ball ball-3" data-voucher="3">
+                            <i class="fas fa-bolt"></i>
+                            <span class="ball-label">Gratis 10GB</span>
+                        </div>
+                        <div class="voucher-ball ball-4" data-voucher="4">
+                            <i class="fas fa-wifi"></i>
+                            <span class="ball-label">Paket Spesial</span>
+                        </div>
+                        <div class="voucher-ball ball-5" data-voucher="5">
+                            <i class="fas fa-gem"></i>
+                            <span class="ball-label">VIP 1 Bulan</span>
+                        </div>
+                        <div class="voucher-ball ball-6" data-voucher="6">
+                            <i class="fas fa-film"></i>
+                            <span class="ball-label">Streaming</span>
+                        </div>
+                        <div class="voucher-ball ball-7" data-voucher="7">
+                            <i class="fas fa-gamepad"></i>
+                            <span class="ball-label">Gaming Pack</span>
+                        </div>
+                        <div class="voucher-ball ball-8" data-voucher="8">
+                            <i class="fas fa-rocket"></i>
+                            <span class="ball-label">Internet Turbo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CONTROL PANEL -->
+                <div class="control-panel">
+                    <div class="control-title">
+                        <i class="fas fa-gamepad"></i> Kontrol Mesin
+                    </div>
+                    
+                    <div class="coin-system">
+                        <div class="coin-info">
+                            <div class="coin-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="coin-details">
+                                <div class="coin-count" id="coinCount">10</div>
+                                <div class="coin-label">Koin Tersedia</div>
+                            </div>
+                        </div>
+                        <button class="btn-insert-coin" id="insertCoinBtn">
+                            <i class="fas fa-plus-circle"></i> Tambah Koin
+                        </button>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button class="control-btn btn-left" id="moveLeftBtn">
+                            <i class="fas fa-arrow-left"></i> Geser Kiri
+                        </button>
+                        <button class="control-btn btn-claw" id="clawBtn">
+                            <i class="fas fa-hand-rock"></i> JALANKAN CAPIT
+                        </button>
+                        <button class="control-btn btn-right" id="moveRightBtn">
+                            Geser Kanan <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="control-hint">
+                        <i class="fas fa-keyboard"></i> Gunakan tombol panah untuk menggeser, Spasi/Enter untuk menjalankan
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VOUCHER COLLECTION -->
+            <div class="voucher-collection">
+                <div class="collection-header">
+                    <div class="collection-title">
+                        <i class="fas fa-trophy"></i> Koleksi Voucher Anda
+                    </div>
+                    <div class="collection-actions">
+                        <div class="collection-count">
+                            <span id="voucherCount">0</span> Voucher
+                        </div>
+                        <a href="voucher.html" class="btn-view-vouchers">
+                            <i class="fas fa-external-link-alt"></i> Lihat Semua
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="voucher-cards-grid" id="voucherCardsGrid">
+                    <!-- Voucher cards will be added here dynamically -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="empty-text">
+                            Belum ada voucher
+                        </div>
+                        <p>Mainkan mesin capit untuk mendapatkan voucher pertama Anda!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== GAME STATE ====================
+        let gameState = {
+            coins: 10,
+            vouchers: [],
+            clawPosition: 50,
+            isPlaying: false,
+            currentBall: null,
+            rewardPoints: 1000 // Poin yang bisa ditukar dengan koin
+        };
+        
+        // ==================== VOUCHER DATA (Potongan Harga & Promo) ====================
+        const voucherData = {
+            1: {
+                id: 1,
+                code: "DISC50",
+                title: "Diskon 50%",
+                description: "Diskon 50% untuk semua paket data bulanan apa saja",
+                icon: "fas fa-percentage",
+                value: "50% OFF",
+                discount: 50,
+                type: "percentage",
+                color: "linear-gradient(135deg, var(--primary-yellow), var(--accent-orange))",
+                expiresIn: 7, // hari
+                minPurchase: 50000 // minimal pembelian
+            },
+            2: {
+                id: 2,
+                code: "CASHBACK30",
+                title: "Cashback 30%",
+                description: "Cashback 30% untuk pembelian paket apapun",
+                icon: "fas fa-tags",
+                value: "30% CB",
+                discount: 30,
+                type: "cashback",
+                color: "linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light))",
+                expiresIn: 14,
+                maxCashback: 50000
+            },
+            3: {
+                id: 3,
+                code: "FREE10GB",
+                title: "Gratis 10GB",
+                description: "Tambahan kuota 10GB gratis untuk paket bulanan",
+                icon: "fas fa-bolt",
+                value: "+10GB",
+                discount: 0,
+                type: "bonus",
+                color: "linear-gradient(135deg, var(--primary-yellow), var(--accent-orange))",
+                expiresIn: 30,
+                bonusData: "10GB"
+            },
+            4: {
+                id: 4,
+                code: "SPECIAL50K",
+                title: "Paket Spesial",
+                description: "Potongan Rp 50.000 untuk paket minimal 100GB",
+                icon: "fas fa-wifi",
+                value: "Rp 50K",
+                discount: 50000,
+                type: "fixed",
+                color: "linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light))",
+                expiresIn: 10,
+                minPurchase: 100000
+            },
+            5: {
+                id: 5,
+                code: "VIPACCESS",
+                title: "Akses VIP 1 Bulan",
+                description: "Akses prioritas ke semua paket premium selama 1 bulan",
+                icon: "fas fa-gem",
+                value: "VIP",
+                discount: 0,
+                type: "premium",
+                color: "linear-gradient(135deg, var(--primary-yellow), var(--accent-orange))",
+                expiresIn: 30,
+                benefits: "Prioritas support, No throttle, 4K streaming"
+            },
+            6: {
+                id: 6,
+                code: "STREAMFREE",
+                title: "Paket Streaming",
+                description: "Paket streaming 1 bulan gratis dengan pembelian paket data",
+                icon: "fas fa-film",
+                value: "STREAM",
+                discount: 0,
+                type: "bundling",
+                color: "linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light))",
+                expiresIn: 21,
+                bundleWith: "Paket data minimal 50GB"
+            },
+            7: {
+                id: 7,
+                code: "GAMER30",
+                title: "Gaming Pack",
+                description: "Diskon 30% untuk semua paket gaming",
+                icon: "fas fa-gamepad",
+                value: "30% OFF",
+                discount: 30,
+                type: "gaming",
+                color: "linear-gradient(135deg, var(--primary-yellow), var(--accent-orange))",
+                expiresIn: 14,
+                gamingOnly: true
+            },
+            8: {
+                id: 8,
+                code: "TURBO20",
+                title: "Internet Turbo",
+                description: "Upgrade ke koneksi turbo untuk semua paket",
+                icon: "fas fa-rocket",
+                value: "TURBO",
+                discount: 0,
+                type: "upgrade",
+                color: "linear-gradient(135deg, var(--primary-white), var(--primary-yellow-light))",
+                expiresIn: 7,
+                speedBoost: "2x speed"
+            }
+        };
+        
+        // ==================== DOM ELEMENTS ====================
+        const coinCountElement = document.getElementById('coinCount');
+        const voucherCountElement = document.getElementById('voucherCount');
+        const voucherCardsGrid = document.getElementById('voucherCardsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const clawMechanism = document.getElementById('clawMechanism');
+        const clawHead = document.getElementById('clawHead');
+        const machineBody = document.getElementById('machineBody');
+        const machineStatus = document.getElementById('machineStatus');
+        const confettiContainer = document.getElementById('confettiContainer');
+        
+        // ==================== NOTIFICATION SYSTEM ====================
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notification.classList.add('show');
+            
+            // Set icon based on type
+            switch(type) {
+                case 'success':
+                    notificationIcon.className = 'fas fa-check-circle';
+                    break;
+                case 'error':
+                    notificationIcon.className = 'fas fa-exclamation-circle';
+                    break;
+                case 'info':
+                    notificationIcon.className = 'fas fa-info-circle';
+                    break;
+            }
+            
+            // Auto hide after 4 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+        
+        // ==================== CONFETTI EFFECT ====================
+        function createConfetti() {
+            confettiContainer.innerHTML = '';
+            confettiContainer.style.display = 'block';
+            
+            const colors = [
+                'var(--primary-yellow)',
+                'var(--primary-white)',
+                'var(--accent-orange)',
+                'var(--accent-gold)',
+                '#FFD54F',
+                '#FFE082'
+            ];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 20 + 10 + 'px';
+                confetti.style.animation = `confetti ${Math.random() * 3 + 2}s ease-out forwards`;
+                confetti.style.animationDelay = Math.random() * 1 + 's';
+                confettiContainer.appendChild(confetti);
+            }
+            
+            setTimeout(() => {
+                confettiContainer.style.display = 'none';
+                confettiContainer.innerHTML = '';
+            }, 3000);
+        }
+        
+        // ==================== GAME FUNCTIONS ====================
+        function updateUI() {
+            coinCountElement.textContent = gameState.coins;
+            voucherCountElement.textContent = gameState.vouchers.length;
+            
+            const clawBtn = document.getElementById('clawBtn');
+            if (gameState.coins <= 0) {
+                clawBtn.disabled = true;
+                clawBtn.innerHTML = '<i class="fas fa-coins"></i> TAMBAH KOIN DULU!';
+                machineStatus.textContent = 'Koin Habis';
+                machineStatus.style.background = 'var(--primary-yellow-light)';
+            } else {
+                clawBtn.disabled = false;
+                clawBtn.innerHTML = '<i class="fas fa-hand-rock"></i> JALANKAN CAPIT';
+                machineStatus.textContent = 'Siap Bermain';
+                machineStatus.style.background = 'var(--primary-yellow-light)';
+            }
+        }
+        
+        function moveClaw(direction) {
+            if (gameState.isPlaying) {
+                showNotification('info', 'Sedang Bermain', 'Tunggu sampai permainan selesai!');
+                return;
+            }
+            
+            if (direction === 'left' && gameState.clawPosition > 10) {
+                gameState.clawPosition -= 10;
+            } else if (direction === 'right' && gameState.clawPosition < 90) {
+                gameState.clawPosition += 10;
+            }
+            
+            clawMechanism.style.left = `${gameState.clawPosition}%`;
+            
+            // Update status
+            machineStatus.textContent = `Posisi: ${gameState.clawPosition}%`;
+        }
+        
+        function getRandomVoucher() {
+            // Weighted random - some vouchers are rarer
+            const weights = {
+                1: 15,  // Diskon 50% - rare
+                2: 20,  // Cashback 30%
+                3: 25,  // Gratis 10GB
+                4: 20,  // Paket Spesial
+                5: 5,   // VIP Access - very rare
+                6: 25,  // Streaming
+                7: 20,  // Gaming Pack
+                8: 15   // Internet Turbo
+            };
+            
+            let totalWeight = 0;
+            for (const id in weights) {
+                totalWeight += weights[id];
+            }
+            
+            let random = Math.random() * totalWeight;
+            for (const id in weights) {
+                random -= weights[id];
+                if (random <= 0) {
+                    return parseInt(id);
+                }
+            }
+            
+            return 3; // fallback
+        }
+        
+        function playClawGame() {
+            if (gameState.isPlaying) {
+                showNotification('info', 'Sedang Bermain', 'Tunggu sampai permainan selesai!');
+                return;
+            }
+            
+            if (gameState.coins <= 0) {
+                showNotification('error', 'Koin Habis', 'Tambahkan koin untuk bermain!');
+                return;
+            }
+            
+            // Reset semua animasi yang mungkin masih berjalan
+            resetClawAnimation();
+            
+            gameState.isPlaying = true;
+            gameState.coins--;
+            saveGameState();
+            updateUI();
+            
+            // Get random voucher
+            const voucherId = getRandomVoucher();
+            gameState.currentBall = voucherId;
+            
+            // Update status
+            machineStatus.textContent = 'Sedang Bermain...';
+            machineStatus.style.background = 'var(--primary-yellow-light)';
+            
+            // Animate claw
+            clawHead.classList.add('claw-open');
+            clawMechanism.classList.add('claw-moving');
+            
+            // After 2 seconds, drop the claw
+            setTimeout(() => {
+                clawMechanism.classList.remove('claw-moving');
+                clawMechanism.classList.add('claw-dropping');
+                machineBody.classList.add('machine-shake');
+                
+                // After 1.5 seconds, capture ball
+                setTimeout(() => {
+                    clawHead.classList.remove('claw-open');
+                    clawHead.classList.add('claw-close');
+                    
+                    // Highlight captured ball
+                    const ballElement = document.querySelector(`.ball-${voucherId}`);
+                    if (ballElement) {
+                        ballElement.classList.add('ball-captured');
+                    }
+                    
+                    // After 1 second, return claw
+                    setTimeout(() => {
+                        clawMechanism.classList.remove('claw-dropping');
+                        clawMechanism.style.top = '50px';
+                        machineBody.classList.remove('machine-shake');
+                        
+                        // After 1 second, open claw and add voucher
+                        setTimeout(() => {
+                            clawHead.classList.remove('claw-close');
+                            
+                            // Add voucher to collection
+                            addVoucher(voucherId);
+                            
+                            // Create confetti effect
+                            createConfetti();
+                            
+                            // Show notification
+                            const voucher = voucherData[voucherId];
+                            showNotification('success', 'Yeay! 🎉', `Kamu mendapatkan: ${voucher.title} (${voucher.code})`);
+                            
+                            // Update status
+                            machineStatus.textContent = 'Berhasil!';
+                            machineStatus.style.background = 'var(--primary-yellow-light)';
+                            
+                            // Reset playing state dengan timeout untuk mencegah double click
+                            setTimeout(() => {
+                                gameState.isPlaying = false;
+                                machineStatus.textContent = 'Siap Bermain';
+                            }, 500);
+                            
+                        }, 1000);
+                    }, 1000);
+                }, 1500);
+            }, 2000);
+        }
+        
+        function resetClawAnimation() {
+            // Reset semua kelas animasi
+            clawMechanism.classList.remove('claw-moving', 'claw-dropping');
+            clawHead.classList.remove('claw-open', 'claw-close');
+            machineBody.classList.remove('machine-shake');
+            
+            // Reset posisi claw
+            clawMechanism.style.top = '50px';
+            
+            // Hapus animasi captured dari semua bola
+            document.querySelectorAll('.voucher-ball').forEach(ball => {
+                ball.classList.remove('ball-captured');
+            });
+        }
+        
+        function addVoucher(voucherId) {
+            const voucher = voucherData[voucherId];
+            const existingIndex = gameState.vouchers.findIndex(v => v.id === voucherId);
+            
+            if (existingIndex === -1) {
+                // Add new voucher with expiration date
+                const expirationDate = new Date();
+                expirationDate.setDate(expirationDate.getDate() + voucher.expiresIn);
+                
+                gameState.vouchers.push({
+                    ...voucher,
+                    obtainedAt: new Date().toISOString(),
+                    expiresAt: expirationDate.toISOString(),
+                    isUsed: false,
+                    usedAt: null
+                });
+                
+                saveGameState();
+                updateUI();
+                renderVoucherCards();
+            }
+        }
+        
+        function renderVoucherCards() {
+            voucherCardsGrid.innerHTML = '';
+            
+            if (gameState.vouchers.length === 0) {
+                voucherCardsGrid.appendChild(emptyState);
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Sort vouchers: newest first
+            const sortedVouchers = [...gameState.vouchers].sort((a, b) => 
+                new Date(b.obtainedAt) - new Date(a.obtainedAt)
+            );
+            
+            // Show only 4 most recent vouchers
+            const recentVouchers = sortedVouchers.slice(0, 4);
+            
+            recentVouchers.forEach(voucher => {
+                const card = document.createElement('div');
+                card.className = 'voucher-card';
+                card.dataset.voucherId = voucher.id;
+                
+                const expiresDate = new Date(voucher.expiresAt);
+                const daysLeft = Math.ceil((expiresDate - new Date()) / (1000 * 60 * 60 * 24));
+                const badgeText = daysLeft <= 3 ? 'HABIS CEPAT!' : 'BARU';
+                
+                card.innerHTML = `
+                    <div class="voucher-badge">${badgeText}</div>
+                    <div class="voucher-icon" style="background: ${voucher.color}">
+                        <i class="${voucher.icon}"></i>
+                    </div>
+                    <h3 class="voucher-title">${voucher.title}</h3>
+                    <p class="voucher-description">${voucher.description}</p>
+                    <div class="voucher-details">
+                        <div class="voucher-value">${voucher.value}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-medium);">
+                            <i class="fas fa-clock"></i> ${daysLeft} hari lagi
+                        </div>
+                    </div>
+                `;
+                voucherCardsGrid.appendChild(card);
+            });
+        }
+        
+        function claimVoucher(voucherId) {
+            showNotification('info', 'Voucher Siap', 'Voucher siap digunakan di halaman pembelian!');
+            
+            // Mark voucher as ready to use
+            const voucherIndex = gameState.vouchers.findIndex(v => v.id === voucherId);
+            if (voucherIndex > -1) {
+                gameState.vouchers[voucherIndex].isReady = true;
+                saveGameState();
+            }
+        }
+        
+        function addCoins() {
+            // Check reward points
+            const rewardPoints = parseInt(localStorage.getItem('user_rewardPoints') || '1000');
+            const coinsPerExchange = 5;
+            const pointsPerExchange = 500;
+            
+            if (rewardPoints < pointsPerExchange) {
+                showNotification('error', 'Poin Tidak Cukup', `Butuh ${pointsPerExchange} poin untuk menukar ${coinsPerExchange} koin!`);
+                return;
+            }
+            
+            // Deduct points and add coins
+            const newPoints = rewardPoints - pointsPerExchange;
+            localStorage.setItem('user_rewardPoints', newPoints);
+            gameState.coins += coinsPerExchange;
+            
+            saveGameState();
+            updateUI();
+            
+            // Update button text
+            document.getElementById('insertCoinBtn').innerHTML = 
+                `<i class="fas fa-plus-circle"></i> Tambah Koin (${newPoints} Poin)`;
+            
+            // Animation
+            coinCountElement.classList.add('coin-pulse');
+            setTimeout(() => {
+                coinCountElement.classList.remove('coin-pulse');
+            }, 500);
+            
+            showNotification('success', 'Koin Ditambahkan', `${coinsPerExchange} koin berhasil ditambahkan!`);
+        }
+        
+        // ==================== LOCAL STORAGE ====================
+        function saveGameState() {
+            localStorage.setItem('clawGameState', JSON.stringify(gameState));
+            localStorage.setItem('user_vouchers', JSON.stringify(gameState.vouchers));
+        }
+        
+        function loadGameState() {
+            const savedState = localStorage.getItem('clawGameState');
+            if (savedState) {
+                gameState = JSON.parse(savedState);
+            }
+            
+            // Load vouchers from separate storage for voucher.html
+            const savedVouchers = localStorage.getItem('user_vouchers');
+            if (savedVouchers) {
+                gameState.vouchers = JSON.parse(savedVouchers);
+            }
+            
+            updateUI();
+            renderVoucherCards();
+            
+            // Set initial claw position
+            clawMechanism.style.left = `${gameState.clawPosition}%`;
+            
+            // Update coin button with points
+            const rewardPoints = parseInt(localStorage.getItem('user_rewardPoints') || '1000');
+            document.getElementById('insertCoinBtn').innerHTML = 
+                `<i class="fas fa-plus-circle"></i> Tambah Koin (${rewardPoints} Poin)`;
+        }
+        
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('moveLeftBtn').addEventListener('click', () => moveClaw('left'));
+        document.getElementById('moveRightBtn').addEventListener('click', () => moveClaw('right'));
+        document.getElementById('clawBtn').addEventListener('click', playClawGame);
+        document.getElementById('insertCoinBtn').addEventListener('click', addCoins);
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                moveClaw('left');
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                moveClaw('right');
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                playClawGame();
+            }
+        });
+        
+        // Ball click for testing
+        document.querySelectorAll('.voucher-ball').forEach(ball => {
+            ball.addEventListener('click', function() {
+                const voucherId = this.dataset.voucher;
+                showNotification('info', voucherData[voucherId].title, `Klik "Jalankan Capit" untuk mendapatkan voucher ini!`);
+            });
+        });
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGameState();
+            
+            // Initialize reward points if not exists
+            if (!localStorage.getItem('user_rewardPoints')) {
+                localStorage.setItem('user_rewardPoints', '1000');
+            }
+            
+            // Pastikan game state dimulai dengan kondisi tidak bermain
+            gameState.isPlaying = false;
+        });
+    </script>
+</body>
+</html>

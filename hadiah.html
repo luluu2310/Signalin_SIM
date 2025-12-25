@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pengiriman Hadiah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f5f5 0%, #f0f0f0 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #FFD700, #FFC107);
+            color: #333;
+            padding: 25px;
+            text-align: center;
+            border-bottom: 3px solid #333;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .balance-info {
+            background-color: #fffde7;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #FFD700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #FFD700;
+        }
+        
+        .balance-info h3 {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .balance-amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .form-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-group {
+            flex: 1 1 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #fafafa;
+        }
+        
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #FFD700;
+            background-color: #fffde7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .price-info {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .price-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .price-details:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 2px solid #e0e0e0;
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #FFD700, #FFC107);
+            color: #333;
+            border: none;
+            padding: 16px 30px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            border: 2px solid #333;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(to right, #FFC107, #FFD700);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #FFD700;
+            color: #333;
+            padding: 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            max-width: 350px;
+            animation: slideIn 0.5s ease;
+            border: 2px solid #333;
+        }
+        
+        .notification.error {
+            background-color: #f5f5f5;
+            border-color: #333;
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .notification-icon {
+            font-size: 28px;
+            color: #333;
+        }
+        
+        .notification-message h3 {
+            margin-bottom: 5px;
+            font-size: 18px;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .notification-message p {
+            font-size: 15px;
+            color: #333;
+            opacity: 0.9;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f8f8;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footer a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .icon-color {
+            color: #333;
+        }
+        
+        .form-group small {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        /* Styling untuk dropdown yang aktif */
+        select option:checked {
+            background-color: #fffde7;
+            font-weight: 600;
+        }
+        
+        /* Styling untuk placeholder */
+        ::placeholder {
+            color: #888;
+        }
+        
+        @media (max-width: 600px) {
+            .form-group {
+                flex: 1 1 100%;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .balance-amount {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-gift icon-color"></i> Form Pengiriman Hadiah</h1>
+            <p>Kirim hadiah berupa pulsa, paket internet, atau voucher ke orang terkasih</p>
+        </div>
+        
+        <div class="content">
+            <div class="balance-info">
+                <div>
+                    <h3><i class="fas fa-wallet icon-color"></i> Saldo Anda Saat Ini</h3>
+                    <p class="balance-amount" id="currentBalance">Rp 250.000</p>
+                </div>
+                <i class="fas fa-coins" style="font-size: 40px; color: #333;"></i>
+            </div>
+            
+            <form id="giftForm">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="phoneNumber"><i class="fas fa-mobile-alt icon-color"></i> Nomor Handphone Tujuan</label>
+                        <input type="tel" id="phoneNumber" placeholder="Contoh: 081234567890" required>
+                        <small>Masukkan nomor handphone penerima hadiah (10-13 digit)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category"><i class="fas fa-list-alt icon-color"></i> Kategori Hadiah</label>
+                        <select id="category" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="pulsa">Pulsa</option>
+                            <option value="internet">Paket Internet</option>
+                            <option value="voucher">Voucher</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="package"><i class="fas fa-box-open icon-color"></i> Jenis Paket</label>
+                        <select id="package" required disabled>
+                            <option value="">-- Pilih kategori terlebih dahulu --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message"><i class="fas fa-comment-alt icon-color"></i> Pesan Ucapan (Opsional)</label>
+                        <textarea id="message" placeholder="Tulis pesan ucapan untuk penerima hadiah..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="price-info">
+                    <div class="price-details">
+                        <span>Harga Paket:</span>
+                        <span id="packagePrice">Rp 0</span>
+                    </div>
+                    <div class="price-details">
+                        <span>Biaya Admin:</span>
+                        <span>Rp 1.500</span>
+                    </div>
+                    <div class="price-details">
+                        <span>Total Pembayaran:</span>
+                        <span id="totalPrice">Rp 0</span>
+                    </div>
+                    <div class="price-details">
+                        <span>Sisa Saldo Setelah Transaksi:</span>
+                        <span id="remainingBalance">Rp 250.000</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Kirim Hadiah Sekarang
+                </button>
+            </form>
+        </div>
+        
+        <div class="footer">
+            <p>Pastikan nomor handphone dan paket yang dipilih sudah benar sebelum mengirim.</p>
+            <p>Transaksi yang sudah diproses tidak dapat dibatalkan. <a href="#">Syarat dan Ketentuan</a></p>
+            <p style="margin-top: 15px;"><a href="home.html" style="color: #FFD700; font-weight: 700;">← Kembali ke Home</a></p>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="notification-message">
+                <h3>Transaksi Berhasil!</h3>
+                <p>Hadiah Anda sedang dikirim ke nomor tujuan. Penerima akan mendapat notifikasi dalam beberapa menit.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        // Data paket berdasarkan kategori
+        const packageData = {
+            pulsa: [
+                { name: "Pulsa 5.000", price: 7000 },
+                { name: "Pulsa 10.000", price: 12000 },
+                { name: "Pulsa 25.000", price: 27000 },
+                { name: "Pulsa 50.000", price: 52000 },
+                { name: "Pulsa 100.000", price: 102000 }
+            ],
+            internet: [
+                { name: "Paket 1GB - 7 Hari", price: 15000 },
+                { name: "Paket 3GB - 30 Hari", price: 35000 },
+                { name: "Paket 10GB - 30 Hari", price: 65000 },
+                { name: "Paket 25GB - 30 Hari", price: 90000 },
+                { name: "Paket Unlimited - 30 Hari", price: 150000 }
+            ],
+            voucher: [
+                { name: "Voucher GoPay 20.000", price: 20000 },
+                { name: "Voucher OVO 50.000", price: 50000 },
+                { name: "Voucher ShopeePay 25.000", price: 25000 },
+                { name: "Voucher Dana 100.000", price: 100000 },
+                { name: "Voucher Starbucks 50.000", price: 50000 }
+            ]
+        };
+        
+        // Fungsi untuk format Rupiah
+        const formatRupiah = (amount) => {
+            return 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        };
+        
+        // Saldo pengguna - ambil dari localStorage
+        let userBalance = parseInt(localStorage.getItem('user_balance')) || 250000;
+        
+        // Inisialisasi tampilan saldo
+        document.getElementById('currentBalance').textContent = formatRupiah(userBalance);
+        document.getElementById('remainingBalance').textContent = formatRupiah(userBalance);
+        
+        // Elemen DOM
+        const categorySelect = document.getElementById('category');
+        const packageSelect = document.getElementById('package');
+        const phoneInput = document.getElementById('phoneNumber');
+        const packagePriceElement = document.getElementById('packagePrice');
+        const totalPriceElement = document.getElementById('totalPrice');
+        const remainingBalanceElement = document.getElementById('remainingBalance');
+        const giftForm = document.getElementById('giftForm');
+        const notification = document.getElementById('notification');
+        
+        // Admin fee
+        const adminFee = 1500;
+        
+        // Update paket berdasarkan kategori yang dipilih
+        categorySelect.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            
+            // Reset dan enable dropdown paket
+            packageSelect.innerHTML = '<option value="">-- Pilih Paket --</option>';
+            packageSelect.disabled = !selectedCategory;
+            
+            // Isi dropdown paket berdasarkan kategori
+            if (selectedCategory && packageData[selectedCategory]) {
+                packageData[selectedCategory].forEach(package => {
+                    const option = document.createElement('option');
+                    option.value = package.price;
+                    option.textContent = package.name;
+                    option.dataset.packageName = package.name;
+                    packageSelect.appendChild(option);
+                });
+            }
+            
+            // Reset harga
+            updatePrice(0);
+        });
+        
+        // Update harga saat paket dipilih
+        packageSelect.addEventListener('change', function() {
+            const packagePrice = parseInt(this.value) || 0;
+            updatePrice(packagePrice);
+        });
+        
+        // Fungsi untuk memperbarui harga dan sisa saldo
+        function updatePrice(packagePrice) {
+            const totalPrice = packagePrice + adminFee;
+            const remainingBalance = userBalance - totalPrice;
+            
+            // Update tampilan
+            packagePriceElement.textContent = formatRupiah(packagePrice);
+            totalPriceElement.textContent = formatRupiah(totalPrice);
+            remainingBalanceElement.textContent = formatRupiah(remainingBalance);
+            
+            // Ubah warna sisa saldo jika negatif
+            if (remainingBalance < 0) {
+                remainingBalanceElement.style.color = '#D32F2F';
+                remainingBalanceElement.innerHTML = `<span style="color:#D32F2F">${formatRupiah(remainingBalance)}</span>`;
+            } else {
+                remainingBalanceElement.style.color = '#333';
+                remainingBalanceElement.textContent = formatRupiah(remainingBalance);
+            }
+        }
+        
+        // Handle pengiriman form
+        giftForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validasi nomor handphone
+            const phoneNumber = phoneInput.value.trim();
+            if (!phoneNumber || phoneNumber.length < 10 || phoneNumber.length > 13) {
+                showNotification('Nomor handphone harus terdiri dari 10-13 digit', true);
+                return;
+            }
+            
+            // Validasi kategori
+            if (!categorySelect.value) {
+                showNotification('Silakan pilih kategori hadiah', true);
+                return;
+            }
+            
+            // Validasi paket
+            if (!packageSelect.value) {
+                showNotification('Silakan pilih paket hadiah', true);
+                return;
+            }
+            
+            // Validasi saldo
+            const packagePrice = parseInt(packageSelect.value);
+            const totalPrice = packagePrice + adminFee;
+            const remainingBalance = userBalance - totalPrice;
+            
+            if (remainingBalance < 0) {
+                showNotification('Saldo Anda tidak mencukupi untuk transaksi ini', true);
+                return;
+            }
+            
+            // Get package name
+            const selectedOption = packageSelect.options[packageSelect.selectedIndex];
+            const packageName = selectedOption.text;
+            const category = categorySelect.value;
+            
+            // Create transaction record
+            const transactionId = 'TRX-GIFT-' + Date.now();
+            const giftTransaction = {
+                id: transactionId,
+                transactionId: transactionId,
+                type: 'gift',
+                category: category,
+                packageName: packageName,
+                price: totalPrice,
+                recipientPhone: phoneNumber,
+                message: document.getElementById('message').value || '',
+                purchaseDate: new Date().toISOString(),
+                status: 'completed'
+            };
+            
+            // Save to purchase history
+            const purchaseHistory = JSON.parse(localStorage.getItem('user_purchase_history') || '[]');
+            purchaseHistory.unshift(giftTransaction);
+            if (purchaseHistory.length > 50) purchaseHistory.pop();
+            localStorage.setItem('user_purchase_history', JSON.stringify(purchaseHistory));
+            
+            // Update user balance
+            userBalance = remainingBalance;
+            localStorage.setItem('user_balance', String(userBalance));
+            
+            // Tampilkan notifikasi sukses
+            showNotification(`Hadiah ${packageName} berhasil dikirim ke ${phoneNumber}`);
+            
+            // Update saldo di tampilan
+            document.getElementById('currentBalance').textContent = formatRupiah(userBalance);
+            
+            // Reset form setelah 3 detik
+            setTimeout(() => {
+                giftForm.reset();
+                packageSelect.disabled = true;
+                packageSelect.innerHTML = '<option value="">-- Pilih kategori terlebih dahulu --</option>';
+                updatePrice(0);
+            }, 3000);
+        });
+        
+        // Fungsi untuk menampilkan notifikasi
+        function showNotification(message, isError = false) {
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            const notificationTitle = notification.querySelector('.notification-message h3');
+            const notificationText = notification.querySelector('.notification-message p');
+            
+            if (isError) {
+                notification.classList.add('error');
+                notificationIcon.className = 'fas fa-exclamation-circle';
+                notificationTitle.textContent = 'Transaksi Gagal!';
+            } else {
+                notification.classList.remove('error');
+                notificationIcon.className = 'fas fa-check-circle';
+                notificationTitle.textContent = 'Transaksi Berhasil!';
+            }
+            
+            notificationText.textContent = message;
+            notification.style.display = 'block';
+            
+            // Sembunyikan notifikasi setelah 5 detik
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Inisialisasi harga awal
+        updatePrice(0);
+        
+        // Tambahkan efek interaktif pada input nomor handphone
+        phoneInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+        
+        }); // Tutup DOMContentLoaded
+    </script>
+</body>
+</html>

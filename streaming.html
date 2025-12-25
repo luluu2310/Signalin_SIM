@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Paket Streaming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="transactions.js"></script>
+    <style>
+        /* ==================== ROOT VARIABLES (SESUAI PULSA.HTML) ==================== */
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #1A1A1A;
+            --primary-gray: #2D2D2D;
+            --primary-gray-dark: #121212;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --accent-gold-glow: rgba(212, 175, 55, 0.3);
+            --text-main: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-dim: #808080;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --shadow-dark: 0 15px 35px rgba(0, 0, 0, 0.7);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--primary-black);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        /* ==================== NAVBAR (SAMA DENGAN PULSA.HTML) ==================== */
+        .navbar {
+            width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+            background: rgba(18, 18, 18, 0.98);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .balance-display {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-normal);
+        }
+        
+        .balance-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .balance-display i {
+            font-size: 1rem;
+        }
+        
+        .mobile-menu-btn {
+            display: flex;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            cursor: pointer;
+            padding: 8px;
+            transition: all var(--transition-fast);
+            background: var(--primary-gray);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: scale(1.05);
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+        }
+        
+        .profile-menu:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all var(--transition-normal);
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 15px var(--accent-gold-glow);
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+            transition: width var(--transition-normal);
+        }
+        
+        .navbar-brand:hover::after {
+            width: 100%;
+        }
+        
+        /* ==================== SIDEBAR MOBILE (SAMA DENGAN PULSA.HTML) ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar-mobile {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-gray-dark);
+            z-index: 1000;
+            padding: 30px;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-mobile.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--primary-gray), #3a3a3a);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* ==================== MAIN CONTENT AREA ==================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        /* ==================== PAGE HEADER ==================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+        }
+        
+        .page-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* ==================== PACKAGES GRID ==================== */
+        .packages-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 1200px) {
+            .packages-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .packages-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
+        .package-card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-normal);
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-dark);
+            border-color: var(--accent-gold);
+        }
+        
+        /* BADGE */
+        .popular-badge {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            padding: 8px 35px;
+            transform: rotate(45deg);
+            font-size: 13px;
+            font-weight: 800;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        /* STREAMING LOGOS */
+        .package-header {
+            margin-bottom: 25px;
+        }
+        
+        .streaming-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-white);
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-medium);
+            transition: transform var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .package-card:hover .streaming-logo {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .netflix { 
+            background: linear-gradient(135deg, #E50914, #B81D24);
+        }
+        .disney { 
+            background: linear-gradient(135deg, #0063E5, #0C1D40);
+        }
+        .vip { 
+            background: linear-gradient(135deg, #00A8FF, #0077B6);
+        }
+        .prime { 
+            background: linear-gradient(135deg, #00A8E1, #146EB4);
+        }
+        .spotify { 
+            background: linear-gradient(135deg, #1DB954, #1ED760);
+        }
+        .youtube { 
+            background: linear-gradient(135deg, #FF0000, #CC0000);
+        }
+        
+        .package-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 5px;
+        }
+        
+        .package-duration {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+        
+        .package-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin: 20px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .package-price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+        
+        .package-benefits {
+            text-align: left;
+            margin: 25px 0;
+            flex-grow: 1;
+        }
+        
+        .package-benefits ul {
+            list-style: none;
+        }
+        
+        .package-benefits li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .package-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        
+        .buy-button {
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            border: none;
+            padding: 16px 30px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            width: 100%;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .buy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .buy-button:disabled {
+            background: linear-gradient(135deg, var(--primary-gray), #3a3a3a);
+            color: var(--text-dim);
+            cursor: not-allowed;
+            box-shadow: none;
+            border-color: var(--primary-gray);
+            transform: none;
+        }
+        
+        .buy-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .buy-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .buy-button:hover::after {
+            opacity: 1;
+        }
+        
+        .buy-button span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ==================== NOTIFICATION ==================== */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-dark);
+            z-index: 9999;
+            font-weight: 600;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+            max-width: 300px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #FF6B6B, #EF476F);
+            color: var(--primary-white);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        /* ==================== RESPONSIVE STYLES ==================== */
+        @media (max-width: 1024px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .balance-display {
+                min-width: 130px;
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-description {
+                font-size: 1rem;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+                position: static;
+                transform: none;
+                left: auto;
+            }
+            
+            .navbar-center {
+                position: static;
+                transform: none;
+            }
+            
+            .balance-display {
+                display: none;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .package-price {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 15px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+                margin: 0 10px;
+            }
+            
+            .package-card {
+                padding: 20px;
+            }
+            
+            .package-price {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .packages-container {
+                gap: 15px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification"></div>
+    
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-mobile" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="pulsa.html"><i class="fas fa-mobile-alt"></i> Pulsa</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Paket Data</a>
+            <a href="streaming.html" class="active"><i class="fas fa-video"></i> Streaming</a>
+            <a href="nonton.html"><i class="fas fa-tv"></i> Nonton</a>
+            <a href="wifi.html"><i class="fas fa-gamepad"></i> Layanan Wifi</a>
+            <a href="riwayat.html"><i class="fas fa-history"></i> Riwayat Top Up</a>
+            <a href="transaksi.html"><i class="fas fa-history"></i> Riwayat Transaksi</a>
+            <a href="help.html"><i class="fas fa-question-circle"></i> Bantuan</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MODIFIED NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil" id="profileLink">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        
+        <div class="navbar-center">
+            <div class="navbar-brand">Signalin</div>
+        </div>
+        
+        <div class="navbar-right">
+            <div class="balance-display" id="navbarBalance">
+                <i class="fas fa-wallet"></i>
+                <span id="balanceAmount">Saldo: Rp 328.500</span>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">Paket Streaming Premium</h1>
+            <p class="page-description">
+                Berlangganan layanan streaming favorit Anda dengan kualitas premium. Akses konten eksklusif tanpa batas.
+            </p>
+        </div>
+        
+        <!-- PACKAGES CONTAINER -->
+        <div class="packages-container">
+            <!-- Netflix -->
+            <div class="package-card">
+                <div class="popular-badge">PREMIUM</div>
+                <div class="package-header">
+                    <div class="streaming-logo netflix">N</div>
+                    <h3 class="package-name">Netflix Premium Ultra</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 54.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>4 layar sekaligus Ultra HD</li>
+                        <li>Kualitas 4K Dolby Atmos</li>
+                        <li>Unduh di 4 perangkat</li>
+                        <li>Akses ke semua konten eksklusif</li>
+                        <li>Prioritas streaming tanpa buffering</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Netflix Premium Ultra" data-price="54000" data-id="NETFLIX01" data-service="netflix" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Disney+ -->
+            <div class="package-card">
+                <div class="package-header">
+                    <div class="streaming-logo disney">D+</div>
+                    <h3 class="package-name">Disney+ Hotstar Premium</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 39.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>4 layar sekaligus 4K</li>
+                        <li>Konten Disney, Marvel, Star Wars</li>
+                        <li>Streaming live sports</li>
+                        <li>Koleksi film Oscar terbaru</li>
+                        <li>Akses IMAX Enhanced</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Disney+ Hotstar Premium" data-price="39000" data-id="DISNEY01" data-service="disney" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Viu -->
+            <div class="package-card">
+                <div class="package-header">
+                    <div class="streaming-logo vip">V</div>
+                    <h3 class="package-name">Viu Premium Ultra</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 35.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Tonton tanpa iklan HD</li>
+                        <li>Download unlimited untuk offline</li>
+                        <li>Akses lebih awal ke drama Korea</li>
+                        <li>Kualitas streaming 1080p</li>
+                        <li>Subtitle multi-bahasa</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Viu Premium Ultra" data-price="35000" data-id="VIU01" data-service="viu" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Amazon Prime -->
+            <div class="package-card">
+                <div class="package-header">
+                    <div class="streaming-logo prime">P</div>
+                    <h3 class="package-name">Amazon Prime Video Pro</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 45.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>3 layar sekaligus 4K UHD</li>
+                        <li>Akses ke Prime Originals</li>
+                        <li>Download untuk offline</li>
+                        <li>Konten HDR10+ & Dolby Vision</li>
+                        <li>Live TV Channels</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Amazon Prime Video Pro" data-price="45000" data-id="PRIME01" data-service="prime" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Spotify -->
+            <div class="package-card">
+                <div class="popular-badge">PREMIUM</div>
+                <div class="package-header">
+                    <div class="streaming-logo spotify">S</div>
+                    <h3 class="package-name">Spotify Premium Family</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 79.900</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>6 akun premium sekaligus</li>
+                        <li>Dengarkan tanpa iklan</li>
+                        <li>Download unlimited untuk offline</li>
+                        <li>Kualitas audio HiFi (360 Reality Audio)</li>
+                        <li>Access to Spotify Kids</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Spotify Premium Family" data-price="79900" data-id="SPOTIFY01" data-service="spotify" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- YouTube -->
+            <div class="package-card">
+                <div class="package-header">
+                    <div class="streaming-logo youtube">YT</div>
+                    <h3 class="package-name">YouTube Premium Family</h3>
+                    <p class="package-duration">1 Bulan Akses Penuh</p>
+                </div>
+                <div class="package-price">Rp 89.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>6 akun family sekaligus</li>
+                        <li>Tonton tanpa iklan 4K</li>
+                        <li>Download video untuk offline</li>
+                        <li>YouTube Music Premium included</li>
+                        <li>Background play & Picture-in-Picture</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="YouTube Premium Family" data-price="89000" data-id="YOUTUBE01" data-service="youtube" data-duration="1 Bulan">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Update saldo display
+            updateBalanceDisplay();
+            
+            // Setup buy buttons
+            setupBuyButtons();
+            
+            // Navbar scroll effect
+            initNavbarScroll();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('info', 'Selamat Datang!', 'Pilih paket streaming premium favorit Anda.');
+            }, 1000);
+            
+            // Check for purchase notification from payment page
+            checkPurchaseNotification();
+        });
+        
+        // ==================== SIDEBAR FUNCTIONS ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+        }
+        
+        // ==================== NAVBAR SCROLL EFFECT ====================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== LOGIN STATUS CHECK ====================
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (!isLoggedIn && !isRegistered) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // ==================== CHECK PURCHASE NOTIFICATION ====================
+        function checkPurchaseNotification() {
+            const purchaseNotification = localStorage.getItem('purchaseNotification');
+            if (purchaseNotification) {
+                const notificationData = JSON.parse(purchaseNotification);
+                showNotification('success', 'Pembelian Berhasil', notificationData.message);
+                localStorage.removeItem('purchaseNotification');
+                
+                // Update balance after successful purchase
+                setTimeout(updateBalanceDisplay, 1000);
+            }
+        }
+        
+        // ==================== FUNCTIONS ====================
+        function getBalance() {
+            const balance = localStorage.getItem('user_balance');
+            return balance ? parseInt(balance) : 328500;
+        }
+        
+        function updateBalanceDisplay() {
+            const balance = getBalance();
+            const navbarBalanceElement = document.getElementById('balanceAmount');
+            
+            navbarBalanceElement.textContent = `Saldo: Rp ${balance.toLocaleString('id-ID')}`;
+            
+            updateButtonsStatus(balance);
+        }
+        
+        function updateButtonsStatus(balance) {
+            const buttons = document.querySelectorAll('.buy-button');
+            buttons.forEach(button => {
+                const price = parseInt(button.getAttribute('data-price'));
+                if (balance < price || balance < 10000) {
+                    button.disabled = true;
+                    button.innerHTML = '<i class="fas fa-exclamation-circle"></i><span>Saldo Tidak Cukup</span>';
+                } else {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-shopping-cart"></i><span>Beli Sekarang</span>';
+                }
+            });
+        }
+        
+        // ==================== BUY PACKAGE FUNCTION ====================
+        function buyPackage(packageName, packagePrice, packageId, service, duration) {
+            const userBalance = getBalance();
+            
+            // Check if user has enough balance
+            if (userBalance < packagePrice) {
+                showNotification('error', 'Saldo Tidak Cukup', 
+                    `Saldo Anda tidak cukup (Rp ${userBalance.toLocaleString('id-ID')}). Ingin top up saldo sekarang?`);
+                
+                // Ask user to top up
+                setTimeout(() => {
+                    if (confirm('Saldo tidak cukup. Ingin top up saldo sekarang?')) {
+                        window.location.href = 'topup.html';
+                    }
+                }, 500);
+                return;
+            }
+            
+            // Save package data for payment page
+            const packageData = {
+                id: 'STREAMING-' + Date.now(),
+                name: packageName,
+                price: packagePrice,
+                type: 'streaming',
+                service: service,
+                packageId: packageId,
+                duration: duration,
+                date: new Date().toISOString(),
+                packageDetails: `${packageName} - ${duration}`
+            };
+            
+            localStorage.setItem('selectedPackage', JSON.stringify(packageData));
+            
+            // Show success notification
+            showNotification('success', 'Pembelian', `Paket ${packageName} akan dibeli`);
+            
+            // Redirect to payment page after delay
+            setTimeout(() => {
+                window.location.href = 'payment.html';
+            }, 1500);
+        }
+        
+        function setupBuyButtons() {
+            const buyButtons = document.querySelectorAll('.buy-button');
+            
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.disabled) {
+                        showNotification('error', 'Saldo Tidak Cukup', 'Silakan top up saldo terlebih dahulu.');
+                        return;
+                    }
+                    
+                    const packageName = this.getAttribute('data-package');
+                    const packagePrice = parseInt(this.getAttribute('data-price'));
+                    const packageId = this.getAttribute('data-id');
+                    const service = this.getAttribute('data-service');
+                    const duration = this.getAttribute('data-duration');
+                    
+                    buyPackage(packageName, packagePrice, packageId, service, duration);
+                });
+            });
+        }
+        
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            
+            // Set content
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                </div>
+            `;
+            
+            // Set type styling
+            notification.className = 'notification';
+            if (type === 'error') {
+                notification.classList.add('error');
+            }
+            
+            // Show notification
+            notification.style.display = 'flex';
+            notification.style.animation = 'slideIn 0.3s ease';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
+        function logout() {
+            // Clear all user data from localStorage except registration data
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Show notification
+            showNotification('success', 'Logout Berhasil', 'Anda telah keluar dari akun.');
+            
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // ==================== KEYBOARD SHORTCUTS ====================
+        document.addEventListener('keydown', function(e) {
+            // ESC to close sidebar
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+            
+            // F5 to refresh balance
+            if (e.key === 'F5') {
+                e.preventDefault();
+                updateBalanceDisplay();
+                showNotification('info', 'Saldo Diperbarui', 'Saldo berhasil diperbarui.');
+            }
+        });
+    </script>
+</body>
+</html>

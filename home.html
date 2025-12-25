@@ -1,0 +1,3003 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =========== RESET & BASE =========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background: #000000;
+            color: #FFFFFF;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* =========== SIDEBAR NAVIGATION =========== */
+        .sidebar-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100%;
+            background: #121212;
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            z-index: 900;
+            display: none;
+            flex-direction: column;
+            padding: 20px 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        @media (min-width: 1200px) {
+            .sidebar-nav {
+                display: flex;
+            }
+        }
+        
+        .sidebar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 0 20px;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .sidebar-user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            font-size: 1.5rem;
+        }
+        
+        .sidebar-user-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #FFFFFF;
+        }
+        
+        .sidebar-user-info p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 0 15px;
+            flex: 1;
+        }
+        
+        .sidebar-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .sidebar-menu-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu-item.active {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .sidebar-menu-item.active::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: #D4AF37;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .sidebar-menu-icon {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-logout {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .sidebar-logout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2D2D2D, #3a3a3a);
+            color: #D4AF37;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            transform: translateY(-2px);
+        }
+        
+        /* =========== NAVBAR WITH MODERN SEARCH =========== */
+        .navbar {
+            width: 100%;
+            background: rgba(18, 18, 18, 0.98);
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .mobile-menu-btn {
+            background: rgba(45, 45, 45, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: #D4AF37;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: rotate(90deg);
+        }
+        
+        @media (min-width: 1200px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+        
+        .profile-menu {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .profile-menu:hover::before {
+            left: 100%;
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-decoration: none;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+        }
+        
+        @media (min-width: 768px) {
+            .navbar-brand {
+                position: static;
+                transform: none;
+                margin-left: 20px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .navbar-brand {
+                display: none;
+            }
+        }
+        
+        /* =========== MODERN SEARCH BAR =========== */
+        .search-container {
+            position: relative;
+            width: 280px;
+            margin-left: auto;
+            margin-right: 20px;
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .search-container {
+                display: block;
+            }
+        }
+        
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            background: rgba(45, 45, 45, 0.8);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 30px;
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: #D4AF37;
+            background: rgba(45, 45, 45, 0.95);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #D4AF37;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .search-bar:focus + .search-icon {
+            color: #FFD700;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(29, 29, 29, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .search-result-item {
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-item:hover {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1), transparent);
+            padding-left: 25px;
+        }
+        
+        .search-result-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .search-result-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+        }
+        
+        .search-result-content p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .search-result-price {
+            margin-left: auto;
+            font-weight: 700;
+            color: #D4AF37;
+            font-size: 0.9rem;
+        }
+        
+        /* Mobile Search Button */
+        .mobile-search-btn {
+            display: none;
+            background: rgba(45, 45, 45, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            color: #D4AF37;
+            font-size: 1.2rem;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 767px) {
+            .mobile-search-btn {
+                display: flex;
+            }
+            
+            .search-container.mobile-active {
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                width: 100%;
+                padding: 15px;
+                background: rgba(18, 18, 18, 0.98);
+                border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+                z-index: 1000;
+            }
+            
+            .search-container.mobile-active .search-bar {
+                width: 100%;
+            }
+        }
+        
+        /* =========== MAIN CONTENT =========== */
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 85px auto 20px;
+            padding: 0 20px;
+            transition: all 0.3s ease;
+        }
+        
+        @media (min-width: 1200px) {
+            .main-container {
+                margin-left: 280px;
+                max-width: calc(1200px - 280px);
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .main-container {
+                margin-top: 75px;
+                padding: 0 15px;
+            }
+        }
+        
+        /* =========== DASHBOARD LAYOUT =========== */
+        .dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 100%;
+        }
+        
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                flex-direction: row;
+                gap: 30px;
+            }
+        }
+        
+        .main-column {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        @media (min-width: 1024px) {
+            .sidebar-content {
+                width: 340px;
+                min-width: 340px;
+            }
+        }
+        
+        /* =========== WELCOME SECTION =========== */
+        .welcome-section {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .welcome-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-content {
+                flex-direction: row;
+                text-align: left;
+                align-items: center;
+            }
+        }
+        
+        .welcome-text {
+            flex: 1;
+            width: 100%;
+        }
+        
+        .welcome-text h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.2;
+            background: linear-gradient(45deg, #FFFFFF, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-text h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .welcome-text p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .welcome-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-stats {
+                display: flex;
+                gap: 40px;
+                text-align: left;
+                margin-top: 30px;
+            }
+        }
+        
+        .welcome-stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        .welcome-stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        .welcome-avatar {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #000000;
+            border: 6px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .welcome-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* =========== USER BALANCE CARD =========== */
+        .user-balance-card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .balance-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 480px) {
+            .balance-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .balance-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #D4AF37;
+        }
+        
+        .balance-amount {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #D4AF37;
+            margin: 20px 0;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .balance-amount::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            border-radius: 3px;
+        }
+        
+        .balance-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        @media (min-width: 480px) {
+            .balance-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .balance-btn {
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .balance-btn:hover::before {
+            left: 100%;
+        }
+        
+        .balance-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .balance-btn.primary {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+        }
+        
+        /* =========== QUICK ACTIONS =========== */
+        .quick-actions-section {
+            margin-bottom: 35px;
+            width: 100%;
+        }
+        
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 640px) {
+            .section-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: #D4AF37;
+        }
+        
+        .see-all {
+            color: #D4AF37;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .see-all:hover {
+            background: rgba(212, 175, 55, 0.2);
+            gap: 12px;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        
+        @media (min-width: 480px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .quick-actions-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        .quick-action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 20px 15px;
+            background: rgba(45, 45, 45, 0.8);
+            border-radius: 16px;
+            min-height: 140px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quick-action-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .quick-action-item:hover::before {
+            left: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .quick-action-item {
+                min-height: 160px;
+                padding: 25px 15px;
+            }
+        }
+        
+        .quick-action-item:hover {
+            transform: translateY(-8px);
+            border-color: #D4AF37;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #D4AF37;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .quick-action-item:hover .action-icon {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000000;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .action-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* =========== PROMO SLIDER =========== */
+        .promo-slider-section {
+            margin-bottom: 35px;
+            width: 100%;
+        }
+        
+        .promo-slider-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #2D2D2D;
+            height: 320px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .promo-slider-container {
+                height: 350px;
+            }
+        }
+        
+        .promo-slider-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .promo-slide {
+            min-width: 100%;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+        }
+        
+        @media (min-width: 768px) {
+            .promo-slide {
+                padding: 50px;
+            }
+        }
+        
+        .promo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .promo-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #FFFFFF, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        @media (min-width: 768px) {
+            .promo-title {
+                font-size: 2.2rem;
+            }
+        }
+        
+        .promo-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            max-width: 700px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .promo-price {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .current-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #D4AF37;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        .original-price {
+            font-size: 1.4rem;
+            color: #808080;
+            text-decoration: line-through;
+        }
+        
+        .promo-btn {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .promo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+        }
+        
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-dot.active {
+            background: #D4AF37;
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        
+        .slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(29, 29, 29, 0.8);
+            color: #D4AF37;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .slider-arrow:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .slider-arrow.prev {
+            left: 15px;
+        }
+        
+        .slider-arrow.next {
+            right: 15px;
+        }
+        
+        /* =========== TRENDING PACKAGES WITH SWIPE =========== */
+        .trending-packages {
+            margin-bottom: 40px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 640px) {
+            .section-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .packages-slider-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .packages-slider-track {
+            display: flex;
+            gap: 20px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 10px 5px;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .packages-slider-track:active {
+            cursor: grabbing;
+        }
+        
+        .package-card {
+            min-width: 280px;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(212, 175, 55, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .package-card:hover::before {
+            opacity: 1;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-8px);
+            border-color: #D4AF37;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .package-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .package-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 20px;
+            color: #D4AF37;
+            transition: all 0.3s ease;
+        }
+        
+        .package-card:hover .package-icon {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000000;
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .package-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #FFFFFF;
+        }
+        
+        .package-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .package-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        
+        .package-quota {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #D4AF37;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        .package-duration {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .package-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+        }
+        
+        .package-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .package-btn:hover::before {
+            left: 100%;
+        }
+        
+        .package-btn:hover {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Navigation arrows for packages */
+        .package-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(29, 29, 29, 0.8);
+            color: #D4AF37;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: none;
+        }
+        
+        @media (min-width: 768px) {
+            .package-nav-arrow {
+                display: flex;
+            }
+        }
+        
+        .package-nav-arrow:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .package-nav-arrow.prev {
+            left: -20px;
+        }
+        
+        .package-nav-arrow.next {
+            right: -20px;
+        }
+        
+        /* =========== SIDEBAR CONTENT =========== */
+        .service-status {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .status-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #D4AF37;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .status-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .status-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateX(5px);
+            color: #D4AF37;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4CAF50;
+            box-shadow: 0 0 10px #4CAF50;
+        }
+        
+        .status-indicator.warning {
+            background: #FF9800;
+            box-shadow: 0 0 10px #FF9800;
+        }
+        
+        .status-text {
+            flex: 1;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .status-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #D4AF37;
+        }
+        
+        .quick-links {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .links-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #D4AF37;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .link-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 18px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .link-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            transform: translateY(-5px);
+        }
+        
+        .link-icon {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        .link-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        /* =========== FOOTER =========== */
+        .footer {
+            background: #121212;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 50px 20px 25px;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 1200px) {
+            .footer-container {
+                margin-left: 280px;
+                max-width: calc(1200px - 280px);
+            }
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .footer-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+        }
+        
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #FFFFFF;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #D4AF37, transparent);
+            border-radius: 3px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #D4AF37;
+            transform: translateX(5px);
+        }
+        
+        .footer-bottom {
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+        
+        .footer-copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            background: #D4AF37;
+            color: #000000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* =========== DOCK =========== */
+        .dock-container {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 900;
+            width: auto;
+        }
+        
+        @media (min-width: 1200px) {
+            .dock-container {
+                left: calc(50% + 140px);
+            }
+        }
+        
+        .dock-bar {
+            background: rgba(29, 29, 29, 0.95);
+            padding: 14px 30px;
+            border-radius: 30px;
+            display: flex;
+            gap: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .dock-icon {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .dock-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #D4AF37;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dock-icon:hover {
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .dock-icon.active {
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.15);
+        }
+        
+        .dock-icon.active::after {
+            opacity: 1;
+        }
+        
+        /* =========== MOBILE SIDEBAR =========== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        .sidebar-mobile {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            background: #121212;
+            z-index: 1000;
+            padding: 25px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sidebar-mobile.active {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            transform: translateX(10px);
+        }
+        
+        /* =========== NOTIFICATION =========== */
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            color: #000000;
+            padding: 18px 24px;
+            border-radius: 14px;
+            z-index: 9999;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+            animation: slideInRight 0.3s ease;
+            max-width: 350px;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* =========== RESPONSIVE UTILITIES =========== */
+        @media (max-width: 767px) {
+            .mobile-only {
+                display: block;
+            }
+            
+            .desktop-only {
+                display: none;
+            }
+            
+            .quick-actions-grid {
+                gap: 12px;
+            }
+            
+            .quick-action-item {
+                min-height: 130px;
+                padding: 18px 12px;
+            }
+            
+            .action-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .action-label {
+                font-size: 0.9rem;
+            }
+            
+            .promo-slider-container {
+                height: 280px;
+            }
+            
+            .promo-slide {
+                padding: 25px;
+            }
+            
+            .package-card {
+                min-width: 260px;
+                padding: 20px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-only {
+                display: none;
+            }
+            
+            .desktop-only {
+                display: block;
+            }
+        }
+        
+        /* =========== SCROLLBAR STYLING =========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <div id="notificationTitle">Berhasil</div>
+            <div id="notificationMessage">Operasi berhasil diselesaikan</div>
+        </div>
+    </div>
+    
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar-nav" id="sidebarNav">
+        <a href="home.html" class="sidebar-brand">Signalin</a>
+        
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar" id="sidebarUserAvatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="sidebar-user-info">
+                <h3 id="sidebarUserName">Pengguna</h3>
+                <p id="sidebarUserPhone">0812 •••• 7890</p>
+            </div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="home.html" class="sidebar-menu-item active">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span>Home</span>
+            </a>
+            <a href="topup.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <span>Top Up Saldo</span>
+            </a>
+            <a href="riwayat.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <span>Riwayat Transaksi</span>
+            </a>
+            <a href="internet.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <span>Paket Data</span>
+            </a>
+            <a href="pulsa.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <span>Pulsa</span>
+            </a>
+            <a href="streaming.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <span>Streaming</span>
+            </a>
+            <a href="profile.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <span>Profil</span>
+            </a>
+            <a href="settings.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <span>Pengaturan</span>
+            </a>
+            <a href="pusat.html" class="sidebar-menu-item">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <span>Pusat Bantuan</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-logout">
+            <button class="sidebar-logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+    
+    <!-- NAVBAR WITH MODERN SEARCH -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="profile.html" class="profile-menu">
+                <i class="fas fa-user"></i>
+            </a>
+        </div>
+        
+        <a href="home.html" class="navbar-brand">Signalin</a>
+        
+        <!-- Modern Search Bar -->
+        <div class="search-container" id="searchContainer">
+            <div class="search-wrapper">
+                <input type="text" class="search-bar" id="searchBar" placeholder="Cari paket data, pulsa, streaming...">
+                <i class="fas fa-search search-icon"></i>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+        
+        <!-- Mobile Search Button -->
+        <button class="mobile-search-btn mobile-only" id="mobileSearchBtn">
+            <i class="fas fa-search"></i>
+        </button>
+    </nav>
+    
+    <!-- MOBILE SIDEBAR -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-mobile" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <button class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="topup.html"><i class="fas fa-wallet"></i> Top Up Saldo</a>
+            <a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Paket Data</a>
+            <a href="pulsa.html"><i class="fas fa-mobile-alt"></i> Pulsa</a>
+            <a href="streaming.html"><i class="fas fa-video"></i> Streaming</a>
+            <a href="profile.html"><i class="fas fa-user-circle"></i> Profil</a>
+            <a href="settings.html"><i class="fas fa-cog"></i> Pengaturan</a>
+            <a href="pusat.html"><i class="fas fa-question-circle"></i> Pusat Bantuan</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()" style="
+            background: linear-gradient(135deg, #2D2D2D, #3a3a3a);
+            color: #D4AF37;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: auto;
+            width: 100%;
+            transition: all 0.3s ease;
+        ">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <div class="dashboard-grid">
+            <!-- MAIN COLUMN -->
+            <div class="main-column">
+                <!-- WELCOME SECTION -->
+                <section class="welcome-section">
+                    <div class="welcome-content">
+                        <div class="welcome-text">
+                            <h1>Halo, <span id="userName">Pengguna</span>!</h1>
+                            <p>Selamat datang kembali di Signalin Premium</p>
+                            <div class="welcome-badge">
+                                <i class="fas fa-crown"></i>
+                                <span id="userType">PRIORITY MEMBER</span>
+                            </div>
+                            <div class="welcome-stats">
+                                <div class="welcome-stat">
+                                    <div class="welcome-stat-value" id="userBalance">Rp 125.000</div>
+                                    <div class="welcome-stat-label">Saldo Tersedia</div>
+                                </div>
+                                <div class="welcome-stat">
+                                    <div class="welcome-stat-value" id="userPoints">1.250</div>
+                                    <div class="welcome-stat-label">Poin Reward</div>
+                                </div>
+                                <div class="welcome-stat">
+                                    <div class="welcome-stat-value" id="userActiveDays">30</div>
+                                    <div class="welcome-stat-label">Hari Aktif</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="welcome-avatar" onclick="window.location.href='profile.html'">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- USER BALANCE CARD -->
+                <section class="user-balance-card">
+                    <div class="balance-header">
+                        <div class="balance-title">
+                            <i class="fas fa-wallet"></i>
+                            Saldo Utama
+                        </div>
+                        <div class="user-phone" id="userPhone">0812 •••• 7890</div>
+                    </div>
+                    <div class="balance-amount" id="mainBalance">Rp 125.000</div>
+                    <div class="balance-actions">
+                        <button class="balance-btn primary" onclick="window.location.href='topup.html'">
+                            <i class="fas fa-plus-circle"></i>
+                            Top Up Saldo
+                        </button>
+                    </div>
+                </section>
+                
+                <!-- QUICK ACTIONS -->
+                <section class="quick-actions-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-bolt"></i>
+                            Layanan Cepat
+                        </div>
+                        <a href="services.html" class="see-all">
+                            Lihat Semua <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="quick-actions-grid">
+                        <a href="pulsa.html" class="quick-action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="action-label">Isi Pulsa</div>
+                        </a>
+                        <a href="internet.html" class="quick-action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <div class="action-label">Paket Data</div>
+                        </a>
+                        <a href="streaming.html" class="quick-action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="action-label">Streaming</div>
+                        </a>
+                        <a href="nonton.html" class="quick-action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-tv"></i>
+                            </div>
+                            <div class="action-label">Nonton</div>
+                        </a>
+                        <a href="riwayat.html" class="quick-action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="action-label">Riwayat</div>
+                        </a>
+                    </div>
+                </section>
+                
+                <!-- PROMO SLIDER -->
+                <section class="promo-slider-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-gift"></i>
+                            Promo & Penawaran
+                        </h2>
+                    </div>
+                    <div class="promo-slider-container">
+                        <button class="slider-arrow prev" onclick="prevPromo()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="promo-slider-track" id="promoSliderTrack"></div>
+                        <button class="slider-arrow next" onclick="nextPromo()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="slider-controls" id="promoSliderDots"></div>
+                </section>
+                
+                <!-- TRENDING PACKAGES WITH SWIPE -->
+                <section class="trending-packages">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-fire"></i>
+                            Paket Terpopuler
+                        </h2>
+                        <div class="section-controls">
+                            <button class="package-nav-arrow prev" onclick="prevPackage()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="package-nav-arrow next" onclick="nextPackage()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="packages-slider-container">
+                        <div class="packages-slider-track" id="packagesSliderTrack"></div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- SIDEBAR COLUMN -->
+            <div class="sidebar-content">
+                <!-- SERVICE STATUS -->
+                <div class="service-status">
+                    <h3 class="status-title">
+                        <i class="fas fa-chart-line"></i>
+                        Status Layanan
+                    </h3>
+                    <div class="status-items">
+                        <div class="status-item">
+                            <div class="status-indicator"></div>
+                            <div class="status-text">Jaringan Internet</div>
+                            <div class="status-value">Normal</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator"></div>
+                            <div class="status-text">Sistem Transaksi</div>
+                            <div class="status-value">Aktif</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator warning"></div>
+                            <div class="status-text">Maintenance</div>
+                            <div class="status-value">00:00-06:00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- QUICK LINKS -->
+                <div class="quick-links">
+                    <h3 class="links-title">
+                        <i class="fas fa-external-link-alt"></i>
+                        Tautan Cepat
+                    </h3>
+                    <div class="links-grid">
+                        <a href="riwayat.html" class="link-item">
+                            <div class="link-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div class="link-text">Riwayat</div>
+                        </a>
+                        <a href="topup.html" class="link-item">
+                            <div class="link-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="link-text">Top Up</div>
+                        </a>
+                        <a href="pusat.html" class="link-item">
+                            <div class="link-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="link-text">Pusat Bantuan</div>
+                        </a>
+                        <a href="settings.html" class="link-item">
+                            <div class="link-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="link-text">Pengaturan</div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- STATS CARD -->
+                <div class="user-balance-card">
+                    <div class="balance-header">
+                        <div class="balance-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Statistik Penggunaan
+                        </div>
+                    </div>
+                    <div class="welcome-stats" style="margin-top: 20px;">
+                        <div class="welcome-stat">
+                            <div class="welcome-stat-value" id="transaksiCount">12</div>
+                            <div class="welcome-stat-label">Transaksi Bulan Ini</div>
+                        </div>
+                        <div class="welcome-stat">
+                            <div class="welcome-stat-value" id="totalSpent">Rp 245K</div>
+                            <div class="welcome-stat-label">Total Pengeluaran</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">Signalin</div>
+                    <p class="footer-description">
+                        Platform penyedia layanan digital terpercaya dengan berbagai pilihan paket internet, pulsa, dan layanan digital lainnya.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Layanan</h3>
+                    <ul class="footer-links">
+                        <li><a href="internet.html"><i class="fas fa-chevron-right"></i> Paket Data</a></li>
+                        <li><a href="pulsa.html"><i class="fas fa-chevron-right"></i> Pulsa</a></li>
+                        <li><a href="streaming.html"><i class="fas fa-chevron-right"></i> Streaming</a></li>
+                        <li><a href="topup.html"><i class="fas fa-chevron-right"></i> Top Up Saldo</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Perusahaan</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> Tentang Kami</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Bantuan</h3>
+                    <ul class="footer-links">
+                        <li><a href="pusat.html"><i class="fas fa-chevron-right"></i> Pusat Bantuan</a></li>
+                        <li><a href="faq.html"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li><a href="riwayat.html"><i class="fas fa-chevron-right"></i> Riwayat Transaksi</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2024 Signalin. All rights reserved.
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- DOCK -->
+    <div class="dock-container">
+        <div class="dock-bar">
+            <a href="home.html" class="dock-icon active">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="internet.html" class="dock-icon">
+                <i class="fas fa-wifi"></i>
+            </a>
+            <a href="pulsa.html" class="dock-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </a>
+            <a href="riwayat.html" class="dock-icon">
+                <i class="fas fa-history"></i>
+            </a>
+            <a href="profile.html" class="dock-icon">
+                <i class="fas fa-user"></i>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // =========== SEARCH DATA ===========
+        const searchProducts = [
+            { name: "Paket Data 1GB", category: "internet", price: "Rp 10.000", page: "internet.html", icon: "wifi", description: "Paket data 1GB untuk 1 hari" },
+            { name: "Paket Data 3GB", category: "internet", price: "Rp 25.000", page: "internet.html", icon: "wifi", description: "Paket data 3GB untuk 7 hari" },
+            { name: "Paket Data 10GB", category: "internet", price: "Rp 50.000", page: "internet.html", icon: "wifi", description: "Paket data 10GB untuk 30 hari" },
+            { name: "Paket Data 20GB", category: "internet", price: "Rp 75.000", page: "internet.html", icon: "wifi", description: "Paket data 20GB untuk 30 hari" },
+            { name: "Paket Unlimited", category: "internet", price: "Rp 100.000", page: "internet.html", icon: "wifi", description: "Paket data unlimited untuk 30 hari" },
+            { name: "Pulsa 5.000", category: "pulsa", price: "Rp 5.000", page: "pulsa.html", icon: "mobile-alt", description: "Pulsa reguler 5.000" },
+            { name: "Pulsa 10.000", category: "pulsa", price: "Rp 10.000", page: "pulsa.html", icon: "mobile-alt", description: "Pulsa reguler 10.000" },
+            { name: "Pulsa 25.000", category: "pulsa", price: "Rp 25.000", page: "pulsa.html", icon: "mobile-alt", description: "Pulsa reguler 25.000" },
+            { name: "Pulsa 50.000", category: "pulsa", price: "Rp 50.000", page: "pulsa.html", icon: "mobile-alt", description: "Pulsa reguler 50.000" },
+            { name: "Pulsa 100.000", category: "pulsa", price: "Rp 100.000", page: "pulsa.html", icon: "mobile-alt", description: "Pulsa reguler 100.000" },
+            { name: "Netflix Basic", category: "streaming", price: "Rp 54.000", page: "streaming.html", icon: "video", description: "Netflix Basic 1 bulan" },
+            { name: "Netflix Premium", category: "streaming", price: "Rp 186.000", page: "streaming.html", icon: "video", description: "Netflix Premium 1 bulan" },
+            { name: "Disney+", category: "streaming", price: "Rp 45.000", page: "streaming.html", icon: "video", description: "Disney+ 1 bulan" },
+            { name: "Spotify Premium", category: "streaming", price: "Rp 49.990", page: "streaming.html", icon: "music", description: "Spotify Premium 1 bulan" },
+            { name: "YouTube Premium", category: "streaming", price: "Rp 65.000", page: "streaming.html", icon: "video", description: "YouTube Premium 1 bulan" }
+        ];
+        
+        // =========== PROMO DATA ===========
+        const promoData = [
+            {
+                title: "Paket Data Spesial",
+                description: "Dapatkan kuota 20GB hanya Rp 40.000! Promo terbatas hingga akhir bulan.",
+                currentPrice: "Rp 40.000",
+                originalPrice: "Rp 75.000",
+                badge: "TERBARU"
+            },
+            {
+                title: "Cashback 20%",
+                description: "Setiap pembelian pulsa dapat cashback hingga 20%. Berlaku untuk semua operator.",
+                currentPrice: "Cashback 20%",
+                originalPrice: "",
+                badge: "CASHBACK"
+            },
+            {
+                title: "Diskon Akhir Tahun",
+                description: "Diskon hingga 50% untuk semua paket data. Buruan sebelum kehabisan!",
+                currentPrice: "Diskon 50%",
+                originalPrice: "",
+                badge: "DISKON"
+            },
+            {
+                title: "Bundle Streaming",
+                description: "Netflix + Spotify + YouTube Premium hanya Rp 150.000! Hemat hingga 30%.",
+                currentPrice: "Rp 150.000",
+                originalPrice: "Rp 215.000",
+                badge: "BUNDLE"
+            }
+        ];
+        
+        // =========== PACKAGES DATA ===========
+        const packagesData = [
+            {
+                id: 1,
+                name: "Paket Data 10GB",
+                description: "Paket data 10GB untuk 30 hari dengan kecepatan maksimal. Cocok untuk streaming dan browsing.",
+                quota: "10 GB",
+                duration: "30 Hari",
+                price: 50000,
+                formattedPrice: "Rp 50.000",
+                icon: "wifi",
+                badge: "TERLARIS",
+                type: "internet",
+                category: "Paket Data"
+            },
+            {
+                id: 2,
+                name: "Pulsa 25.000",
+                description: "Pulsa reguler 25.000 untuk semua operator. Proses instan dan garansi 100%.",
+                quota: "25.000",
+                duration: "Tidak Terbatas",
+                price: 25000,
+                formattedPrice: "Rp 25.000",
+                icon: "mobile-alt",
+                badge: "INSTAN",
+                type: "pulsa",
+                category: "Pulsa"
+            },
+            {
+                id: 3,
+                name: "Netflix Basic",
+                description: "Langganan Netflix Basic 1 bulan. Tonton tanpa batas di 1 perangkat.",
+                quota: "1 Bulan",
+                duration: "30 Hari",
+                price: 54000,
+                formattedPrice: "Rp 54.000",
+                icon: "video",
+                badge: "STREAMING",
+                type: "streaming",
+                category: "Langganan"
+            },
+            {
+                id: 4,
+                name: "Paket Data 20GB",
+                description: "Paket data 20GB dengan bonus kuota malam 10GB. Unlimited sosial media.",
+                quota: "20 GB",
+                duration: "30 Hari",
+                price: 75000,
+                formattedPrice: "Rp 75.000",
+                icon: "wifi",
+                badge: "PREMIUM",
+                type: "internet",
+                category: "Paket Data"
+            },
+            {
+                id: 5,
+                name: "Spotify Premium",
+                description: "Langganan Spotify Premium 1 bulan. Dengarkan musik tanpa iklan.",
+                quota: "1 Bulan",
+                duration: "30 Hari",
+                price: 49990,
+                formattedPrice: "Rp 49.990",
+                icon: "music",
+                badge: "MUSIK",
+                type: "streaming",
+                category: "Langganan"
+            },
+            {
+                id: 6,
+                name: "Paket Data 5GB",
+                description: "Paket data 5GB untuk 7 hari. Cocok untuk penggunaan ringan.",
+                quota: "5 GB",
+                duration: "7 Hari",
+                price: 35000,
+                formattedPrice: "Rp 35.000",
+                icon: "wifi",
+                badge: "HEMAT",
+                type: "internet",
+                category: "Paket Data"
+            }
+        ];
+        
+        // =========== INITIALIZATION ===========
+        document.addEventListener('DOMContentLoaded', function() {
+            initPromoSlider();
+            initPackagesSlider();
+            initMobileMenu();
+            initSearch();
+            initMobileSearch();
+            loadUserData();
+            loadTransactionStats();
+            initPackageSwipe();
+            
+            // Set active sidebar menu item
+            setActiveMenu();
+        });
+        
+        // =========== SET ACTIVE MENU ===========
+        function setActiveMenu() {
+            const currentPage = window.location.pathname.split('/').pop();
+            const menuItems = document.querySelectorAll('.sidebar-menu-item');
+            
+            menuItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+        
+        // =========== MODERN SEARCH FUNCTIONALITY ===========
+        function initSearch() {
+            const searchBar = document.getElementById('searchBar');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!searchBar) return;
+            
+            // Search on input
+            searchBar.addEventListener('input', function() {
+                const query = this.value.toLowerCase().trim();
+                
+                if (query.length === 0) {
+                    searchResults.style.display = 'none';
+                    return;
+                }
+                
+                const filtered = searchProducts.filter(product => {
+                    const searchText = (product.name + ' ' + product.description + ' ' + product.category).toLowerCase();
+                    return searchText.includes(query);
+                });
+                
+                displaySearchResults(filtered);
+                searchResults.style.display = 'block';
+            });
+            
+            // Hide results when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+            
+            // Handle Enter key
+            searchBar.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    const query = this.value.trim();
+                    showNotification('info', 'Pencarian', `Mencari "${query}"...`);
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+        
+        function displaySearchResults(products) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (products.length === 0) {
+                searchResults.innerHTML = `
+                    <div class="search-result-item">
+                        <div class="search-result-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="search-result-content">
+                            <h4>Produk tidak ditemukan</h4>
+                            <p>Coba kata kunci lain</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            searchResults.innerHTML = products.map(product => `
+                <div class="search-result-item" onclick="window.location.href='${product.page}'">
+                    <div class="search-result-icon">
+                        <i class="fas fa-${product.icon}"></i>
+                    </div>
+                    <div class="search-result-content">
+                        <h4>${product.name}</h4>
+                        <p>${product.description}</p>
+                    </div>
+                    <div class="search-result-price">${product.price}</div>
+                </div>
+            `).join('');
+        }
+        
+        // =========== MOBILE SEARCH ===========
+        function initMobileSearch() {
+            const searchBtn = document.getElementById('mobileSearchBtn');
+            const searchContainer = document.getElementById('searchContainer');
+            
+            if (!searchBtn) return;
+            
+            searchBtn.addEventListener('click', function() {
+                searchContainer.classList.toggle('mobile-active');
+                if (searchContainer.classList.contains('mobile-active')) {
+                    document.getElementById('searchBar').focus();
+                }
+            });
+            
+            // Close mobile search when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchContainer.contains(event.target) && !searchBtn.contains(event.target)) {
+                    searchContainer.classList.remove('mobile-active');
+                }
+            });
+        }
+        
+        // =========== PROMO SLIDER ===========
+        let currentPromoIndex = 0;
+        
+        function initPromoSlider() {
+            const track = document.getElementById('promoSliderTrack');
+            const dots = document.getElementById('promoSliderDots');
+            
+            if (!track) return;
+            
+            track.innerHTML = promoData.map((promo, index) => `
+                <div class="promo-slide">
+                    <div class="promo-badge">${promo.badge}</div>
+                    <h3 class="promo-title">${promo.title}</h3>
+                    <p class="promo-description">${promo.description}</p>
+                    <div class="promo-price">
+                        <div class="current-price">${promo.currentPrice}</div>
+                        ${promo.originalPrice ? `<div class="original-price">${promo.originalPrice}</div>` : ''}
+                    </div>
+                    <button class="promo-btn" onclick="showNotification('success', 'Promo', 'Detail promo akan ditampilkan')">Lihat Detail</button>
+                </div>
+            `).join('');
+            
+            dots.innerHTML = promoData.map((_, index) => `
+                <div class="slider-dot ${index === 0 ? 'active' : ''}" onclick="goToPromo(${index})"></div>
+            `).join('');
+            
+            // Auto slide
+            setInterval(nextPromo, 5000);
+        }
+        
+        function goToPromo(index) {
+            currentPromoIndex = index;
+            updatePromoSlider();
+        }
+        
+        function prevPromo() {
+            currentPromoIndex = (currentPromoIndex - 1 + promoData.length) % promoData.length;
+            updatePromoSlider();
+        }
+        
+        function nextPromo() {
+            currentPromoIndex = (currentPromoIndex + 1) % promoData.length;
+            updatePromoSlider();
+        }
+        
+        function updatePromoSlider() {
+            const track = document.getElementById('promoSliderTrack');
+            const dots = document.querySelectorAll('#promoSliderDots .slider-dot');
+            
+            if (!track) return;
+            
+            track.style.transform = `translateX(-${currentPromoIndex * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentPromoIndex);
+            });
+        }
+        
+        // =========== PACKAGES SLIDER WITH SWIPE ===========
+        let packagePosition = 0;
+        let isDragging = false;
+        let startPosition = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID;
+        
+        function initPackagesSlider() {
+            const track = document.getElementById('packagesSliderTrack');
+            
+            if (!track) return;
+            
+            track.innerHTML = packagesData.map(pkg => `
+                <div class="package-card">
+                    <div class="package-badge">${pkg.badge}</div>
+                    <div class="package-icon">
+                        <i class="fas fa-${pkg.icon}"></i>
+                    </div>
+                    <h3 class="package-title">${pkg.name}</h3>
+                    <p class="package-description">${pkg.description}</p>
+                    <div class="package-details">
+                        <div class="package-quota">${pkg.quota}</div>
+                        <div class="package-duration">
+                            <i class="far fa-calendar"></i>
+                            <span>${pkg.duration}</span>
+                        </div>
+                    </div>
+                    <div class="package-price">${pkg.formattedPrice}</div>
+                    <button class="package-btn" onclick="buyPackage(${pkg.id})">
+                        <i class="fas fa-shopping-cart"></i>
+                        Beli Sekarang
+                    </button>
+                </div>
+            `).join('');
+            
+            // Initialize swipe functionality
+            initPackageSwipe();
+        }
+        
+        function initPackageSwipe() {
+            const track = document.getElementById('packagesSliderTrack');
+            if (!track) return;
+            
+            // Touch events for mobile
+            track.addEventListener('touchstart', touchStart);
+            track.addEventListener('touchmove', touchMove);
+            track.addEventListener('touchend', touchEnd);
+            
+            // Mouse events for desktop
+            track.addEventListener('mousedown', mouseDown);
+            track.addEventListener('mousemove', mouseMove);
+            track.addEventListener('mouseup', mouseUp);
+            track.addEventListener('mouseleave', mouseLeave);
+            
+            // Prevent image drag
+            track.addEventListener('dragstart', (e) => e.preventDefault());
+        }
+        
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+        
+        function touchStart(event) {
+            startPosition = getPositionX(event);
+            isDragging = true;
+            animationID = requestAnimationFrame(animation);
+        }
+        
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startPosition;
+            }
+        }
+        
+        function touchEnd() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            
+            const movedBy = currentTranslate - prevTranslate;
+            
+            // If moved enough, snap to next/prev
+            if (movedBy < -100) {
+                nextPackage();
+            } else if (movedBy > 100) {
+                prevPackage();
+            } else {
+                // Return to original position
+                setSliderPosition();
+            }
+            
+            prevTranslate = currentTranslate;
+        }
+        
+        function mouseDown(event) {
+            startPosition = getPositionX(event);
+            isDragging = true;
+            animationID = requestAnimationFrame(animation);
+        }
+        
+        function mouseMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startPosition;
+            }
+        }
+        
+        function mouseUp() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            
+            const movedBy = currentTranslate - prevTranslate;
+            
+            if (movedBy < -100) {
+                nextPackage();
+            } else if (movedBy > 100) {
+                prevPackage();
+            } else {
+                setSliderPosition();
+            }
+            
+            prevTranslate = currentTranslate;
+        }
+        
+        function mouseLeave() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            setSliderPosition();
+        }
+        
+        function animation() {
+            setSliderPosition();
+            if (isDragging) requestAnimationFrame(animation);
+        }
+        
+        function setSliderPosition() {
+            const track = document.getElementById('packagesSliderTrack');
+            if (track) {
+                track.style.transform = `translateX(${currentTranslate}px)`;
+            }
+        }
+        
+        function prevPackage() {
+            const track = document.getElementById('packagesSliderTrack');
+            if (!track) return;
+            
+            const cardWidth = 280 + 20; // card width + gap
+            const maxPosition = -((packagesData.length - 1) * cardWidth);
+            
+            packagePosition = Math.min(packagePosition + cardWidth, 0);
+            currentTranslate = packagePosition;
+            prevTranslate = packagePosition;
+            
+            track.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            track.style.transform = `translateX(${packagePosition}px)`;
+            
+            setTimeout(() => {
+                track.style.transition = '';
+            }, 500);
+        }
+        
+        function nextPackage() {
+            const track = document.getElementById('packagesSliderTrack');
+            if (!track) return;
+            
+            const cardWidth = 280 + 20; // card width + gap
+            const maxPosition = -((packagesData.length - 1) * cardWidth);
+            
+            packagePosition = Math.max(packagePosition - cardWidth, maxPosition);
+            currentTranslate = packagePosition;
+            prevTranslate = packagePosition;
+            
+            track.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            track.style.transform = `translateX(${packagePosition}px)`;
+            
+            setTimeout(() => {
+                track.style.transition = '';
+            }, 500);
+        }
+        
+        // =========== BUY PACKAGE FUNCTION ===========
+        function buyPackage(packageId) {
+            // Find the selected package
+            const selectedPackage = packagesData.find(pkg => pkg.id === packageId);
+            
+            if (!selectedPackage) {
+                showNotification('error', 'Error', 'Paket tidak ditemukan!');
+                return;
+            }
+            
+            // Check user balance
+            const userBalance = parseInt(localStorage.getItem('user_balance') || '125000');
+            
+            if (userBalance < selectedPackage.price) {
+                showNotification('error', 'Saldo Tidak Cukup', `Saldo Anda Rp ${userBalance.toLocaleString('id-ID')}. Silakan top up saldo terlebih dahulu.`);
+                return;
+            }
+            
+            // Save package data to localStorage for payment page
+            // Menyimpan data lengkap untuk payment.html
+            localStorage.setItem('selected_package_id', selectedPackage.id);
+            localStorage.setItem('selected_package_name', selectedPackage.name);
+            localStorage.setItem('selected_package_formatted_price', selectedPackage.formattedPrice);
+            localStorage.setItem('selected_package_price', selectedPackage.price);
+            localStorage.setItem('selected_package_quota', selectedPackage.quota);
+            localStorage.setItem('selected_package_duration', selectedPackage.duration);
+            localStorage.setItem('selected_package_type', selectedPackage.type);
+            localStorage.setItem('selected_package_category', selectedPackage.category);
+            localStorage.setItem('selected_package_description', selectedPackage.description);
+            localStorage.setItem('selected_package_icon', selectedPackage.icon);
+            
+            console.log('Paket yang dipilih:', selectedPackage.name);
+            console.log('Data disimpan ke localStorage');
+            
+            // Redirect to payment page
+            window.location.href = 'payment.html';
+        }
+        
+        // =========== MOBILE MENU ===========
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const closeBtn = document.getElementById('closeSidebarBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (!menuBtn) return;
+            
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeBtn.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+        
+        // =========== LOAD USER DATA ===========
+        function loadUserData() {
+            const userName = localStorage.getItem('user_name') || 'Pengguna';
+            const userPhone = localStorage.getItem('user_phone') || '081234567890';
+            const userBalance = localStorage.getItem('user_balance') || '125000';
+            const userPoints = localStorage.getItem('user_points') || '1250';
+            const userActiveDays = localStorage.getItem('user_active_days') || '30';
+            
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('sidebarUserName').textContent = userName;
+            
+            const formattedPhone = userPhone.replace(/(\d{4})(\d{4})(\d{0,4})/, '$1 •••• $3').trim();
+            document.getElementById('userPhone').textContent = formattedPhone;
+            document.getElementById('sidebarUserPhone').textContent = formattedPhone;
+            
+            const formattedBalance = 'Rp ' + parseInt(userBalance).toLocaleString('id-ID');
+            document.getElementById('userBalance').textContent = formattedBalance;
+            document.getElementById('mainBalance').textContent = formattedBalance;
+            
+            document.getElementById('userPoints').textContent = userPoints;
+            document.getElementById('userActiveDays').textContent = userActiveDays;
+        }
+        
+        // =========== LOAD TRANSACTION STATISTICS ===========
+        function loadTransactionStats() {
+            // Load from localStorage or use defaults
+            const transaksiCount = localStorage.getItem('transaction_count') || '12';
+            const totalSpent = localStorage.getItem('total_spent') || '245000';
+            
+            document.getElementById('transaksiCount').textContent = transaksiCount;
+            document.getElementById('totalSpent').textContent = 'Rp ' + (parseInt(totalSpent) / 1000).toFixed(0) + 'K';
+        }
+        
+        // =========== ACTION FUNCTIONS ===========
+        function topUp() {
+            window.location.href = 'topup.html';
+        }
+        
+        function transferBalance() {
+            // Fitur dihapus, tidak melakukan apa-apa
+        }
+        
+        function logout() {
+            showNotification('success', 'Logout', 'Berhasil logout...');
+            setTimeout(() => {
+                // Clear session and redirect
+                localStorage.removeItem('isLoggedIn');
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+        
+        // =========== NOTIFICATION ===========
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const titleEl = document.getElementById('notificationTitle');
+            const messageEl = document.getElementById('notificationMessage');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #D4AF37, #B8860B)';
+                notification.style.color = '#000000';
+            } else if (type === 'info') {
+                notification.style.background = 'linear-gradient(135deg, #2D2D2D, #3a3a3a)';
+                notification.style.color = '#FFFFFF';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #FF6B6B, #EE5A52)';
+                notification.style.color = '#FFFFFF';
+            }
+            
+            notification.style.display = 'flex';
+            
+            // Auto hide
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // =========== RESPONSIVE ADJUSTMENTS ===========
+        window.addEventListener('resize', function() {
+            // Reset package slider position on resize
+            packagePosition = 0;
+            currentTranslate = 0;
+            prevTranslate = 0;
+            
+            const track = document.getElementById('packagesSliderTrack');
+            if (track) {
+                track.style.transform = 'translateX(0)';
+            }
+        });
+    </script>
+</body>
+</html>

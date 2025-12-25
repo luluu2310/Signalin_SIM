@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Pembayaran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="transactions.js"></script>
+    <style>
+        :root {
+            --white: #ffffff;
+            --black: #000000;
+            --gray-light: #f8f9fa;
+            --gray-medium: #e9ecef;
+            --gray-dark: #495057;
+            --gray-darker: #212529;
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --gold-transparent: rgba(212, 175, 55, 0.1);
+            --accent-green: #4CAF50;
+            --accent-red: #f44336;
+            --accent-blue: #2196F3;
+            --text-main: #1A1A1A;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--black) 0%, var(--gray-darker) 100%);
+            color: var(--white);
+            min-height: 100vh;
+        }
+        
+        /* Background pattern seperti home page */
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                linear-gradient(45deg, var(--gray-darker) 25%, transparent 25%),
+                linear-gradient(-45deg, var(--gray-darker) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, var(--gray-darker) 75%),
+                linear-gradient(-45deg, transparent 75%, var(--gray-darker) 75%);
+            background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px, 20px 20px, 20px 20px;
+            background-position: 0 0, 0 0, 0 0, 0 10px, 10px -10px, -10px 0px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            background: var(--black);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            min-height: 80px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--gold-primary);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            text-decoration: none;
+            color: var(--white);
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            background-color: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            background: var(--gold-primary);
+            color: var(--black);
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .navbar-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: var(--white);
+            letter-spacing: 1px;
+            font-weight: 900;
+            margin: 0 16px;
+            position: relative;
+        }
+        
+        .navbar-brand .signal {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        .navbar-brand .dot {
+            color: var(--gold-primary);
+            display: inline-block;
+            animation: pulseDot 2s infinite;
+            text-shadow: 0 0 15px var(--gold-light);
+        }
+        
+        .navbar-brand .in {
+            color: var(--white);
+            display: inline-block;
+        }
+        
+        @keyframes pulseDot {
+            0%, 100% { 
+                transform: scale(1); 
+                opacity: 1; 
+                text-shadow: 0 0 15px var(--gold-light);
+            }
+            50% { 
+                transform: scale(1.1); 
+                opacity: 0.8; 
+                text-shadow: 0 0 25px var(--gold-primary);
+            }
+        }
+        
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* CHECKOUT STEPS */
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.3);
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--black);
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 700;
+            color: var(--gray-medium);
+            transition: all var(--transition-normal);
+        }
+        
+        .step.active .step-number {
+            background: var(--gold-primary);
+            border-color: var(--gold-primary);
+            color: var(--black);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-number {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: var(--white);
+        }
+        
+        .step-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray-medium);
+        }
+        
+        .step.active .step-label {
+            color: var(--gold-light);
+        }
+        
+        .step.completed .step-label {
+            color: var(--accent-green);
+        }
+        
+        /* PAYMENT CONTENT */
+        .payment-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .payment-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ORDER SUMMARY */
+        .order-summary-card {
+            background: rgba(33, 37, 41, 0.8);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-dark);
+            margin-bottom: 30px;
+            position: sticky;
+            top: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.5);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            color: var(--gray-medium);
+            font-size: 0.95rem;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(212, 175, 55, 0.5);
+        }
+        
+        .total-label {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .total-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* PAYMENT METHODS */
+        .payment-methods {
+            background: rgba(33, 37, 41, 0.8);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-dark);
+            margin-bottom: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .method-card {
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .method-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+            background-color: var(--gold-transparent);
+        }
+        
+        .method-card.selected {
+            border-color: var(--gold-primary);
+            background: var(--gold-transparent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .method-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--gold-primary);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all var(--transition-normal);
+        }
+        
+        .method-card:hover .method-icon,
+        .method-card.selected .method-icon {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: var(--black);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--gold-primary);
+        }
+        
+        .method-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--white);
+        }
+        
+        /* PAYMENT DETAILS */
+        .payment-details {
+            background: rgba(33, 37, 41, 0.8);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-dark);
+            margin-bottom: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .payment-form {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--gray-medium);
+        }
+        
+        .form-input {
+            padding: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--white);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            background-color: var(--gold-transparent);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: var(--gray-dark);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        /* VIRTUAL ACCOUNT */
+        .virtual-account {
+            background: rgba(33, 37, 41, 0.8);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-dark);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .va-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--gold-primary);
+            letter-spacing: 2px;
+            margin: 20px 0;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--border-radius);
+            font-family: monospace;
+            border: 2px solid var(--gold-primary);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            display: inline-block;
+        }
+        
+        .va-expiry {
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .va-instruction {
+            color: var(--gray-medium);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* PAYMENT BUTTONS */
+        .payment-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 18px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--white);
+            border: 2px solid var(--gold-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gold-primary);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            color: var(--black);
+            border: 2px solid var(--gold-primary);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+        }
+        
+        .btn-success {
+            background: var(--accent-green);
+            color: var(--white);
+            border: 2px solid var(--accent-green);
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(212, 175, 55, 0.1);
+            border-top-color: var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            color: var(--gold-light);
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* SUCCESS MESSAGE */
+        .success-message {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(33, 37, 41, 0.9);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-dark);
+            border: 2px solid var(--gold-primary);
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        .success-icon {
+            font-size: 6rem;
+            color: var(--accent-green);
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+            animation: pulseSuccess 2s infinite;
+        }
+        
+        @keyframes pulseSuccess {
+            0%, 100% { 
+                transform: scale(1); 
+                text-shadow: 0 0 30px rgba(76, 175, 80, 0.5);
+            }
+            50% { 
+                transform: scale(1.1); 
+                text-shadow: 0 0 50px rgba(76, 175, 80, 0.8);
+            }
+        }
+        
+        .success-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .success-text {
+            color: var(--gray-medium);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* TRANSACTION HISTORY */
+        .transaction-history {
+            background: rgba(33, 37, 41, 0.8);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-dark);
+            margin-top: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+            transition: all var(--transition-fast);
+        }
+        
+        .transaction-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: var(--border-radius);
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+        
+        .transaction-date {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+        
+        .transaction-amount {
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+        
+        .transaction-success {
+            background: linear-gradient(135deg, var(--accent-green), #45a049);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .transaction-pending {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .transaction-failed {
+            color: var(--accent-red);
+        }
+        
+        /* BALANCE PAYMENT DETAILS */
+        .balance-payment-info {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid var(--gold-primary);
+        }
+        
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .balance-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        /* BANK ACCOUNT DETAILS */
+        .bank-details-container {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid var(--gold-primary);
+        }
+        
+        .bank-details-container h4 {
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .bank-details-container p {
+            margin-bottom: 12px;
+            color: var(--gray-medium);
+            font-size: 1rem;
+        }
+        
+        .bank-details-container strong {
+            color: var(--white);
+        }
+        
+        /* QRIS BOX */
+        .qris-box {
+            width: 250px;
+            height: 250px;
+            margin: 30px auto;
+            background: var(--black);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--gold-primary);
+            border: 3px solid var(--gold-primary);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .qris-box::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 20px,
+                rgba(212, 175, 55, 0.1) 20px,
+                rgba(212, 175, 55, 0.1) 40px
+            );
+            animation: qrisAnimation 10s linear infinite;
+        }
+        
+        @keyframes qrisAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .qris-box i {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* E-WALLET SELECTION */
+        .ewallet-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .ewallet-card {
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .ewallet-card:hover {
+            border-color: var(--gold-primary);
+            background-color: var(--gold-transparent);
+        }
+        
+        .ewallet-card.selected {
+            border-color: var(--gold-primary);
+            background-color: var(--gold-transparent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* PIN INPUT MODAL */
+        .pin-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .pin-modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .pin-modal {
+            background: rgba(33, 37, 41, 0.95);
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: var(--shadow-dark);
+            border: 3px solid var(--gold-primary);
+            text-align: center;
+            backdrop-filter: blur(20px);
+        }
+        
+        .pin-modal-header {
+            margin-bottom: 30px;
+        }
+        
+        .pin-modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold-primary);
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .pin-modal-subtitle {
+            color: var(--gray-medium);
+            font-size: 1rem;
+        }
+        
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .pin-dot {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.2);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            transition: all var(--transition-fast);
+        }
+        
+        .pin-dot.filled {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            border-color: var(--gold-primary);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .pin-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 40px 0 30px;
+        }
+        
+        .pin-key {
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+        .pin-key:hover {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            color: var(--black);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+            border-color: var(--gold-primary);
+        }
+        
+        .pin-key:active {
+            transform: translateY(0);
+        }
+        
+        .pin-key-backspace {
+            font-size: 1.8rem;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-primary);
+            border-color: var(--gold-primary);
+        }
+        
+        .pin-key-clear {
+            font-size: 1.1rem;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-primary);
+            border-color: var(--gold-primary);
+            grid-column: span 2;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 180px;
+            height: 80px;
+        }
+        
+        .pin-modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .pin-modal-btn {
+            flex: 1;
+            padding: 18px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 2px solid transparent;
+            font-size: 1rem;
+        }
+        
+        .pin-modal-btn.cancel {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--white);
+            border-color: var(--gold-primary);
+        }
+        
+        .pin-modal-btn.cancel:hover {
+            background: var(--gold-primary);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .pin-modal-btn.confirm {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            color: var(--black);
+            border-color: var(--gold-primary);
+        }
+        
+        .pin-modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+        
+        .pin-modal-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* ERROR MESSAGE */
+        .error-message {
+            color: var(--accent-red);
+            font-size: 0.95rem;
+            margin-top: 10px;
+            min-height: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        /* SUCCESS NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-dark);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .notification.success {
+            background: rgba(76, 175, 80, 0.9);
+            color: var(--white);
+            border: 1px solid #45a049;
+        }
+        
+        .notification.error {
+            background: rgba(244, 67, 54, 0.9);
+            color: var(--white);
+            border: 1px solid #d32f2f;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .methods-grid,
+            .ewallet-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .total-amount {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-steps {
+                flex-direction: column;
+                gap: 25px;
+                align-items: flex-start;
+            }
+            
+            .checkout-steps::before {
+                display: none;
+            }
+            
+            .step {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                text-align: left;
+                width: 100%;
+            }
+            
+            .step-number {
+                margin: 0;
+                width: 35px;
+                height: 35px;
+            }
+            
+            .methods-grid,
+            .ewallet-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-actions {
+                flex-direction: column;
+            }
+            
+            .va-number {
+                font-size: 1.5rem;
+                padding: 20px;
+            }
+            
+            .qris-box {
+                width: 200px;
+                height: 200px;
+                font-size: 3rem;
+            }
+            
+            .pin-key {
+                width: 65px;
+                height: 65px;
+                font-size: 1.6rem;
+            }
+            
+            .pin-key-clear {
+                max-width: 150px;
+                height: 65px;
+            }
+            
+            .pin-modal {
+                padding: 30px;
+            }
+            
+            .success-message {
+                padding: 40px 20px;
+            }
+            
+            .success-icon {
+                font-size: 4rem;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .pin-key {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+            
+            .pin-key-clear {
+                max-width: 130px;
+                height: 55px;
+                font-size: 0.95rem;
+            }
+            
+            .va-number {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+            
+            .total-amount {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="home.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+        </div>
+        <div class="navbar-brand">
+            <span class="signal">SIGNAL</span>
+            <span class="dot">.</span>
+            <span class="in">IN</span>
+        </div>
+        <div></div>
+    </nav>
+    
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div>
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">Memproses pembayaran...</div>
+        </div>
+    </div>
+    
+    <!-- PIN INPUT MODAL -->
+    <div class="pin-modal-overlay" id="pinModalOverlay">
+        <div class="pin-modal">
+            <div class="pin-modal-header">
+                <h3 class="pin-modal-title">Masukkan PIN Transaksi</h3>
+                <p class="pin-modal-subtitle">Masukkan PIN 6 digit untuk konfirmasi pembayaran</p>
+                <p class="pin-modal-subtitle" style="color: var(--gold-light); font-weight: 500; margin-top: 10px;">
+                    <i class="fas fa-info-circle"></i> Semua PIN akan diterima
+                </p>
+            </div>
+            
+            <div class="pin-display">
+                <div class="pin-dot" id="pinDot1"></div>
+                <div class="pin-dot" id="pinDot2"></div>
+                <div class="pin-dot" id="pinDot3"></div>
+                <div class="pin-dot" id="pinDot4"></div>
+                <div class="pin-dot" id="pinDot5"></div>
+                <div class="pin-dot" id="pinDot6"></div>
+            </div>
+            
+            <div class="error-message" id="pinErrorMessage"></div>
+            
+            <div class="pin-keypad">
+                <button class="pin-key" data-key="1">1</button>
+                <button class="pin-key" data-key="2">2</button>
+                <button class="pin-key" data-key="3">3</button>
+                <button class="pin-key" data-key="4">4</button>
+                <button class="pin-key" data-key="5">5</button>
+                <button class="pin-key" data-key="6">6</button>
+                <button class="pin-key" data-key="7">7</button>
+                <button class="pin-key" data-key="8">8</button>
+                <button class="pin-key" data-key="9">9</button>
+                <button class="pin-key pin-key-clear" id="pinClear">Hapus Semua</button>
+                <button class="pin-key" data-key="0">0</button>
+                <button class="pin-key pin-key-backspace" id="pinBackspace">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+            
+            <div class="pin-modal-actions">
+                <button class="pin-modal-btn cancel" id="pinCancel">Batal</button>
+                <button class="pin-modal-btn confirm" id="pinConfirm" disabled>Konfirmasi Pembayaran</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- CHECKOUT STEPS -->
+        <div class="checkout-steps">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">Pilih Metode</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">Detail Pembayaran</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">Konfirmasi</div>
+            </div>
+        </div>
+        
+        <!-- STEP 1: SELECT PAYMENT METHOD -->
+        <div class="payment-content active" id="step1Content">
+            <div class="order-summary-card">
+                <h3 class="summary-title">Ringkasan Pesanan</h3>
+                <div class="summary-item">
+                    <span class="summary-label">Paket</span>
+                    <span class="summary-value" id="packageName">Paket Data Merah</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Durasi</span>
+                    <span class="summary-value" id="packageDuration">30 Hari</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Kuota</span>
+                    <span class="summary-value" id="packageQuota">10 GB Utama + 5 GB Malam</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Harga</span>
+                    <span class="summary-value" id="packagePrice">Rp 50.000</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Diskon</span>
+                    <span class="summary-value" id="packageDiscount">-Rp 0</span>
+                </div>
+                <div class="summary-total">
+                    <span class="total-label">Total Pembayaran</span>
+                    <span class="total-amount" id="totalAmount">Rp 50.000</span>
+                </div>
+            </div>
+            
+            <div class="payment-methods">
+                <h3 class="summary-title">Pilih Metode Pembayaran</h3>
+                <div class="methods-grid">
+                    <div class="method-card" data-method="balance">
+                        <div class="method-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="method-name">Saldo Signalin</div>
+                    </div>
+                    <div class="method-card" data-method="virtual_account">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">Virtual Account</div>
+                    </div>
+                    <div class="method-card" data-method="ewallet">
+                        <div class="method-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="method-name">E-Wallet</div>
+                    </div>
+                    <div class="method-card" data-method="qris">
+                        <div class="method-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="method-name">QRIS</div>
+                    </div>
+                    <div class="method-card" data-method="credit_card">
+                        <div class="method-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="method-name">Kartu Kredit</div>
+                    </div>
+                    <div class="method-card" data-method="bank_transfer">
+                        <div class="method-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="method-name">Transfer Bank</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-actions">
+                <button class="btn btn-secondary" onclick="window.location.href='home.html'">
+                    <i class="fas fa-times"></i> Batalkan
+                </button>
+                <button class="btn btn-primary" id="nextStep1">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- STEP 2: PAYMENT DETAILS -->
+        <div class="payment-content" id="step2Content">
+            <div class="order-summary-card">
+                <h3 class="summary-title">Ringkasan Pembayaran</h3>
+                <div class="summary-item">
+                    <span class="summary-label">Metode</span>
+                    <span class="summary-value" id="selectedMethod">-</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Paket</span>
+                    <span class="summary-value" id="summaryPackage">-</span>
+                </div>
+                <div class="summary-total">
+                    <span class="total-label">Total</span>
+                    <span class="total-amount" id="summaryTotal">-</span>
+                </div>
+            </div>
+            
+            <!-- BALANCE PAYMENT -->
+            <div class="payment-details" id="balanceDetails">
+                <h3 class="summary-title">Bayar dengan Saldo</h3>
+                <div class="balance-payment-info">
+                    <div class="balance-item">
+                        <span class="summary-label">Saldo Tersedia</span>
+                        <span class="summary-value" id="userBalance">Rp 125.000</span>
+                    </div>
+                    <div class="balance-item">
+                        <span class="summary-label">Saldo Setelah Pembayaran</span>
+                        <span class="summary-value" id="balanceAfter">Rp 75.000</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PIN Transaksi</label>
+                    <button class="btn btn-primary" id="enterPinBtn" style="padding: 18px; font-size: 1.1rem;">
+                        <i class="fas fa-key"></i> Masukkan PIN Transaksi
+                    </button>
+                    <input type="hidden" id="transactionPin" value="">
+                </div>
+            </div>
+            
+            <!-- VIRTUAL ACCOUNT -->
+            <div class="virtual-account" id="vaDetails">
+                <h3 class="summary-title">Virtual Account</h3>
+                <p class="va-instruction">Silakan transfer ke Virtual Account berikut:</p>
+                <div class="va-number" id="vaNumber">8088801234567890</div>
+                <p class="va-expiry">Berlaku hingga: <span id="vaExpiry">25/12/2023 23:59</span></p>
+                <p class="va-instruction">Transfer tepat sesuai jumlah untuk proses otomatis. Paket akan aktif otomatis setelah pembayaran terverifikasi.</p>
+            </div>
+            
+            <!-- CREDIT CARD FORM -->
+            <div class="payment-details" id="creditCardDetails">
+                <h3 class="summary-title">Kartu Kredit</h3>
+                <div class="payment-form">
+                    <div class="form-group">
+                        <label class="form-label">Nomor Kartu</label>
+                        <input type="text" class="form-input" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Masa Berlaku</label>
+                            <input type="text" class="form-input" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">CVV</label>
+                            <input type="password" class="form-input" id="cardCvv" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nama di Kartu</label>
+                        <input type="text" class="form-input" id="cardName" placeholder="Nama Pemilik Kartu">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- E-WALLET -->
+            <div class="payment-methods" id="ewalletDetails">
+                <h3 class="summary-title">Pilih E-Wallet</h3>
+                <div class="ewallet-methods">
+                    <div class="ewallet-card" data-ewallet="gopay">
+                        <div class="method-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="method-name">GoPay</div>
+                    </div>
+                    <div class="ewallet-card" data-ewallet="ovo">
+                        <div class="method-icon">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <div class="method-name">OVO</div>
+                    </div>
+                    <div class="ewallet-card" data-ewallet="dana">
+                        <div class="method-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="method-name">DANA</div>
+                    </div>
+                    <div class="ewallet-card" data-ewallet="shopeepay">
+                        <div class="method-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="method-name">ShopeePay</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- QRIS -->
+            <div class="virtual-account" id="qrisDetails">
+                <h3 class="summary-title">QRIS</h3>
+                <div class="qris-box">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <p class="va-instruction">Scan QR code di atas dengan aplikasi pembayaran Anda</p>
+                <p class="va-expiry">Berlaku hingga: <span>25/12/2023 23:59</span></p>
+            </div>
+            
+            <!-- BANK TRANSFER -->
+            <div class="payment-details" id="bankTransferDetails">
+                <h3 class="summary-title">Transfer Bank</h3>
+                <div class="methods-grid">
+                    <div class="method-card" data-bank="bca">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">BCA</div>
+                    </div>
+                    <div class="method-card" data-bank="mandiri">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">Mandiri</div>
+                    </div>
+                    <div class="method-card" data-bank="bni">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">BNI</div>
+                    </div>
+                    <div class="method-card" data-bank="bri">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">BRI</div>
+                    </div>
+                </div>
+                <div id="bankAccountDetails" style="display: none;" class="bank-details-container">
+                    <h4>Rekening Tujuan</h4>
+                    <p><strong>Bank:</strong> <span id="bankName">-</span></p>
+                    <p><strong>Nomor Rekening:</strong> <span id="bankAccount">-</span></p>
+                    <p><strong>Atas Nama:</strong> PT Signalin Digital</p>
+                    <p><strong>Jumlah Transfer:</strong> <span id="bankAmount">-</span></p>
+                </div>
+            </div>
+            
+            <div class="payment-actions">
+                <button class="btn btn-secondary" id="backStep2">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </button>
+                <button class="btn btn-primary" id="nextStep2">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- STEP 3: CONFIRMATION -->
+        <div class="payment-content" id="step3Content">
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="success-title">Pembayaran Berhasil!</h2>
+                <p class="success-text" id="successText">Paket Anda akan segera diaktifkan dalam beberapa menit.</p>
+                <div class="summary-item" style="max-width: 500px; margin: 25px auto; padding: 20px; background: rgba(0,0,0,0.3); border-radius: var(--border-radius);">
+                    <span class="summary-label" style="font-size: 1.1rem;">Kode Transaksi</span>
+                    <span class="summary-value" id="transactionCode" style="font-size: 1.3rem; color: var(--gold-light); font-weight: 700;">SGN20231225001</span>
+                </div>
+                <div class="payment-actions" style="max-width: 500px; margin: 40px auto;">
+                    <button class="btn btn-success" onclick="window.location.href='home.html'">
+                        <i class="fas fa-home"></i> Kembali ke Home
+                    </button>
+                </div>
+            </div>
+            
+            <!-- TRANSACTION HISTORY -->
+            <div class="transaction-history" id="transactionHistory">
+                <h3 class="summary-title">Riwayat Transaksi Terakhir</h3>
+                <div id="historyList">
+                    <!-- Transactions will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== GLOBAL VARIABLES ====================
+        let paymentState = {
+            package: {},
+            paymentMethod: null,
+            ewalletType: null,
+            bankType: null,
+            transactionData: null,
+            pinInput: ''
+        };
+        
+        // ==================== PACKAGE DATA ====================
+        const packageData = {
+            'merah': {
+                name: 'Paket Data Merah',
+                duration: '30 Hari',
+                quota: '10 GB Utama + 5 GB Malam',
+                price: 50000,
+                originalPrice: 50000,
+                discount: 0,
+                features: ['Akses Streaming', '24/7 Support']
+            },
+            'emas': {
+                name: 'Paket Data Emas',
+                duration: '30 Hari',
+                quota: '20 GB Utama + 10 GB Malam',
+                price: 75000,
+                originalPrice: 75000,
+                discount: 0,
+                features: ['Akses Streaming & Gaming', 'Priority Support']
+            },
+            'silver': {
+                name: 'Paket Data Silver',
+                duration: '1 Hari',
+                quota: '2 GB Utama + 1 GB Malam',
+                price: 15000,
+                originalPrice: 15000,
+                discount: 0,
+                features: ['Internet Standar']
+            }
+        };
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load package from URL parameter or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const packageName = urlParams.get('name');
+            const packagePrice = urlParams.get('price');
+            const packageId = urlParams.get('id');
+            const packageType = urlParams.get('type');
+            
+            // Jika ada data dari URL, gunakan itu
+            if (packageName && packagePrice) {
+                const selectedPackageData = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
+                
+                paymentState.package = {
+                    name: decodeURIComponent(packageName),
+                    price: parseInt(packagePrice),
+                    type: packageType || selectedPackageData.type || 'package',
+                    id: packageId || selectedPackageData.id || ''
+                };
+            } else {
+                // Fallback ke localStorage jika tidak ada URL parameter
+                const selectedPackageData = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
+                paymentState.package = selectedPackageData.price ? {
+                    name: selectedPackageData.name || 'Paket Data Merah',
+                    price: selectedPackageData.price || 50000,
+                    type: selectedPackageData.type || 'package',
+                    id: selectedPackageData.id || ''
+                } : packageData['merah'];
+            }
+            
+            // Set package data untuk order summary
+            paymentState.package.originalPrice = paymentState.package.price;
+            paymentState.package.discount = 0;
+            paymentState.package.duration = '30 Hari';
+            paymentState.package.quota = 'Paket Layanan';
+            paymentState.package.features = ['Proses cepat', 'Aman dan terpercaya'];
+            
+            // Load package data
+            updateOrderSummary();
+            
+            // Load user data
+            loadUserData();
+            
+            // Initialize event listeners
+            initializeEventListeners();
+            
+            // Load transaction history
+            loadTransactionHistory();
+            
+            // Initialize PIN modal
+            initializePinModal();
+        });
+        
+        function loadUserData() {
+            // Load user balance from localStorage
+            const userBalance = localStorage.getItem('user_balance') || 125000;
+            document.getElementById('userBalance').textContent = `Rp ${parseInt(userBalance).toLocaleString('id-ID')}`;
+            
+            // Calculate balance after payment
+            const balanceAfter = parseInt(userBalance) - paymentState.package.price;
+            document.getElementById('balanceAfter').textContent = `Rp ${balanceAfter.toLocaleString('id-ID')}`;
+            
+            // Update user info in localStorage (for demo)
+            if (!localStorage.getItem('user_balance')) {
+                localStorage.setItem('user_balance', userBalance);
+            }
+        }
+        
+        // ==================== ORDER SUMMARY ====================
+        function updateOrderSummary() {
+            const pkg = paymentState.package;
+            
+            document.getElementById('packageName').textContent = pkg.name;
+            document.getElementById('packageDuration').textContent = pkg.duration;
+            document.getElementById('packageQuota').textContent = pkg.quota;
+            document.getElementById('packagePrice').textContent = `Rp ${pkg.price.toLocaleString('id-ID')}`;
+            document.getElementById('packageDiscount').textContent = `-Rp ${pkg.discount.toLocaleString('id-ID')}`;
+            document.getElementById('totalAmount').textContent = `Rp ${pkg.price.toLocaleString('id-ID')}`;
+            
+            // Update summary for step 2
+            document.getElementById('summaryPackage').textContent = pkg.name;
+            document.getElementById('summaryTotal').textContent = `Rp ${pkg.price.toLocaleString('id-ID')}`;
+        }
+        
+        // ==================== PIN MODAL FUNCTIONS ====================
+        function initializePinModal() {
+            // Pin input buttons
+            const pinKeys = document.querySelectorAll('.pin-key[data-key]');
+            pinKeys.forEach(key => {
+                key.addEventListener('click', function() {
+                    if (paymentState.pinInput.length < 6) {
+                        paymentState.pinInput += this.getAttribute('data-key');
+                        updatePinDisplay();
+                    }
+                });
+            });
+            
+            // Clear button
+            document.getElementById('pinClear').addEventListener('click', function() {
+                paymentState.pinInput = '';
+                updatePinDisplay();
+            });
+            
+            // Backspace button
+            document.getElementById('pinBackspace').addEventListener('click', function() {
+                if (paymentState.pinInput.length > 0) {
+                    paymentState.pinInput = paymentState.pinInput.slice(0, -1);
+                    updatePinDisplay();
+                }
+            });
+            
+            // Cancel button
+            document.getElementById('pinCancel').addEventListener('click', function() {
+                closePinModal();
+            });
+            
+            // Confirm button
+            document.getElementById('pinConfirm').addEventListener('click', function() {
+                // SEMUA PIN DITERIMA - Tidak ada validasi
+                document.getElementById('transactionPin').value = paymentState.pinInput;
+                closePinModal();
+                
+                // Show success message
+                showNotification('PIN berhasil diverifikasi', 'success');
+            });
+            
+            // Enter PIN button in balance payment
+            document.getElementById('enterPinBtn').addEventListener('click', function() {
+                openPinModal();
+            });
+        }
+        
+        function openPinModal() {
+            // Reset PIN input
+            paymentState.pinInput = '';
+            updatePinDisplay();
+            
+            // Hide error message
+            document.getElementById('pinErrorMessage').textContent = '';
+            
+            // Disable confirm button initially
+            document.getElementById('pinConfirm').disabled = true;
+            
+            // Show modal
+            document.getElementById('pinModalOverlay').classList.add('active');
+            
+            // Focus on first pin dot (for accessibility)
+            setTimeout(() => {
+                document.querySelector('.pin-key[data-key="1"]').focus();
+            }, 100);
+        }
+        
+        function closePinModal() {
+            document.getElementById('pinModalOverlay').classList.remove('active');
+        }
+        
+        function updatePinDisplay() {
+            // Update dot display
+            for (let i = 1; i <= 6; i++) {
+                const dot = document.getElementById(`pinDot${i}`);
+                if (i <= paymentState.pinInput.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            }
+            
+            // Update confirm button state
+            document.getElementById('pinConfirm').disabled = paymentState.pinInput.length !== 6;
+            
+            // Hide error message when user starts typing
+            if (paymentState.pinInput.length > 0) {
+                document.getElementById('pinErrorMessage').textContent = '';
+            }
+        }
+        
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: ${type === 'success' ? 'rgba(76, 175, 80, 0.9)' : 'rgba(244, 67, 54, 0.9)'};
+                color: white;
+                padding: 20px 30px;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow-dark);
+                z-index: 4000;
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                animation: slideIn 0.3s ease;
+                max-width: 400px;
+                font-weight: 600;
+                backdrop-filter: blur(10px);
+                border: 1px solid ${type === 'success' ? '#45a049' : '#d32f2f'};
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Add keyframe animations for notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // ==================== PAYMENT METHODS ====================
+        function initializeEventListeners() {
+            // Payment method selection
+            const methodCards = document.querySelectorAll('.method-card[data-method]');
+            methodCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    methodCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Set payment method
+                    paymentState.paymentMethod = this.getAttribute('data-method');
+                    document.getElementById('selectedMethod').textContent = 
+                        getMethodName(paymentState.paymentMethod);
+                    
+                    // Show/hide next button based on selection
+                    document.getElementById('nextStep1').disabled = false;
+                });
+            });
+            
+            // Pre-select "Saldo Signalin" by default
+            const balanceCard = document.querySelector('.method-card[data-method="balance"]');
+            if (balanceCard) {
+                balanceCard.click();
+            }
+            
+            // E-wallet selection
+            const ewalletCards = document.querySelectorAll('.ewallet-card[data-ewallet]');
+            ewalletCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    ewalletCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    paymentState.ewalletType = this.getAttribute('data-ewallet');
+                });
+            });
+            
+            // Bank selection
+            const bankCards = document.querySelectorAll('.method-card[data-bank]');
+            bankCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    bankCards.forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    paymentState.bankType = this.getAttribute('data-bank');
+                    
+                    // Show bank account details
+                    showBankDetails(paymentState.bankType);
+                });
+            });
+            
+            // Step navigation
+            document.getElementById('nextStep1').addEventListener('click', nextStep1);
+            document.getElementById('backStep2').addEventListener('click', backStep2);
+            document.getElementById('nextStep2').addEventListener('click', processPayment);
+        }
+        
+        function getMethodName(method) {
+            const methods = {
+                'balance': 'Saldo Signalin',
+                'virtual_account': 'Virtual Account',
+                'ewallet': 'E-Wallet',
+                'qris': 'QRIS',
+                'credit_card': 'Kartu Kredit',
+                'bank_transfer': 'Transfer Bank'
+            };
+            return methods[method] || '-';
+        }
+        
+        function showBankDetails(bankType) {
+            const bankData = {
+                'bca': { name: 'BCA', account: '1234567890' },
+                'mandiri': { name: 'Mandiri', account: '0987654321' },
+                'bni': { name: 'BNI', account: '1122334455' },
+                'bri': { name: 'BRI', account: '5566778899' }
+            };
+            
+            if (bankData[bankType]) {
+                document.getElementById('bankName').textContent = bankData[bankType].name;
+                document.getElementById('bankAccount').textContent = bankData[bankType].account;
+                document.getElementById('bankAmount').textContent = `Rp ${paymentState.package.price.toLocaleString('id-ID')}`;
+                document.getElementById('bankAccountDetails').style.display = 'block';
+            }
+        }
+        
+        // ==================== STEP NAVIGATION ====================
+        function nextStep1() {
+            if (!paymentState.paymentMethod) {
+                showNotification('Silakan pilih metode pembayaran terlebih dahulu', 'error');
+                return;
+            }
+            
+            // Jika memilih metode Saldo Signalin, cek saldo terlebih dahulu
+            if (paymentState.paymentMethod === 'balance') {
+                const userBalance = parseInt(localStorage.getItem('user_balance') || 0);
+                if (userBalance < paymentState.package.price) {
+                    showNotification(`Saldo Anda tidak cukup. Saldo Anda: Rp ${userBalance.toLocaleString('id-ID')}`, 'error');
+                    return;
+                }
+            }
+            
+            // Update steps
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step2').classList.add('active');
+            
+            // Show/hide content
+            document.getElementById('step1Content').classList.remove('active');
+            document.getElementById('step2Content').classList.add('active');
+            
+            // Show appropriate payment details
+            showPaymentDetails();
+        }
+        
+        function backStep2() {
+            // Update steps
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step1').classList.remove('completed');
+            
+            // Show/hide content
+            document.getElementById('step2Content').classList.remove('active');
+            document.getElementById('step1Content').classList.add('active');
+        }
+        
+        function showPaymentDetails() {
+            // Hide all payment detail sections first
+            const sections = [
+                'balanceDetails',
+                'vaDetails',
+                'creditCardDetails',
+                'ewalletDetails',
+                'qrisDetails',
+                'bankTransferDetails'
+            ];
+            
+            sections.forEach(section => {
+                document.getElementById(section).style.display = 'none';
+            });
+            
+            // Show selected payment method section
+            switch(paymentState.paymentMethod) {
+                case 'balance':
+                    document.getElementById('balanceDetails').style.display = 'block';
+                    break;
+                case 'virtual_account':
+                    document.getElementById('vaDetails').style.display = 'block';
+                    generateVANumber();
+                    break;
+                case 'credit_card':
+                    document.getElementById('creditCardDetails').style.display = 'block';
+                    break;
+                case 'ewallet':
+                    document.getElementById('ewalletDetails').style.display = 'block';
+                    break;
+                case 'qris':
+                    document.getElementById('qrisDetails').style.display = 'block';
+                    break;
+                case 'bank_transfer':
+                    document.getElementById('bankTransferDetails').style.display = 'block';
+                    break;
+            }
+        }
+        
+        function generateVANumber() {
+            // Generate random VA number
+            const vaNumber = '808880' + Math.floor(1000000000 + Math.random() * 9000000000);
+            document.getElementById('vaNumber').textContent = vaNumber;
+            
+            // Set expiry time (24 hours from now)
+            const expiry = new Date();
+            expiry.setHours(expiry.getHours() + 24);
+            const formattedExpiry = expiry.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }) + ' ' + expiry.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            document.getElementById('vaExpiry').textContent = formattedExpiry;
+        }
+        
+        // ==================== PAYMENT PROCESSING ====================
+        function processPayment() {
+            // Validate based on payment method
+            if (!validatePayment()) {
+                return;
+            }
+            
+            // Show loading
+            showLoading('Memproses pembayaran...');
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Process payment based on method
+                let success = false;
+                let message = '';
+                
+                switch(paymentState.paymentMethod) {
+                    case 'balance':
+                        success = processBalancePayment();
+                        message = success ? 'Pembayaran dengan saldo berhasil' : 'Saldo tidak cukup';
+                        break;
+                    case 'virtual_account':
+                        success = true;
+                        message = 'Virtual Account berhasil dibuat';
+                        break;
+                    case 'credit_card':
+                        success = true;
+                        message = 'Pembayaran kartu kredit berhasil';
+                        break;
+                    case 'ewallet':
+                        success = true;
+                        message = `Pembayaran dengan ${paymentState.ewalletType} berhasil`;
+                        break;
+                    case 'qris':
+                        success = true;
+                        message = 'Pembayaran QRIS berhasil';
+                        break;
+                    case 'bank_transfer':
+                        success = true;
+                        message = 'Instruksi transfer berhasil dibuat';
+                        break;
+                }
+                
+                if (success) {
+                    completePayment();
+                } else {
+                    hideLoading();
+                    showNotification(message, 'error');
+                }
+            }, 2000);
+        }
+        
+        function validatePayment() {
+            switch(paymentState.paymentMethod) {
+                case 'balance':
+                    const pin = document.getElementById('transactionPin').value;
+                    if (!pin || pin.length !== 6) {
+                        showNotification('Silakan masukkan PIN 6 digit terlebih dahulu', 'error');
+                        return false;
+                    }
+                    // Check balance
+                    const userBalance = parseInt(localStorage.getItem('user_balance') || 0);
+                    if (userBalance < paymentState.package.price) {
+                        showNotification('Saldo tidak cukup', 'error');
+                        return false;
+                    }
+                    break;
+                    
+                case 'credit_card':
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const cardExpiry = document.getElementById('cardExpiry').value;
+                    const cardCvv = document.getElementById('cardCvv').value;
+                    const cardName = document.getElementById('cardName').value;
+                    
+                    if (!cardNumber || !cardExpiry || !cardCvv || !cardName) {
+                        showNotification('Harap isi semua data kartu kredit', 'error');
+                        return false;
+                    }
+                    break;
+                    
+                case 'ewallet':
+                    if (!paymentState.ewalletType) {
+                        showNotification('Pilih jenis e-wallet terlebih dahulu', 'error');
+                        return false;
+                    }
+                    break;
+                    
+                case 'bank_transfer':
+                    if (!paymentState.bankType) {
+                        showNotification('Pilih bank terlebih dahulu', 'error');
+                        return false;
+                    }
+                    break;
+            }
+            
+            return true;
+        }
+        
+        function processBalancePayment() {
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 0);
+            const newBalance = userBalance - paymentState.package.price;
+            
+            if (newBalance < 0) {
+                return false;
+            }
+            
+            // Update user balance in localStorage
+            localStorage.setItem('user_balance', newBalance.toString());
+            
+            // Update user balance on home page data
+            const userHomeData = JSON.parse(localStorage.getItem('user_homeData') || '{}');
+            userHomeData.balance = newBalance;
+            localStorage.setItem('user_homeData', JSON.stringify(userHomeData));
+            
+            // Catat transaksi
+            const transactionId = 'SGN' + new Date().getFullYear() + 
+                String(new Date().getMonth() + 1).padStart(2, '0') +
+                String(new Date().getDate()).padStart(2, '0') +
+                String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            
+            const transaction = {
+                id: transactionId,
+                package: paymentState.package.name,
+                amount: paymentState.package.price,
+                type: paymentState.package.type || 'package',
+                method: 'balance',
+                date: new Date().toISOString(),
+                status: 'success'
+            };
+            
+            // Save transaction
+            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            transactions.unshift(transaction);
+            
+            // Keep only last 20 transactions
+            if (transactions.length > 20) {
+                transactions.pop();
+            }
+            
+            localStorage.setItem('user_transactions', JSON.stringify(transactions));
+            
+            return true;
+        }
+        
+        function completePayment() {
+            // Generate transaction data
+            const transactionId = 'SGN' + new Date().getFullYear() + 
+                String(new Date().getMonth() + 1).padStart(2, '0') +
+                String(new Date().getDate()).padStart(2, '0') +
+                String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            
+            const transactionData = {
+                id: transactionId,
+                package: paymentState.package.name,
+                amount: paymentState.package.price,
+                type: paymentState.package.type || 'package',
+                method: paymentState.paymentMethod,
+                ewalletType: paymentState.ewalletType,
+                bankType: paymentState.bankType,
+                date: new Date().toISOString(),
+                status: paymentState.paymentMethod === 'balance' ? 'success' : 'pending'
+            };
+            
+            // Save transaction
+            saveTransaction(transactionData);
+            
+            // Jika pembayaran dengan Saldo Signalin, kurangi saldo
+            if (paymentState.paymentMethod === 'balance') {
+                processBalancePayment();
+            }
+            
+            // Update user data (add package to active packages)
+            addPackageToUser(transactionData);
+            
+            // Update steps
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
+            
+            // Show success message
+            document.getElementById('step2Content').classList.remove('active');
+            document.getElementById('step3Content').classList.add('active');
+            document.getElementById('transactionCode').textContent = transactionId;
+            
+            // Update success text based on payment method
+            let successText = 'Paket Anda akan segera diaktifkan.';
+            if (paymentState.paymentMethod === 'virtual_account' || paymentState.paymentMethod === 'bank_transfer') {
+                successText = 'Paket akan diaktifkan setelah pembayaran dikonfirmasi.';
+            }
+            document.getElementById('successText').textContent = successText;
+            
+            hideLoading();
+            
+            // Show success notification
+            showNotification('Pembayaran berhasil diproses!', 'success');
+            
+            // Reload transaction history
+            loadTransactionHistory();
+        }
+        
+        function saveTransaction(transaction) {
+            // Get existing transactions
+            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            // Add new transaction (front)
+            transactions.unshift(transaction);
+            if (transactions.length > 10) transactions.pop();
+            localStorage.setItem('user_transactions', JSON.stringify(transactions));
+
+            // Also save to profile-compatible purchase history key `user_purchase_history`
+            const history = JSON.parse(localStorage.getItem('user_purchase_history') || '[]');
+            const historyEntry = {
+                id: transaction.id || ('TRX-' + Date.now()),
+                transactionId: transaction.id || ('TRX-' + Date.now()),
+                packageId: transaction.packageId || transaction.package || '',
+                packageName: transaction.package || transaction.packageName || '',
+                packageQuota: transaction.packageQuota || transaction.quota || '',
+                price: transaction.amount || transaction.price || 0,
+                type: transaction.type || transaction.packageType || 'package',
+                purchaseDate: transaction.date || new Date().toISOString(),
+                status: transaction.status || 'completed'
+            };
+            history.unshift(historyEntry);
+            if (history.length > 50) history.pop();
+            localStorage.setItem('user_purchase_history', JSON.stringify(history));
+        }
+        
+        function addPackageToUser(transaction) {
+            // Standardize package info and add to profile-compatible keys
+            const selectedPackage = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
+
+            // Determine expiry days (try to parse if duration exists)
+            function parseDurationToDays(durationStr) {
+                if (!durationStr) return 30;
+                const s = String(durationStr).toLowerCase();
+                const numMatch = s.match(/(\d+)/);
+                const num = numMatch ? parseInt(numMatch[0], 10) : 30;
+                if (s.includes('hari')) return num;
+                if (s.includes('minggu')) return num * 7;
+                if (s.includes('bulan')) return num * 30;
+                return num;
+            }
+
+            const days = parseDurationToDays(transaction.duration || paymentState.package.duration || selectedPackage.duration);
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + days);
+
+            const packageQuotaStr = transaction.packageQuota || paymentState.package.quota || selectedPackage.packageQuota || (selectedPackage.dataAmount ? (selectedPackage.dataAmount + 'GB') : '');
+            const packageId = transaction.packageId || paymentState.package.id || selectedPackage.id || '';
+
+            // Determine numeric data amount (GB) and unlimited flag
+            let dataAmountGB = 0;
+            let isUnlimited = false;
+            if (selectedPackage.isUnlimited || (typeof packageQuotaStr === 'string' && /unlimited/i.test(packageQuotaStr))) {
+                isUnlimited = true;
+            } else {
+                if (selectedPackage.dataAmount && !isNaN(selectedPackage.dataAmount)) {
+                    dataAmountGB = Number(selectedPackage.dataAmount);
+                } else {
+                    // try parse from packageQuotaStr like '15GB', '15 GB', '10.5 GB'
+                    const m = String(packageQuotaStr).match(/(\d+(?:\.\d+)?)\s*(GB|G)\b/i);
+                    if (m) dataAmountGB = parseFloat(m[1]);
+                    else {
+                        // fallback: find any number (e.g., 'Bonus 5 GB')
+                        const m2 = String(packageQuotaStr).match(/(\d+(?:\.\d+)?)/);
+                        if (m2) dataAmountGB = parseFloat(m2[1]);
+                    }
+                }
+            }
+
+            // Add to generic storage (kept for compatibility)
+            const userPackages = JSON.parse(localStorage.getItem('user_packages') || '[]');
+            const userPackage = {
+                name: transaction.package || paymentState.package.name || selectedPackage.name || '',
+                purchaseDate: new Date().toISOString(),
+                expiryDate: expiryDate.toISOString(),
+                status: 'active',
+                transactionId: transaction.id || ('TRX-' + Date.now())
+            };
+            userPackages.push(userPackage);
+            localStorage.setItem('user_packages', JSON.stringify(userPackages));
+
+            // Add to profile's active packages key `user_active_packages`
+            const active = JSON.parse(localStorage.getItem('user_active_packages') || '[]');
+            const activeEntry = {
+                id: 'AP-' + Date.now(),
+                packageId: packageId,
+                packageName: transaction.package || paymentState.package.name || selectedPackage.name || '',
+                packageQuota: packageQuotaStr,
+                // store numeric GB value and unlimited flag for reliable aggregation
+                packageQuotaGB: isUnlimited ? null : dataAmountGB,
+                isUnlimited: isUnlimited,
+                price: transaction.amount || transaction.price || paymentState.package.price || selectedPackage.price || 0,
+                type: transaction.type || paymentState.package.type || selectedPackage.type || 'internet',
+                purchaseDate: transaction.date || new Date().toISOString(),
+                expiryDate: expiryDate.toISOString(),
+                status: transaction.status || 'active'
+            };
+            active.push(activeEntry);
+            localStorage.setItem('user_active_packages', JSON.stringify(active));
+
+            // If internet package: update numeric user_data_left or set unlimited flag
+            const pkgType = (transaction.type || paymentState.package.type || selectedPackage.type || '').toLowerCase();
+            if (pkgType === 'internet' || pkgType === 'data' || pkgType === 'package') {
+                if (isUnlimited) {
+                    localStorage.setItem('user_data_unlimited', 'true');
+                    // remove numeric left to avoid confusion
+                    localStorage.removeItem('user_data_left');
+                } else if (dataAmountGB > 0) {
+                    const currentLeft = parseFloat(localStorage.getItem('user_data_left') || '0');
+                    localStorage.setItem('user_data_left', String(currentLeft + dataAmountGB));
+                }
+            }
+
+            // If transaction is pulsa, credit user_pulsa with numeric amount
+            if (pkgType === 'pulsa') {
+                const pulsaCurrent = parseInt(localStorage.getItem('user_pulsa') || '0');
+                let pulsaCredit = 0;
+
+                // Prefer an explicit numeric field if present
+                if (selectedPackage.pulsaAmount && !isNaN(selectedPackage.pulsaAmount)) {
+                    pulsaCredit = Number(selectedPackage.pulsaAmount);
+                } else {
+                    // try parse from packageQuotaStr like 'Rp 50.000'
+                    const digits = String(packageQuotaStr || selectedPackage.packageQuota || '').replace(/[^0-9]/g, '');
+                    if (digits) pulsaCredit = parseInt(digits, 10);
+                    else pulsaCredit = parseInt(transaction.amount || transaction.price || paymentState.package.price || selectedPackage.price || 0);
+                }
+
+                localStorage.setItem('user_pulsa', String(pulsaCurrent + pulsaCredit));
+            }
+        }
+        
+        // ==================== TRANSACTION HISTORY ====================
+        function loadTransactionHistory() {
+            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            const historyList = document.getElementById('historyList');
+            
+            if (transactions.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: var(--gray-medium); padding: 30px; font-style: italic;">Belum ada transaksi</p>';
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            transactions.forEach(transaction => {
+                const item = document.createElement('div');
+                item.className = 'transaction-item';
+                
+                const date = new Date(transaction.date);
+                const formattedDate = date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                }) + ' ' + date.toLocaleTimeString('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const statusClass = transaction.status === 'success' ? 'transaction-success' : 
+                                  transaction.status === 'pending' ? 'transaction-pending' : 'transaction-failed';
+                
+                item.innerHTML = `
+                    <div class="transaction-info">
+                        <h4>${transaction.package}</h4>
+                        <div class="transaction-date">${formattedDate}</div>
+                        <div style="color: var(--gray-medium); font-size: 0.85rem;">
+                            ${getMethodName(transaction.method)} 
+                            ${transaction.ewalletType ? '(' + transaction.ewalletType + ')' : ''}
+                            ${transaction.bankType ? '(' + transaction.bankType + ')' : ''}
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${statusClass}">
+                        Rp ${transaction.amount.toLocaleString('id-ID')}
+                    </div>
+                `;
+                
+                historyList.appendChild(item);
+            });
+        }
+        
+        // ==================== UTILITY FUNCTIONS ====================
+        function showLoading(message) {
+            document.getElementById('loadingText').textContent = message;
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        }
+        
+        // Format card number input
+        document.getElementById('cardNumber')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            e.target.value = formatted.substring(0, 19);
+        });
+        
+        // Format expiry date input
+        document.getElementById('cardExpiry')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+    </script>
+</body>
+</html>

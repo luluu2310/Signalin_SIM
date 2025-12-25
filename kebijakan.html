@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Kebijakan Privasi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #F5F5F5;
+            --primary-gray: #808080;
+            --primary-gray-dark: #333333;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --text-main: #1A1A1A;
+            --text-secondary: #666666;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-white);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+            line-height: 1.6;
+        }
+        
+        /* NAVBAR MODERN */
+        .navbar {
+            width: 100%;
+            background: var(--primary-white);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            overflow: hidden;
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-white);
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0 16px;
+            position: relative;
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+        
+        .navbar-menu {
+            list-style: none;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        .navbar-menu li {
+            position: relative;
+        }
+        
+        .navbar-menu a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .navbar-menu a:hover {
+            background: var(--accent-gold);
+            color: var(--primary-white);
+        }
+        
+        .navbar-menu a.active {
+            background: var(--accent-gold);
+            color: var(--primary-white);
+        }
+        
+        /* MAIN CONTAINER */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* POLICY HEADER */
+        .policy-header {
+            margin: 40px 0 30px;
+            text-align: center;
+        }
+        
+        .policy-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: var(--primary-black);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .policy-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+        
+        .policy-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .last-updated {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-gray-light);
+            color: var(--text-secondary);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        /* TABLE OF CONTENTS */
+        .toc-section {
+            margin: 40px 0;
+        }
+        
+        .toc-card {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: var(--primary-white);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-dark);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .toc-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            z-index: 0;
+        }
+        
+        .toc-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .toc-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            list-style: none;
+        }
+        
+        .toc-item {
+            margin-bottom: 12px;
+        }
+        
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .toc-link:hover {
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--accent-gold-light);
+            transform: translateX(5px);
+        }
+        
+        .toc-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        /* POLICY CONTENT */
+        .policy-content {
+            margin: 50px 0;
+        }
+        
+        .policy-section {
+            margin-bottom: 50px;
+            background: var(--primary-white);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-normal);
+        }
+        
+        .policy-section:hover {
+            box-shadow: var(--shadow-dark);
+            border-color: rgba(212, 175, 55, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .section-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-black);
+            flex-shrink: 0;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-black);
+        }
+        
+        .section-content {
+            color: var(--text-main);
+        }
+        
+        .section-content p {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .section-content ul, .section-content ol {
+            margin: 15px 0 20px 25px;
+        }
+        
+        .section-content li {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        
+        .highlight {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-gold);
+            margin: 20px 0;
+        }
+        
+        .highlight p {
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        
+        .info-box {
+            background: rgba(0, 123, 255, 0.05);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .data-table th {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+        }
+        
+        .data-table td {
+            padding: 15px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(212, 175, 55, 0.05);
+        }
+        
+        /* CONSENT SECTION */
+        .consent-section {
+            margin: 50px 0;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            text-align: center;
+            box-shadow: var(--shadow-medium);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .consent-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary-black);
+        }
+        
+        .consent-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .consent-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 16px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all var(--transition-fast);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+        }
+        
+        .consent-btn:hover {
+            background: var(--accent-gold-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* CONTACT SECTION */
+        .contact-section {
+            margin: 50px 0;
+            text-align: center;
+        }
+        
+        .contact-card {
+            background: var(--primary-white);
+            border-radius: var(--border-radius-lg);
+            padding: 50px;
+            box-shadow: var(--shadow-dark);
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .contact-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--primary-black);
+        }
+        
+        .contact-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        
+        .contact-item i {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+        }
+        
+        /* DOCK / FOOTER */
+        .dock-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 900;
+            pointer-events: none;
+        }
+        
+        .dock-bar {
+            background: var(--primary-black);
+            padding: 15px 30px;
+            border-radius: 40px;
+            display: flex;
+            gap: 35px;
+            box-shadow: var(--shadow-dark);
+            pointer-events: auto;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .dock-icon {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.3rem;
+            position: relative;
+            transition: all var(--transition-fast);
+        }
+        
+        .dock-icon:hover {
+            color: var(--accent-gold);
+            transform: translateY(-3px);
+        }
+        
+        .dock-icon.active {
+            color: var(--accent-gold);
+        }
+        
+        .dock-icon.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+        
+        /* SIDEBAR MOBILE */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-white);
+            z-index: 1000;
+            padding: 30px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar.active {
+            right: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--primary-gray-light);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-black);
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-gray);
+            transition: color var(--transition-fast);
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all var(--transition-fast);
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+        
+        .sidebar-submenu a {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: var(--primary-gray-light);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-fast);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-dark);
+            z-index: 9999;
+            font-weight: 600;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+            max-width: 300px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* BACK TO TOP */
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-medium);
+            z-index: 899;
+            opacity: 0;
+            visibility: hidden;
+            border: 2px solid var(--primary-black);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--accent-gold-dark);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-dark);
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .navbar-menu {
+                gap: 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .policy-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .toc-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .navbar-menu {
+                display: none;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .policy-section {
+                padding: 30px;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .consent-section {
+                padding: 30px;
+            }
+            
+            .contact-card {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .policy-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .policy-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .section-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 15px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+                margin: 0 10px;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .policy-header h1 {
+                font-size: 2rem;
+            }
+            
+            .policy-section {
+                padding: 25px 20px;
+            }
+            
+            .toc-card {
+                padding: 25px 20px;
+            }
+            
+            .consent-section {
+                padding: 25px 20px;
+            }
+            
+            .contact-card {
+                padding: 25px 20px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .dock-bar {
+                padding: 12px 25px;
+                gap: 30px;
+            }
+            
+            .back-to-top {
+                bottom: 90px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .policy-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .policy-subtitle {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+            
+            .section-content p, .section-content li {
+                font-size: 1rem;
+            }
+            
+            .consent-title, .contact-title {
+                font-size: 1.6rem;
+            }
+            
+            .consent-text, .contact-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Berhasil</div>
+            <div class="notification-message" id="notificationMessage">Persetujuan berhasil disimpan.</div>
+        </div>
+    </div>
+    
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        <div class="navbar-brand">Signalin</div>
+        
+        <ul class="navbar-menu">
+            <li><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="internet.html"><i class="fas fa-wifi"></i> Produk</a></li>
+            <li><a href="voucher.html"><i class="fas fa-ticket-alt"></i> Voucher</a></li>
+            <li><a href="pusat.html"><i class="fas fa-life-ring"></i> Pusat Bantuan</a></li>
+            <li><a href="kebijakan.html" class="active"><i class="fas fa-shield-alt"></i> Kebijakan Privasi</a></li>
+        </ul>
+    </nav>
+    
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Produk</a>
+            <a href="voucher.html"><i class="fas fa-ticket-alt"></i> Voucher</a>
+            <a href="pusat.html"><i class="fas fa-life-ring"></i> Pusat Bantuan</a>
+            <a href="kebijakan.html" class="active"><i class="fas fa-shield-alt"></i> Kebijakan Privasi</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- POLICY HEADER -->
+        <section class="policy-header">
+            <h1>Kebijakan Privasi Signalin</h1>
+            <p class="policy-subtitle">
+                Kami berkomitmen untuk melindungi privasi dan keamanan data pribadi Anda. 
+                Dokumen ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda.
+            </p>
+            <div class="last-updated">
+                <i class="fas fa-calendar-alt"></i>
+                Terakhir diperbarui: 1 Januari 2024
+            </div>
+        </section>
+        
+        <!-- TABLE OF CONTENTS -->
+        <section class="toc-section">
+            <div class="toc-card">
+                <div class="toc-content">
+                    <div class="toc-title">
+                        <i class="fas fa-list-alt"></i>
+                        Daftar Isi
+                    </div>
+                    <ul class="toc-list">
+                        <li class="toc-item">
+                            <a href="#section1" class="toc-link">
+                                <span class="toc-number">1</span>
+                                <span>Pengumpulan Informasi</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section2" class="toc-link">
+                                <span class="toc-number">2</span>
+                                <span>Penggunaan Data</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section3" class="toc-link">
+                                <span class="toc-number">3</span>
+                                <span>Berbagi Informasi</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section4" class="toc-link">
+                                <span class="toc-number">4</span>
+                                <span>Keamanan Data</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section5" class="toc-link">
+                                <span class="toc-number">5</span>
+                                <span>Cookie & Teknologi Pelacakan</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section6" class="toc-link">
+                                <span class="toc-number">6</span>
+                                <span>Hak Pengguna</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section7" class="toc-link">
+                                <span class="toc-number">7</span>
+                                <span>Perubahan Kebijakan</span>
+                            </a>
+                        </li>
+                        <li class="toc-item">
+                            <a href="#section8" class="toc-link">
+                                <span class="toc-number">8</span>
+                                <span>Kontak Kami</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- POLICY CONTENT -->
+        <div class="policy-content">
+            <!-- SECTION 1 -->
+            <section id="section1" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">1</div>
+                    <h2 class="section-title">Pengumpulan Informasi</h2>
+                </div>
+                <div class="section-content">
+                    <p>Kami mengumpulkan informasi yang Anda berikan secara langsung saat menggunakan layanan Signalin:</p>
+                    
+                    <div class="highlight">
+                        <p><i class="fas fa-info-circle"></i> <strong>Informasi Pribadi:</strong> Nama, alamat email, nomor telepon, dan data identitas lainnya yang diperlukan untuk verifikasi.</p>
+                    </div>
+                    
+                    <p><strong>Informasi yang kami kumpulkan meliputi:</strong></p>
+                    <ul>
+                        <li><strong>Data Registrasi:</strong> Informasi yang Anda berikan saat membuat akun Signalin</li>
+                        <li><strong>Data Transaksi:</strong> Riwayat pembelian, top up, dan penggunaan layanan</li>
+                        <li><strong>Data Teknis:</strong> Alamat IP, tipe perangkat, browser, dan informasi sistem</li>
+                        <li><strong>Data Lokasi:</strong> Informasi lokasi umum untuk keamanan dan personalisasi layanan</li>
+                        <li><strong>Data Komunikasi:</strong> Catatan komunikasi dengan tim support kami</li>
+                    </ul>
+                    
+                    <p>Kami juga secara otomatis mengumpulkan informasi teknis untuk meningkatkan pengalaman pengguna dan keamanan sistem.</p>
+                </div>
+            </section>
+            
+            <!-- SECTION 2 -->
+            <section id="section2" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">2</div>
+                    <h2 class="section-title">Penggunaan Data</h2>
+                </div>
+                <div class="section-content">
+                    <p>Data yang kami kumpulkan digunakan untuk tujuan berikut:</p>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tujuan</th>
+                                <th>Deskripsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Penyediaan Layanan</strong></td>
+                                <td>Memproses transaksi, mengaktifkan layanan, dan memberikan dukungan teknis</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Verifikasi Akun</strong></td>
+                                <td>Memverifikasi identitas dan mencegah penipuan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Komunikasi</strong></td>
+                                <td>Mengirim notifikasi, update layanan, dan informasi penting</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Peningkatan Layanan</strong></td>
+                                <td>Menganalisis penggunaan untuk meningkatkan kualitas layanan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Keamanan</strong></td>
+                                <td>Melindungi akun dan sistem dari aktivitas yang mencurigakan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kepatuhan Hukum</strong></td>
+                                <td>Memenuhi kewajiban hukum dan regulasi yang berlaku</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-exclamation-circle"></i> <strong>Transparansi Penggunaan:</strong> Kami tidak akan menggunakan data Anda untuk tujuan lain selain yang telah dijelaskan tanpa persetujuan Anda.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 3 -->
+            <section id="section3" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">3</div>
+                    <h2 class="section-title">Berbagi Informasi</h2>
+                </div>
+                <div class="section-content">
+                    <p>Kami menjaga kerahasiaan data Anda dan hanya membagikan informasi dalam kondisi berikut:</p>
+                    
+                    <p><strong>1. Dengan Penyedia Layanan:</strong></p>
+                    <ul>
+                        <li>Penyedia pembayaran untuk memproses transaksi</li>
+                        <li>Penyedia hosting dan infrastruktur teknologi</li>
+                        <li>Layanan analitik untuk meningkatkan performa sistem</li>
+                    </ul>
+                    
+                    <p><strong>2. Untuk Kepatuhan Hukum:</strong></p>
+                    <ul>
+                        <li>Ketika diwajibkan oleh hukum atau peraturan</li>
+                        <li>Untuk melindungi hak, properti, atau keselamatan Signalin dan pengguna</li>
+                        <li>Dalam proses hukum atau investigasi resmi</li>
+                    </ul>
+                    
+                    <p><strong>3. Dengan Persetujuan Anda:</strong></p>
+                    <ul>
+                        <li>Ketika Anda secara eksplisit memberikan persetujuan untuk berbagi informasi</li>
+                        <li>Dalam konteks kemitraan bisnis yang telah disepakati</li>
+                    </ul>
+                    
+                    <div class="highlight">
+                        <p><i class="fas fa-shield-alt"></i> <strong>Perlindungan Data:</strong> Semua pihak ketiga yang menerima data dari kami harus mematuhi standar perlindungan data yang setara dengan yang kami terapkan.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 4 -->
+            <section id="section4" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">4</div>
+                    <h2 class="section-title">Keamanan Data</h2>
+                </div>
+                <div class="section-content">
+                    <p>Kami menerapkan langkah-langkah keamanan teknis dan organisasi untuk melindungi data Anda:</p>
+                    
+                    <ul>
+                        <li><strong>Enkripsi Data:</strong> Menggunakan enkripsi SSL/TLS untuk data dalam transit</li>
+                        <li><strong>Enkripsi Penyimpanan:</strong> Data sensitif dienkripsi saat disimpan</li>
+                        <li><strong>Kontrol Akses:</strong> Pembatasan akses hanya untuk personel yang berwenang</li>
+                        <li><strong>Audit Keamanan:</strong> Pemeriksaan keamanan berkala dan pemantauan sistem</li>
+                        <li><strong>Pelatihan Staf:</strong> Pelatihan kesadaran keamanan data untuk seluruh tim</li>
+                        <li><strong>Backup Data:</strong> Cadangan data rutin untuk mencegah kehilangan data</li>
+                    </ul>
+                    
+                    <p>Meskipun kami berusaha keras untuk melindungi data Anda, tidak ada sistem yang 100% aman. Kami terus memperbarui dan meningkatkan langkah-langkah keamanan kami.</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-user-shield"></i> <strong>Peran Anda:</strong> Anda juga bertanggung jawab untuk menjaga keamanan akun dengan menggunakan password yang kuat, mengaktifkan verifikasi dua faktor jika tersedia, dan tidak membagikan kredensial login.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 5 -->
+            <section id="section5" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">5</div>
+                    <h2 class="section-title">Cookie & Teknologi Pelacakan</h2>
+                </div>
+                <div class="section-content">
+                    <p>Kami menggunakan cookie dan teknologi serupa untuk meningkatkan pengalaman pengguna:</p>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Jenis Cookie</th>
+                                <th>Tujuan</th>
+                                <th>Durasi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Cookie Esensial</strong></td>
+                                <td>Memungkinkan fungsi dasar situs web</td>
+                                <td>Sesi</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cookie Preferensi</strong></td>
+                                <td>Mengingat pengaturan dan preferensi Anda</td>
+                                <td>30 hari</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cookie Analitik</strong></td>
+                                <td>Memahami bagaimana pengguna berinteraksi dengan situs</td>
+                                <td>2 tahun</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cookie Pemasaran</strong></td>
+                                <td>Menampilkan iklan yang relevan</td>
+                                <td>90 hari</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <p>Anda dapat mengontrol penggunaan cookie melalui pengaturan browser Anda. Namun, menonaktifkan cookie esensial dapat memengaruhi fungsi situs web.</p>
+                    
+                    <div class="highlight">
+                        <p><i class="fas fa-cookie-bite"></i> <strong>Kontrol Cookie:</strong> Anda dapat mengelola preferensi cookie melalui banner persetujuan yang muncul saat pertama kali mengunjungi situs kami.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 6 -->
+            <section id="section6" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">6</div>
+                    <h2 class="section-title">Hak Pengguna</h2>
+                </div>
+                <div class="section-content">
+                    <p>Sebagai pemilik data, Anda memiliki hak-hak berikut:</p>
+                    
+                    <ul>
+                        <li><strong>Hak Akses:</strong> Meminta salinan data pribadi yang kami miliki tentang Anda</li>
+                        <li><strong>Hak Perbaikan:</strong> Memperbaiki data yang tidak akurat atau tidak lengkap</li>
+                        <li><strong>Hak Penghapusan:</strong> Meminta penghapusan data pribadi dalam kondisi tertentu</li>
+                        <li><strong>Hak Pembatasan:</strong> Membatasi pemrosesan data Anda</li>
+                        <li><strong>Hak Portabilitas:</strong> Menerima data Anda dalam format terstruktur</li>
+                        <li><strong>Hak Keberatan:</strong> Menolak pemrosesan data untuk tujuan tertentu</li>
+                        <li><strong>Hak Penarikan Persetujuan:</strong> Menarik persetujuan kapan saja</li>
+                    </ul>
+                    
+                    <p>Untuk menggunakan hak-hak ini, Anda dapat menghubungi kami melalui metode kontak yang tersedia di bagian akhir dokumen ini.</p>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-clock"></i> <strong>Waktu Respon:</strong> Kami akan merespons permintaan hak Anda dalam waktu 30 hari kalender. Dalam kasus kompleks, waktu dapat diperpanjang hingga 60 hari dengan pemberitahuan.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 7 -->
+            <section id="section7" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">7</div>
+                    <h2 class="section-title">Perubahan Kebijakan</h2>
+                </div>
+                <div class="section-content">
+                    <p>Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu untuk mencerminkan:</p>
+                    
+                    <ul>
+                        <li>Perubahan dalam praktik bisnis kami</li>
+                        <li>Perubahan layanan yang kami tawarkan</li>
+                        <li>Perubahan hukum atau regulasi yang berlaku</li>
+                        <li>Perubahan teknologi yang kami gunakan</li>
+                    </ul>
+                    
+                    <p>Ketika kami membuat perubahan signifikan pada Kebijakan Privasi, kami akan:</p>
+                    <ol>
+                        <li>Memperbarui tanggal "Terakhir diperbarui" di bagian atas dokumen</li>
+                        <li>Mengirim notifikasi melalui email atau dalam aplikasi</li>
+                        <li>Menampilkan pemberitahuan di situs web kami</li>
+                    </ol>
+                    
+                    <p>Kami mendorong Anda untuk meninjau Kebijakan Privasi ini secara berkala untuk tetap terinformasi tentang bagaimana kami melindungi informasi Anda.</p>
+                    
+                    <div class="highlight">
+                        <p><i class="fas fa-bell"></i> <strong>Kontinuitas Layanan:</strong> Penggunaan berkelanjutan layanan Signalin setelah perubahan kebijakan menunjukkan penerimaan Anda terhadap perubahan tersebut.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- SECTION 8 -->
+            <section id="section8" class="policy-section">
+                <div class="section-header">
+                    <div class="section-number">8</div>
+                    <h2 class="section-title">Kontak Kami</h2>
+                </div>
+                <div class="section-content">
+                    <p>Jika Anda memiliki pertanyaan, kekhawatiran, atau permintaan terkait Kebijakan Privasi ini, silakan hubungi kami:</p>
+                    
+                    <div class="contact-section">
+                        <div class="contact-card">
+                            <h3 class="contact-title">Tim Perlindungan Data Signalin</h3>
+                            <p class="contact-text">Kami berkomitmen untuk melindungi privasi Anda dan merespons semua pertanyaan dengan cepat.</p>
+                            
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>privacy@signalin.co.id</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>1500-123 (Ext. Privacy)</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Jl. Sudirman No. 123, Jakarta</span>
+                                </div>
+                            </div>
+                            
+                            <p style="margin-top: 30px; font-size: 0.95rem; color: var(--text-secondary);">
+                                <i class="fas fa-clock"></i> Jam operasional: Senin - Jumat, 09:00 - 17:00 WIB
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <p>Untuk permintaan hak privasi, harap sertakan informasi identifikasi yang jelas untuk membantu kami memverifikasi identitas Anda dan memproses permintaan Anda dengan efisien.</p>
+                </div>
+            </section>
+        </div>
+        
+        <!-- CONSENT SECTION -->
+        <section class="consent-section">
+            <h2 class="consent-title">Setuju dengan Kebijakan Privasi?</h2>
+            <p class="consent-text">
+                Dengan menggunakan layanan Signalin, Anda menyetujui pengumpulan, penggunaan, dan berbagi informasi 
+                sebagaimana dijelaskan dalam Kebijakan Privasi ini.
+            </p>
+            <button class="consent-btn" onclick="acceptPolicy()">
+                <i class="fas fa-check-circle"></i> Saya Setuju dengan Kebijakan Privasi
+            </button>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: var(--text-secondary);">
+                Anda dapat menarik persetujuan kapan saja dengan menghubungi tim privacy kami.
+            </p>
+        </section>
+    </div>
+    
+    <!-- BACK TO TOP -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <!-- DOCK / FOOTER -->
+    <div class="dock-container">
+        <div class="dock-bar">
+            <a href="home.html" class="dock-icon">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="internet.html" class="dock-icon">
+                <i class="fas fa-wifi"></i>
+            </a>
+            <a href="pulsa.html" class="dock-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </a>
+            <a href="voucher.html" class="dock-icon">
+                <i class="fas fa-gift"></i>
+            </a>
+            <a href="kebijakan.html" class="dock-icon active">
+                <i class="fas fa-shield-alt"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- SCRIPT -->
+    <script>
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Initialize navbar scroll effect
+            initNavbarScroll();
+            
+            // Initialize back to top button
+            initBackToTop();
+            
+            // Initialize smooth scrolling for table of contents
+            initSmoothScroll();
+            
+            // Check if user has already accepted policy
+            checkPolicyAcceptance();
+            
+            // Initialize section highlight on scroll
+            initSectionHighlight();
+        });
+        
+        // ==================== LOGIN STATUS CHECK ====================
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (!isLoggedIn && !isRegistered) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // ==================== MOBILE MENU ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+        }
+        
+        // ==================== NAVBAR SCROLL EFFECT ====================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== BACK TO TOP ====================
+        function initBackToTop() {
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+            
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // ==================== SMOOTH SCROLL ====================
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    
+                    // Skip if it's just "#"
+                    if (href === '#') return;
+                    
+                    // Check if it's an internal link
+                    if (href.startsWith('#') && document.querySelector(href)) {
+                        e.preventDefault();
+                        
+                        const targetElement = document.querySelector(href);
+                        const headerOffset = 100;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update URL hash without jumping
+                        history.pushState(null, null, href);
+                        
+                        // Close sidebar if mobile
+                        document.getElementById('sidebar').classList.remove('active');
+                        document.getElementById('sidebarOverlay').classList.remove('active');
+                    }
+                });
+            });
+        }
+        
+        // ==================== POLICY ACCEPTANCE ====================
+        function checkPolicyAcceptance() {
+            const policyAccepted = localStorage.getItem('policy_accepted');
+            const policyVersion = localStorage.getItem('policy_version') || '1.0';
+            
+            if (!policyAccepted || policyVersion !== '2024.1') {
+                // Policy not accepted or outdated version
+                // Show a reminder if needed
+                // For now, just check quietly
+            }
+        }
+        
+        function acceptPolicy() {
+            // Save acceptance to localStorage
+            localStorage.setItem('policy_accepted', 'true');
+            localStorage.setItem('policy_version', '2024.1');
+            localStorage.setItem('policy_accepted_date', new Date().toISOString());
+            
+            // Show success notification
+            showNotification('success', 'Persetujuan Berhasil', 'Terima kasih telah menyetujui Kebijakan Privasi Signalin.');
+            
+            // Redirect to home after delay
+            setTimeout(() => {
+                window.location.href = 'home.html';
+            }, 2000);
+        }
+        
+        // ==================== SECTION HIGHLIGHT ON SCROLL ====================
+        function initSectionHighlight() {
+            const sections = document.querySelectorAll('.policy-section');
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            function highlightSection() {
+                let currentSection = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (window.pageYOffset >= (sectionTop - 150)) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+                
+                // Update active state in table of contents
+                tocLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const href = link.getAttribute('href');
+                    if (href === `#${currentSection}`) {
+                        link.classList.add('active');
+                        link.style.background = 'rgba(212, 175, 55, 0.3)';
+                        link.style.color = 'var(--accent-gold-light)';
+                    } else {
+                        link.style.background = '';
+                        link.style.color = '';
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', highlightSection);
+            highlightSection(); // Initial call
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
+        function logout() {
+            // Clear all user data from localStorage
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password', 'policy_accepted', 'policy_version', 'policy_accepted_date'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Show notification
+            showNotification('success', 'Logout Berhasil', 'Anda telah keluar dari akun.');
+            
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // ==================== NOTIFICATION SYSTEM ====================
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Set type styling
+            notification.className = 'notification';
+            if (type === 'success') {
+                notification.style.background = 'var(--accent-gold)';
+                notification.style.color = 'var(--primary-black)';
+                notificationIcon.className = 'fas fa-check-circle';
+            } else if (type === 'info') {
+                notification.style.background = 'var(--primary-gray-dark)';
+                notification.style.color = 'var(--primary-white)';
+                notificationIcon.className = 'fas fa-info-circle';
+            } else if (type === 'warning') {
+                notification.style.background = '#ffc107';
+                notification.style.color = 'var(--primary-black)';
+                notificationIcon.className = 'fas fa-exclamation-triangle';
+            }
+            
+            // Show notification
+            notification.style.display = 'flex';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ==================== PRINT FUNCTIONALITY ====================
+        function printPolicy() {
+            window.print();
+        }
+        
+        // Expose print function to window
+        window.printPolicy = printPolicy;
+        
+        // ==================== DOWNLOAD PDF FUNCTION ====================
+        function downloadPDF() {
+            showNotification('info', 'Download', 'Fitur download PDF akan segera tersedia.');
+            // In a real implementation, this would generate/download a PDF version
+        }
+        
+        // Expose download function to window
+        window.downloadPDF = downloadPDF;
+    </script>
+</body>
+</html>

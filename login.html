@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Login & Registrasi</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #F5F5F5;
+            --primary-gray: #808080;
+            --primary-gray-dark: #333333;
+            
+            /* Gold Color Palette */
+            --gold-primary: #D4AF37;
+            --gold-dark: #B8860B;
+            --gold-light: #FFD700;
+            --gold-transparent: rgba(212, 175, 55, 0.1);
+            
+            /* Accent Colors */
+            --accent-green: #28a745;
+            --accent-blue: #007bff;
+            --text-main: #1A1A1A;
+            
+            /* Shadows */
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.1);
+            --shadow-dark: 0 12px 36px rgba(0, 0, 0, 0.15);
+            --gold-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+            --gold-glow: 0 0 20px rgba(212, 175, 55, 0.4);
+            
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            
+            /* Border Radius */
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-black), var(--primary-gray-dark));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* BACKGROUND ANIMATION */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0) 70%);
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+        
+        .bg-circle:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: 10%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        /* MAIN CONTAINER */
+        .auth-container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* HEADER */
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auth-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 3.5rem;
+            color: var(--primary-white);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .auth-brand span {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .auth-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+            border-radius: 2px;
+            box-shadow: var(--gold-glow);
+        }
+        
+        .auth-tagline {
+            font-size: 1.1rem;
+            color: var(--primary-gray);
+            font-weight: 500;
+        }
+        
+        /* CARD CONTAINER */
+        .card-container {
+            width: 100%;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: stretch;
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* AUTH CARD */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-dark);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-light));
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-black);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-primary), transparent);
+        }
+        
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: var(--primary-gray);
+        }
+        
+        /* FORM STYLES */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-black);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--primary-gray-light);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-main);
+            background: var(--primary-white);
+            transition: all var(--transition-fast);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-gray);
+        }
+        
+        .input-with-icon .form-control {
+            padding-left: 48px;
+        }
+        
+        /* BUTTON STYLES */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: var(--primary-black);
+            box-shadow: var(--gold-shadow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--gold-glow);
+        }
+        
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+        
+        .btn-primary:hover::after {
+            opacity: 1;
+        }
+        
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-secondary {
+            background: var(--primary-gray-light);
+            color: var(--text-main);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-gray);
+            color: var(--primary-white);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--gold-dark);
+            border: 2px solid var(--gold-primary);
+        }
+        
+        .btn-outline:hover {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: var(--primary-black);
+        }
+        
+        /* DIVIDER */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+        
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--primary-gray-light);
+        }
+        
+        .divider-text {
+            padding: 0 15px;
+            font-size: 0.85rem;
+            color: var(--primary-gray);
+            font-weight: 500;
+        }
+        
+        /* SWITCH LINK */
+        .switch-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--primary-gray);
+        }
+        
+        .switch-link a {
+            color: var(--gold-dark);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color var(--transition-fast);
+        }
+        
+        .switch-link a:hover {
+            color: var(--gold-primary);
+            text-decoration: underline;
+        }
+        
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 9999;
+            min-width: 320px;
+            padding: 18px 24px;
+            border-radius: 14px;
+            background: var(--primary-white);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            border-left: 5px solid var(--accent-green);
+            display: none;
+            animation: slideInRight 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .notification.show {
+            display: flex;
+            align-items: center;
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            border-left-color: var(--gold-dark);
+        }
+        
+        .notification.success {
+            border-left-color: var(--gold-primary);
+        }
+        
+        .notification.info {
+            border-left-color: var(--gold-dark);
+        }
+        
+        .notification-icon {
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .notification.error .notification-icon {
+            color: var(--gold-dark);
+        }
+        
+        .notification.success .notification-icon {
+            color: var(--gold-primary);
+        }
+        
+        .notification.info .notification-icon {
+            color: var(--gold-dark);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-black);
+            margin-bottom: 4px;
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            color: var(--primary-gray-dark);
+            line-height: 1.4;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--primary-gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: color 0.3s;
+        }
+        
+        .notification-close:hover {
+            color: var(--gold-dark);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        /* REDIRECT OVERLAY */
+        .redirect-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+        
+        .redirect-overlay.active {
+            display: flex;
+            animation: fadeInOverlay 0.5s ease;
+        }
+        
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .redirect-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--gold-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 25px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .redirect-text {
+            color: var(--primary-white);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .redirect-countdown {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: monospace;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* FORM HIGHLIGHT */
+        .form-highlight {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .auth-brand {
+                font-size: 2.5rem;
+            }
+            
+            .auth-card {
+                padding: 30px;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+            
+            .notification {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Success</div>
+            <div class="notification-message" id="notificationMessage">Operation completed successfully.</div>
+        </div>
+        <button class="notification-close" onclick="hideNotification()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <!-- Redirect Overlay -->
+    <div class="redirect-overlay" id="redirectOverlay">
+        <div class="redirect-spinner"></div>
+        <div class="redirect-text" id="redirectMessage">Mengarahkan ke Halaman Login...</div>
+        <div class="redirect-countdown" id="redirectCountdown">3</div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="auth-container">
+        <!-- Header -->
+        <div class="auth-header">
+            <h1 class="auth-brand">SIGNAL<span>.</span>IN</h1>
+            <p class="auth-tagline">Akses Dunia Digitalmu dengan Mudah</p>
+        </div>
+        
+        <!-- Card Container -->
+        <div class="card-container">
+            <!-- Registration Card -->
+            <div class="auth-card">
+                <div class="card-header">
+                    <h2 class="card-title">Daftar Akun Baru</h2>
+                    <p class="card-subtitle">Bergabunglah dengan komunitas <span class="form-highlight">Signalin Premium</span></p>
+                </div>
+                
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" class="form-control" id="regName" placeholder="Masukkan nama lengkap" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input type="email" class="form-control" id="regEmail" placeholder="contoh@email.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nomor Handphone</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" class="form-control" id="regPhone" placeholder="Contoh: 081234567890" required 
+                                   pattern="[0-9]{10,13}" title="Masukkan 10-13 digit angka" 
+                                   oninput="validatePhoneInput(this)">
+                        </div>
+                        <small style="color: var(--primary-gray); font-size: 0.8rem; display: block; margin-top: 5px;">
+                            Masukkan 10-13 digit angka tanpa spasi atau tanda baca
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Daerah Asal</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-map-marker-alt input-icon"></i>
+                            <input type="text" class="form-control" id="regRegion" placeholder="Contoh: Jakarta, Bandung, Surabaya, dll" required>
+                        </div>
+                        <small style="color: var(--primary-gray); font-size: 0.8rem; display: block; margin-top: 5px;">
+                            Masukkan kota/kabupaten tempat tinggal Anda
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" class="form-control" id="regPassword" placeholder="Minimal 8 karakter" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Konfirmasi Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" class="form-control" id="regConfirmPassword" placeholder="Ulangi password" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> 
+                        <span>Daftar Sekarang</span>
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-text">Sudah punya akun?</div>
+                    <div class="divider-line"></div>
+                </div>
+                
+                <button class="btn btn-outline" onclick="switchToLogin()">
+                    <i class="fas fa-sign-in-alt"></i> Masuk ke Akun
+                </button>
+            </div>
+            
+            <!-- Login Card -->
+            <div class="auth-card" id="loginCard" style="display: none;">
+                <div class="card-header">
+                    <h2 class="card-title">Masuk ke Akun</h2>
+                    <p class="card-subtitle">Selamat datang kembali di <span class="form-highlight">Signalin Premium</span>!</p>
+                </div>
+                
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Nomor Handphone</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone input-icon"></i>
+                            <input type="tel" class="form-control" id="loginPhone" placeholder="Contoh: 081234567890" required 
+                                   pattern="[0-9]{10,13}" title="Masukkan 10-13 digit angka">
+                        </div>
+                        <small style="color: var(--primary-gray); font-size: 0.8rem; display: block; margin-top: 5px;">
+                            Masukkan nomor handphone yang terdaftar
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Masukkan password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="text-align: right;">
+                        <a href="#" onclick="showNotification('info', 'Lupa Password', 'Fitur reset password akan segera tersedia.')" 
+                           style="font-size: 0.85rem; color: var(--gold-dark); text-decoration: none; font-weight: 600;">
+                            Lupa Password?
+                        </a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> 
+                        <span>Masuk ke Akun</span>
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <div class="divider-text">Belum punya akun?</div>
+                    <div class="divider-line"></div>
+                </div>
+                
+                <button class="btn btn-outline" onclick="switchToRegister()">
+                    <i class="fas fa-user-plus"></i> Daftar Akun Baru
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== NOTIFICATION SYSTEM ====================
+        let notificationTimeout;
+        
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Set type styling
+            notification.className = 'notification';
+            notification.classList.add(type);
+            notification.classList.add('show');
+            
+            // Set icon based on type
+            switch(type) {
+                case 'success':
+                    notificationIcon.className = 'fas fa-check-circle';
+                    break;
+                case 'error':
+                    notificationIcon.className = 'fas fa-exclamation-circle';
+                    break;
+                case 'info':
+                    notificationIcon.className = 'fas fa-info-circle';
+                    break;
+            }
+            
+            // Auto hide after 5 seconds
+            clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+        
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
+        
+        // ==================== REDIRECT SYSTEM ====================
+        function startRedirect(destination, message) {
+            const overlay = document.getElementById('redirectOverlay');
+            const countdownElement = document.getElementById('redirectCountdown');
+            const messageElement = document.getElementById('redirectMessage');
+            
+            let countdown = 3;
+            
+            // Set message
+            messageElement.textContent = message;
+            
+            // Show overlay
+            overlay.classList.add('active');
+            countdownElement.textContent = countdown;
+            
+            // Update countdown every second
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = destination;
+                }
+            }, 1000);
+        }
+        
+        // ==================== FORM SWITCHING ====================
+        function switchToLogin() {
+            document.querySelector('.auth-card:first-of-type').style.display = 'none';
+            document.getElementById('loginCard').style.display = 'block';
+        }
+        
+        function switchToRegister() {
+            document.getElementById('loginCard').style.display = 'none';
+            document.querySelector('.auth-card:first-of-type').style.display = 'block';
+        }
+        
+        // ==================== FORM VALIDATION ====================
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function validatePhone(phone) {
+            const re = /^[0-9]{10,13}$/;
+            return re.test(phone);
+        }
+        
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+        
+        // ==================== PHONE INPUT VALIDATION ====================
+        function validatePhoneInput(input) {
+            // Hanya menerima angka
+            input.value = input.value.replace(/\D/g, '');
+            
+            // Validasi panjang
+            const phone = input.value;
+            if (phone.length > 0 && (phone.length < 10 || phone.length > 13)) {
+                input.style.borderColor = 'var(--gold-dark)';
+                input.style.boxShadow = '0 0 0 3px rgba(212, 175, 55, 0.1)';
+            } else {
+                input.style.borderColor = '';
+                input.style.boxShadow = '';
+            }
+        }
+        
+        // ==================== REGISTER HANDLER ====================
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value;
+            const region = document.getElementById('regRegion').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            // Validation
+            if (!name) {
+                showNotification('error', 'Error Registrasi', 'Nama lengkap harus diisi.');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showNotification('error', 'Error Registrasi', 'Format email tidak valid.');
+                return;
+            }
+            
+            if (!validatePhone(phone)) {
+                showNotification('error', 'Error Registrasi', 'Nomor HP harus 10-13 digit angka tanpa spasi.');
+                return;
+            }
+            
+            if (!region) {
+                showNotification('error', 'Error Registrasi', 'Daerah asal harus diisi.');
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                showNotification('error', 'Error Registrasi', 'Password minimal 8 karakter.');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('error', 'Error Registrasi', 'Konfirmasi password tidak cocok.');
+                return;
+            }
+            
+            try {
+                // Send data to Google Sheets (Web App URL)
+                const webAppUrl = 'https://script.google.com/macros/s/AKfycby7lJhRQ1Xs-D30SEzsiphkNfOV2p2Bjbnr9z1OXG8y20VxOx-nIlL2UrlEn4GKF1WMlg/exec';
+                
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('phone', phone);
+                formData.append('region', region);
+                formData.append('password', password);
+                formData.append('timestamp', new Date().toISOString());
+                
+                // Kirim data ke Google Sheets
+                const response = await fetch(webAppUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    // Simpan data di localStorage untuk login
+                    localStorage.setItem('user_name', name);
+                    localStorage.setItem('user_email', email);
+                    localStorage.setItem('user_phone', phone);
+                    localStorage.setItem('user_region', region);
+                    localStorage.setItem('user_password', password);
+                    localStorage.setItem('isRegistered', 'true');
+                    
+                    // Set join date
+                    const now = new Date();
+                    const joinDate = now.toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    localStorage.setItem('user_joinDate', joinDate);
+                    
+                    // Set default balance
+                    const defaultBalance = 50000;
+                    localStorage.setItem('user_balance', defaultBalance);
+                    
+                    // Initialize purchase history
+                    localStorage.setItem('user_purchaseHistory', JSON.stringify([]));
+                    localStorage.setItem('user_dataPackages', JSON.stringify([]));
+                    localStorage.setItem('user_phoneCredit', '0');
+                    
+                    // Show success notification
+                    showNotification('success', 'Registrasi Berhasil!', `Akun ${name} berhasil dibuat! Data telah dikirim ke spreadsheet.`);
+                    
+                    // Clear form
+                    document.getElementById('registerForm').reset();
+                    
+                    // Switch to login after 3 seconds
+                    setTimeout(() => {
+                        showNotification('info', 'Beralih ke Login', 'Silakan login dengan nomor HP dan password Anda.');
+                        switchToLogin();
+                    }, 3000);
+                    
+                } else {
+                    throw new Error('Gagal mengirim data ke spreadsheet');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                // Fallback: save to localStorage only
+                localStorage.setItem('user_name', name);
+                localStorage.setItem('user_email', email);
+                localStorage.setItem('user_phone', phone);
+                localStorage.setItem('user_region', region);
+                localStorage.setItem('user_password', password);
+                localStorage.setItem('isRegistered', 'true');
+                
+                // Set join date
+                const now = new Date();
+                const joinDate = now.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                localStorage.setItem('user_joinDate', joinDate);
+                
+                // Set default balance
+                const defaultBalance = 50000;
+                localStorage.setItem('user_balance', defaultBalance);
+                
+                // Initialize purchase history
+                localStorage.setItem('user_purchaseHistory', JSON.stringify([]));
+                localStorage.setItem('user_dataPackages', JSON.stringify([]));
+                localStorage.setItem('user_phoneCredit', '0');
+                
+                showNotification('success', 'Registrasi Berhasil!', `Akun ${name} berhasil dibuat! (Data disimpan lokal)`);
+                
+                // Clear form
+                document.getElementById('registerForm').reset();
+                
+                // Switch to login after 3 seconds
+                setTimeout(() => {
+                    showNotification('info', 'Beralih ke Login', 'Silakan login dengan nomor HP dan password Anda.');
+                    switchToLogin();
+                }, 3000);
+            }
+        }
+        
+        // ==================== LOGIN HANDLER ====================
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('loginPhone').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Check if user is registered
+            const isRegistered = localStorage.getItem('isRegistered');
+            if (!isRegistered || isRegistered !== 'true') {
+                showNotification('error', 'Login Gagal', 'Silakan registrasi terlebih dahulu.');
+                return;
+            }
+            
+            // Get stored credentials
+            const storedPhone = localStorage.getItem('user_phone');
+            const storedPassword = localStorage.getItem('user_password');
+            const storedName = localStorage.getItem('user_name');
+            
+            // Check credentials
+            if (phone === storedPhone && password === storedPassword) {
+                // Set login status
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                // Show success notification
+                showNotification('success', 'Login Berhasil!', `Selamat datang kembali, ${storedName || 'Pengguna'}!`);
+                
+                // Redirect to home page after 2 seconds
+                setTimeout(() => {
+                    startRedirect('home.html', 'Mengarahkan ke Beranda...');
+                }, 2000);
+            } else {
+                showNotification('error', 'Login Gagal', 'Nomor HP atau password salah.');
+            }
+        }
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                // If already logged in, redirect to home
+                window.location.href = 'home.html';
+            }
+            
+            // Check if redirected from registration
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'login') {
+                switchToLogin();
+            }
+            
+            // Auto-focus on first input
+            setTimeout(() => {
+                const firstInput = document.querySelector('.auth-card:first-of-type input');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }, 300);
+            
+            // Auto-remove non-digit characters from phone inputs
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            phoneInputs.forEach(input => {
+                input.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/\D/g, '');
+                });
+            });
+        });
+        
+        // Auto-hide notification on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideNotification();
+            }
+        });
+        
+        // Validasi input hanya angka untuk nomor handphone
+        document.getElementById('regPhone')?.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+        
+        document.getElementById('loginPhone')?.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+    </script>
+    
+    <!-- Google Apps Script Web App Integration -->
+    <!-- 
+    Untuk menggunakan Google Sheets integration:
+    1. Buat spreadsheet baru di Google Sheets
+    2. Buka Tools → Script editor
+    3. Tempel kode berikut:
+    
+    function doPost(e) {
+        try {
+            var sheet = SpreadsheetApp.openById('YOUR_SPREADSHEET_ID').getActiveSheet();
+            
+            // Ambil data dari request
+            var data = e.parameter;
+            
+            var row = [
+                new Date(),
+                data.name || '',
+                data.email || '',
+                data.phone || '',
+                data.region || '',
+                data.timestamp || '',
+                'REGISTERED'
+            ];
+            
+            sheet.appendRow(row);
+            
+            return ContentService
+                .createTextOutput(JSON.stringify({success: true, message: 'Data saved successfully'}))
+                .setMimeType(ContentService.MimeType.JSON);
+        } catch(error) {
+            return ContentService
+                .createTextOutput(JSON.stringify({success: false, message: error.toString()}))
+                .setMimeType(ContentService.MimeType.JSON);
+        }
+    }
+    
+    4. Ganti 'YOUR_SPREADSHEET_ID' dengan ID spreadsheet Anda
+    5. Deploy sebagai Web App (Execute as: Me, Who has access: Anyone)
+    6. Copy URL Web App dan ganti di kode JavaScript di atas
+    -->
+</body>
+</html>

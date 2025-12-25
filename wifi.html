@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Paket WiFi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="transactions.js"></script>
+    <style>
+        /* ==================== ROOT VARIABLES ==================== */
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #1A1A1A;
+            --primary-gray: #2D2D2D;
+            --primary-gray-dark: #121212;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --accent-gold-glow: rgba(212, 175, 55, 0.3);
+            --text-main: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-dim: #808080;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --shadow-dark: 0 15px 35px rgba(0, 0, 0, 0.7);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+        }
+        
+        /* ==================== BASE STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--primary-black);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        /* ==================== NAVBAR DENGAN SALDO ==================== */
+        .navbar {
+            width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+            background: rgba(18, 18, 18, 0.98);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .balance-display {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-normal);
+        }
+        
+        .balance-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .balance-display i {
+            font-size: 1rem;
+        }
+        
+        .mobile-menu-btn {
+            display: flex;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            cursor: pointer;
+            padding: 8px;
+            transition: all var(--transition-fast);
+            background: var(--primary-gray);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: scale(1.05);
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+        }
+        
+        .profile-menu:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all var(--transition-normal);
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 15px var(--accent-gold-glow);
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+            transition: width var(--transition-normal);
+        }
+        
+        .navbar-brand:hover::after {
+            width: 100%;
+        }
+        
+        /* ==================== SIDEBAR MOBILE DI SEBELAH KIRI ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar-mobile {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-gray-dark);
+            z-index: 1000;
+            padding: 30px;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-mobile.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--primary-gray), #3a3a3a);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* ==================== MAIN CONTENT AREA ==================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* ==================== HERO SECTION ==================== */
+        .hero-section {
+            position: relative;
+            height: 300px;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-dark);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1925&q=80');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 60px;
+            max-width: 70%;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content {
+                max-width: 100%;
+                padding: 0 30px;
+                text-align: center;
+            }
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            padding: 8px 20px;
+            border-radius: var(--border-radius-xl);
+            font-size: 0.9rem;
+            font-weight: 700;
+            width: fit-content;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            max-width: 90%;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-description {
+                max-width: 100%;
+            }
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-section {
+                height: 250px;
+            }
+        }
+        
+        /* ==================== FILTER SECTION ==================== */
+        .filter-section {
+            background: var(--primary-gray);
+            border-radius: var(--border-radius-lg);
+            padding: 20px 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-medium);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            background: var(--primary-gray-light);
+            color: var(--text-secondary);
+            border: 2px solid transparent;
+            border-radius: var(--border-radius-xl);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all var(--transition-normal);
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            border-color: var(--accent-gold);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* ==================== PAKET WIFI GRID ==================== */
+        .paket-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .paket-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+        }
+        
+        .paket-card {
+            background: var(--primary-gray);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            position: relative;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .paket-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-dark);
+            border: 2px solid var(--accent-gold);
+        }
+        
+        .paket-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--accent-gold-light);
+        }
+        
+        .paket-header {
+            background: linear-gradient(135deg, var(--primary-gray-light), var(--primary-gray-dark));
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .paket-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        
+        .paket-type {
+            font-size: 0.85rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+        
+        .paket-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .paket-price {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .price-amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        
+        .price-duration {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .paket-features {
+            list-style: none;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+        
+        .paket-features li {
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .paket-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .paket-features i {
+            color: var(--accent-gold);
+            margin-right: 12px;
+            font-size: 0.9rem;
+            min-width: 20px;
+        }
+        
+        .beli-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            border: 2px solid var(--accent-gold-light);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .beli-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        /* ==================== NOTIFICATION ==================== */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-dark);
+            display: none;
+            z-index: 1001;
+            max-width: 400px;
+            animation: slideIn 0.5s ease;
+            border: 2px solid var(--accent-gold-light);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: var(--primary-white);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* ==================== MODAL STYLES ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1002;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--primary-gray-dark);
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 40px;
+            position: relative;
+            border: 2px solid var(--accent-gold);
+            box-shadow: var(--shadow-dark);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+        
+        .modal-close:hover {
+            transform: rotate(90deg);
+            background: var(--accent-gold-light);
+        }
+        
+        .modal-header {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .modal-body {
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .modal-info {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+        }
+        
+        .modal-info p {
+            margin: 10px 0;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+        }
+        
+        .modal-btn.cancel {
+            background: var(--primary-gray);
+            color: var(--text-main);
+            border: 1px solid var(--text-dim);
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .balance-display {
+                min-width: 130px;
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .hero-section {
+                height: 280px;
+            }
+            
+            .hero-content {
+                padding: 0 40px;
+            }
+            
+            .hero-title {
+                font-size: 2.3rem;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+                position: static;
+                transform: none;
+                left: auto;
+            }
+            
+            .navbar-center {
+                position: static;
+                transform: none;
+            }
+            
+            .balance-display {
+                display: none;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                height: 250px;
+            }
+            
+            .hero-content {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+            
+            .filter-section {
+                padding: 15px;
+            }
+            
+            .filter-btn {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 25px;
+            }
+            
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 15px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+                margin: 0 10px;
+            }
+            
+            .sidebar-mobile {
+                width: 280px;
+            }
+            
+            .paket-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 1.6rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .hero-section {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div id="notification" class="notification"></div>
+    
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-mobile" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="pulsa.html"><i class="fas fa-mobile-alt"></i> Pulsa</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Paket Data</a>
+            <a href="streaming.html"><i class="fas fa-video"></i> Streaming</a>
+            <a href="nonton.html"><i class="fas fa-tv"></i> Nonton</a>
+            <a href="wifi.html" class="active"><i class="fas fa-network-wired"></i> Paket WiFi</a>
+            <a href="riwayat.html"><i class="fas fa-history"></i> Riwayat Top Up</a>
+            <a href="transaksi.html"><i class="fas fa-history"></i> Riwayat Transaksi</a>
+            <a href="help.html"><i class="fas fa-question-circle"></i> Bantuan</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- NAVBAR DENGAN SALDO -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil" id="profileLink">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        
+        <div class="navbar-center">
+            <div class="navbar-brand">Signalin</div>
+        </div>
+        
+        <div class="navbar-right">
+            <div class="balance-display" id="navbarBalance">
+                <i class="fas fa-wallet"></i>
+                <span id="balanceAmount">Saldo: Rp 500.000</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- HERO SECTION -->
+        <section class="hero-section">
+            <div class="hero-background"></div>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-bolt"></i>
+                    <span>HIGH SPEED INTERNET</span>
+                </div>
+                <h1 class="hero-title">Paket WiFi Terbaik</h1>
+                <p class="hero-description">
+                    Nikmati internet cepat tanpa batas untuk rumah, kantor, dan gaming. Pilih paket yang sesuai dengan kebutuhan Anda.
+                </p>
+            </div>
+        </section>
+        
+        <!-- FILTER SECTION -->
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">Semua Paket</button>
+            <button class="filter-btn" data-filter="rumah">Paket Rumah</button>
+            <button class="filter-btn" data-filter="kantor">Paket Kantor</button>
+            <button class="filter-btn" data-filter="gaming">Paket Gaming</button>
+        </div>
+        
+        <!-- PAKET WIFI GRID -->
+        <div class="paket-grid">
+            <!-- Paket 1 -->
+            <div class="paket-card" data-category="rumah">
+                <div class="paket-badge">POPULER</div>
+                <div class="paket-header">
+                    <h3>Basic Home</h3>
+                    <div class="paket-type">Paket Rumah</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 250.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 30 Mbps</li>
+                        <li><i class="fas fa-infinity"></i> Unlimited Quota</li>
+                        <li><i class="fas fa-wifi"></i> 1 Device WiFi</li>
+                        <li><i class="fas fa-tools"></i> Gratis instalasi</li>
+                        <li><i class="fas fa-headset"></i> Support 24/7</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI001">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paket 2 -->
+            <div class="paket-card" data-category="rumah">
+                <div class="paket-header">
+                    <h3>Family Pack</h3>
+                    <div class="paket-type">Paket Rumah</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 400.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 50 Mbps</li>
+                        <li><i class="fas fa-infinity"></i> Unlimited Quota</li>
+                        <li><i class="fas fa-wifi"></i> 4 Device WiFi</li>
+                        <li><i class="fas fa-tools"></i> Gratis instalasi</li>
+                        <li><i class="fas fa-tv"></i> Netflix included</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI002">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paket 3 -->
+            <div class="paket-card" data-category="kantor">
+                <div class="paket-badge">PROFESIONAL</div>
+                <div class="paket-header">
+                    <h3>Office Pro</h3>
+                    <div class="paket-type">Paket Kantor</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 750.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 100 Mbps</li>
+                        <li><i class="fas fa-infinity"></i> Unlimited Quota</li>
+                        <li><i class="fas fa-wifi"></i> 10 Device WiFi</li>
+                        <li><i class="fas fa-network-wired"></i> Static IP Address</li>
+                        <li><i class="fas fa-star"></i> Priority Support</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI003">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paket 4 -->
+            <div class="paket-card" data-category="gaming">
+                <div class="paket-badge">GAMING</div>
+                <div class="paket-header">
+                    <h3>Gaming Ultra</h3>
+                    <div class="paket-type">Paket Gaming</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 550.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 80 Mbps</li>
+                        <li><i class="fas fa-infinity"></i> Unlimited Quota</li>
+                        <li><i class="fas fa-signal"></i> Ping rendah (&lt;30ms)</li>
+                        <li><i class="fas fa-wifi"></i> 3 Device WiFi</li>
+                        <li><i class="fas fa-gamepad"></i> Gaming optimization</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI004">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paket 5 -->
+            <div class="paket-card" data-category="kantor">
+                <div class="paket-badge">ENTERPRISE</div>
+                <div class="paket-header">
+                    <h3>Enterprise</h3>
+                    <div class="paket-type">Paket Kantor</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 1.200.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 200 Mbps</li>
+                        <li><i class="fas fa-infinity"></i> Unlimited Quota</li>
+                        <li><i class="fas fa-wifi"></i> 25 Device WiFi</li>
+                        <li><i class="fas fa-sync-alt"></i> Dual Backup Line</li>
+                        <li><i class="fas fa-user-shield"></i> Dedicated Support 24/7</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI005">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Paket 6 -->
+            <div class="paket-card" data-category="rumah">
+                <div class="paket-badge">STUDENT</div>
+                <div class="paket-header">
+                    <h3>Student Package</h3>
+                    <div class="paket-type">Paket Rumah</div>
+                </div>
+                <div class="paket-body">
+                    <div class="paket-price">
+                        <div class="price-amount">Rp 180.000</div>
+                        <div class="price-duration">/ bulan</div>
+                    </div>
+                    <ul class="paket-features">
+                        <li><i class="fas fa-bolt"></i> Kecepatan 20 Mbps</li>
+                        <li><i class="fas fa-database"></i> 150GB Quota</li>
+                        <li><i class="fas fa-wifi"></i> 1 Device WiFi</li>
+                        <li><i class="fas fa-book"></i> Akses e-library</li>
+                        <li><i class="fas fa-headset"></i> Support 12/5</li>
+                    </ul>
+                    <button class="beli-btn" data-id="WIFI006">
+                        <i class="fas fa-shopping-cart"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CONFIRMATION MODAL (DIBUTUHKAN UNTUK CEK SALDO) -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Konfirmasi Pembelian</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info" id="modalInfo">
+                    <!-- Informasi paket akan diisi oleh JavaScript -->
+                </div>
+                <p>Anda yakin ingin membeli paket ini?</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" id="cancelBuy">
+                        <i class="fas fa-times-circle"></i> Batal
+                    </button>
+                    <button class="modal-btn confirm" id="confirmBuy">
+                        <i class="fas fa-check-circle"></i> Ya, Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== DATA PAKET WIFI ====================
+        const wifiPackages = {
+            WIFI001: {
+                id: "WIFI001",
+                title: "Basic Home",
+                category: "rumah",
+                type: "Paket Rumah",
+                price: 250000,
+                speed: "30 Mbps",
+                quota: "Unlimited",
+                features: ["Kecepatan 30 Mbps", "Unlimited Quota", "1 Device WiFi", "Gratis instalasi", "Support 24/7"],
+                badge: "POPULER",
+                duration: "30 Hari"
+            },
+            WIFI002: {
+                id: "WIFI002",
+                title: "Family Pack",
+                category: "rumah",
+                type: "Paket Rumah",
+                price: 400000,
+                speed: "50 Mbps",
+                quota: "Unlimited",
+                features: ["Kecepatan 50 Mbps", "Unlimited Quota", "4 Device WiFi", "Gratis instalasi", "Netflix included"],
+                badge: null,
+                duration: "30 Hari"
+            },
+            WIFI003: {
+                id: "WIFI003",
+                title: "Office Pro",
+                category: "kantor",
+                type: "Paket Kantor",
+                price: 750000,
+                speed: "100 Mbps",
+                quota: "Unlimited",
+                features: ["Kecepatan 100 Mbps", "Unlimited Quota", "10 Device WiFi", "Static IP Address", "Priority Support"],
+                badge: "PROFESIONAL",
+                duration: "30 Hari"
+            },
+            WIFI004: {
+                id: "WIFI004",
+                title: "Gaming Ultra",
+                category: "gaming",
+                type: "Paket Gaming",
+                price: 550000,
+                speed: "80 Mbps",
+                quota: "Unlimited",
+                features: ["Kecepatan 80 Mbps", "Unlimited Quota", "Ping rendah (<30ms)", "3 Device WiFi", "Gaming optimization"],
+                badge: "GAMING",
+                duration: "30 Hari"
+            },
+            WIFI005: {
+                id: "WIFI005",
+                title: "Enterprise",
+                category: "kantor",
+                type: "Paket Kantor",
+                price: 1200000,
+                speed: "200 Mbps",
+                quota: "Unlimited",
+                features: ["Kecepatan 200 Mbps", "Unlimited Quota", "25 Device WiFi", "Dual Backup Line", "Dedicated Support 24/7"],
+                badge: "ENTERPRISE",
+                duration: "30 Hari"
+            },
+            WIFI006: {
+                id: "WIFI006",
+                title: "Student Package",
+                category: "rumah",
+                type: "Paket Rumah",
+                price: 180000,
+                speed: "20 Mbps",
+                quota: "150GB",
+                features: ["Kecepatan 20 Mbps", "150GB Quota", "1 Device WiFi", "Akses e-library", "Support 12/5"],
+                badge: "STUDENT",
+                duration: "30 Hari"
+            }
+        };
+
+        // ==================== FUNGSI UTAMA ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Initialize page
+            initPage();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Initialize navbar scroll
+            initNavbarScroll();
+            
+            // Update balance display
+            updateBalanceDisplay();
+        });
+        
+        // ==================== CHECK LOGIN STATUS ====================
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (!isLoggedIn && !isRegistered) {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // ==================== UPDATE BALANCE DISPLAY ====================
+        function updateBalanceDisplay() {
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 500000);
+            const balanceElement = document.getElementById('balanceAmount');
+            balanceElement.textContent = 'Saldo: Rp ' + userBalance.toLocaleString('id-ID');
+            
+            // Add warning animation if balance is low
+            if (userBalance < 100000) {
+                const balanceDiv = document.getElementById('navbarBalance');
+                balanceDiv.style.animation = 'pulseGold 1.5s infinite';
+            }
+        }
+        
+        // ==================== INITIALIZE PAGE ====================
+        function initPage() {
+            // Setup event listeners untuk filter
+            setupFilterListeners();
+            
+            // Setup event listeners untuk tombol beli
+            setupBeliButtons();
+            
+            // Setup modal buttons
+            setupModalButtons();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Selamat datang di Paket WiFi Signalin! Pilih paket internet terbaik untuk kebutuhan Anda.');
+            }, 1000);
+        }
+        
+        // ==================== FILTER PAKET ====================
+        function setupFilterListeners() {
+            // Filter paket berdasarkan kategori
+            document.querySelectorAll('.filter-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Hapus kelas active dari semua tombol
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Tambah kelas active ke tombol yang diklik
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    const cards = document.querySelectorAll('.paket-card');
+                    
+                    cards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+        
+        // ==================== SETUP TOMBOL BELI ====================
+        function setupBeliButtons() {
+            let selectedPackage = null;
+            
+            document.querySelectorAll('.beli-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageId = this.getAttribute('data-id');
+                    selectedPackage = wifiPackages[packageId];
+                    
+                    if (!selectedPackage) return;
+                    
+                    // Cek saldo user
+                    const userBalance = parseInt(localStorage.getItem('user_balance') || 500000);
+                    
+                    if (userBalance < selectedPackage.price) {
+                        const saldoKurang = selectedPackage.price - userBalance;
+                        showNotification(`Saldo tidak cukup! Anda membutuhkan tambahan Rp ${saldoKurang.toLocaleString('id-ID')}`, 'error');
+                        return;
+                    }
+                    
+                    // Tampilkan modal konfirmasi (SEPERTI DI INTERNET.HTML)
+                    showConfirmationModal(selectedPackage, userBalance);
+                });
+            });
+        }
+        
+        // ==================== SHOW CONFIRMATION MODAL ====================
+        function showConfirmationModal(packageData, userBalance) {
+            const modalInfo = document.getElementById('modalInfo');
+            const saldoAfter = userBalance - packageData.price;
+            
+            modalInfo.innerHTML = `
+                <p><strong>Paket:</strong> ${packageData.title}</p>
+                <p><strong>Kategori:</strong> ${packageData.type}</p>
+                <p><strong>Kecepatan:</strong> ${packageData.speed}</p>
+                <p><strong>Kuota:</strong> ${packageData.quota}</p>
+                <p><strong>Durasi:</strong> ${packageData.duration}</p>
+                <p><strong>Harga:</strong> Rp ${packageData.price.toLocaleString('id-ID')}</p>
+                <p><strong>Saldo Anda:</strong> Rp ${userBalance.toLocaleString('id-ID')}</p>
+                <p><strong>Saldo Setelah:</strong> Rp ${saldoAfter.toLocaleString('id-ID')}</p>
+            `;
+            
+            // Simpan data paket yang dipilih untuk digunakan saat konfirmasi
+            document.getElementById('confirmBuy').dataset.packageId = packageData.id;
+            
+            // Tampilkan modal
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+        
+        // ==================== SETUP MODAL BUTTONS ====================
+        function setupModalButtons() {
+            // Modal close button
+            document.querySelector('.modal-close').addEventListener('click', function() {
+                document.getElementById('confirmationModal').style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            document.getElementById('confirmationModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                }
+            });
+            
+            // Cancel button
+            document.getElementById('cancelBuy').addEventListener('click', function() {
+                document.getElementById('confirmationModal').style.display = 'none';
+            });
+            
+            // Confirm button - DIPERBAIKI DENGAN LOGIKA SAMA SEPERTI INTERNET.HTML
+            document.getElementById('confirmBuy').addEventListener('click', function() {
+                const packageId = this.dataset.packageId;
+                const packageData = wifiPackages[packageId];
+                
+                if (!packageData) {
+                    showNotification('Terjadi kesalahan. Silakan pilih paket kembali.', 'error');
+                    return;
+                }
+                
+                // LOGIKA SAMA SEPERTI DI INTERNET.HTML
+                // DAPATKAN DATA PAKET
+                const pkg = wifiPackages[packageId] || {};
+                
+                // SIMPAN DATA PAKET DENGAN FORMAT YANG SAMA SEPERTI INTERNET.HTML
+                const selectedPackageData = {
+                    id: packageId,
+                    name: packageData.title,
+                    price: packageData.price,
+                    type: 'wifi',  // Tipe 'wifi' untuk identifikasi di payment.html
+                    date: new Date().toISOString(),
+                    category: pkg.category || 'wifi',
+                    speed: pkg.speed || '',
+                    quota: pkg.quota || '',
+                    duration: pkg.duration || '30 Hari',
+                    packageQuota: pkg.quota || '',
+                    packageSpeed: pkg.speed || '',
+                    isUnlimited: pkg.quota === 'Unlimited' || false,
+                    dataAmount: pkg.quota && pkg.quota !== 'Unlimited' ? 
+                               parseFloat(pkg.quota.replace('GB', '').trim()) : null
+                };
+
+                // SIMPAN KE LOCALSTORAGE DENGAN KEY YANG SAMA SEPERTI INTERNET.HTML
+                localStorage.setItem('selectedPackage', JSON.stringify(selectedPackageData));
+                localStorage.setItem('purchaseType', 'wifi');
+
+                // CEK SALDO USER (SUDAH DICEK SEBELUMNYA, TAPI UNTUK KEAMANAN)
+                const userBalance = parseInt(localStorage.getItem('user_balance') || 500000);
+                if (userBalance < packageData.price) {
+                    if (confirm(`Saldo Anda tidak cukup (Rp ${userBalance.toLocaleString('id-ID')}). Ingin top up saldo sekarang?`)) {
+                        window.location.href = 'topup.html';
+                        return;
+                    }
+                }
+
+                // REDIRECT KE PAYMENT.HTML
+                window.location.href = 'payment.html';
+            });
+        }
+        
+        // ==================== MOBILE MENU ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+        }
+        
+        // ==================== NAVBAR SCROLL EFFECT ====================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== NOTIFICATION ====================
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            }
+            
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ==================== LOGOUT ====================
+        function logout() {
+            // Clear all user data from localStorage except registration data
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            showNotification('Logout berhasil');
+            
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // ==================== PULSE ANIMATION FOR LOW BALANCE ====================
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulseGold {
+                0% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+                50% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.6); }
+                100% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

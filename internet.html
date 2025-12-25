@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Paket Internet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="transactions.js"></script>
+    <style>
+        /* ==================== ROOT VARIABLES (SESUAI PULSA.HTML) ==================== */
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #1A1A1A;
+            --primary-gray: #2D2D2D;
+            --primary-gray-dark: #121212;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --accent-gold-glow: rgba(212, 175, 55, 0.3);
+            --text-main: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-dim: #808080;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --shadow-dark: 0 15px 35px rgba(0, 0, 0, 0.7);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--primary-black);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        /* ==================== NAVBAR (SAMA DENGAN PULSA.HTML) ==================== */
+        .navbar {
+            width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+            background: rgba(18, 18, 18, 0.98);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .balance-display {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-normal);
+        }
+        
+        .balance-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .balance-display i {
+            font-size: 1rem;
+        }
+        
+        .mobile-menu-btn {
+            display: flex;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            cursor: pointer;
+            padding: 8px;
+            transition: all var(--transition-fast);
+            background: var(--primary-gray);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: scale(1.05);
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+        }
+        
+        .profile-menu:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all var(--transition-normal);
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 15px var(--accent-gold-glow);
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+            transition: width var(--transition-normal);
+        }
+        
+        .navbar-brand:hover::after {
+            width: 100%;
+        }
+        
+        /* ==================== SIDEBAR MOBILE (SAMA DENGAN PULSA.HTML) ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar-mobile {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-gray-dark);
+            z-index: 1000;
+            padding: 30px;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-mobile.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--primary-gray), #3a3a3a);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* ==================== MAIN CONTENT AREA ==================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        /* ==================== PAGE HEADER ==================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+        }
+        
+        .page-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* ==================== CATEGORY FILTER ==================== */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .category-btn {
+            padding: 12px 25px;
+            border-radius: var(--border-radius-xl);
+            background: var(--primary-gray);
+            color: var(--text-secondary);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+        
+        .category-btn:hover:not(.active) {
+            background: var(--primary-gray-light);
+            color: var(--text-main);
+            transform: translateY(-2px);
+        }
+        
+        /* ==================== PACKAGES GRID (STYLE SEPERTI PULSA) ==================== */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 1200px) {
+            .packages-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .packages-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
+        .package-card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-normal);
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-dark);
+            border-color: var(--accent-gold);
+        }
+        
+        .package-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .package-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-medium);
+            transition: transform var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+            color: var(--accent-gold);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .package-card:hover .package-icon {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .package-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 10px;
+        }
+        
+        .package-description {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .package-features {
+            text-align: left;
+            margin: 25px 0;
+            flex-grow: 1;
+        }
+        
+        .package-features ul {
+            list-style: none;
+        }
+        
+        .package-features li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .package-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        
+        .package-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .package-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .package-price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+        
+        .btn-buy {
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .btn-buy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .btn-buy::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .btn-buy:hover::after {
+            opacity: 1;
+        }
+        
+        .btn-buy span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ==================== LOADING OVERLAY ==================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* ==================== RESPONSIVE STYLES ==================== */
+        @media (max-width: 1024px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .balance-display {
+                min-width: 130px;
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-description {
+                font-size: 1rem;
+            }
+            
+            .navbar {
+                padding: 0 20px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+                position: static;
+                transform: none;
+                left: auto;
+            }
+            
+            .navbar-center {
+                position: static;
+                transform: none;
+            }
+            
+            .balance-display {
+                display: none;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .package-price {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 15px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.6rem;
+                margin: 0 10px;
+            }
+            
+            .package-card {
+                padding: 20px;
+            }
+            
+            .package-price {
+                font-size: 1.8rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .category-filter {
+                gap: 10px;
+            }
+            
+            .category-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .packages-grid {
+                gap: 15px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-mobile" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="pulsa.html"><i class="fas fa-mobile-alt"></i> Pulsa</a>
+            <a href="internet.html" class="active"><i class="fas fa-wifi"></i> Paket Data</a>
+            <a href="streaming.html"><i class="fas fa-video"></i> Streaming</a>
+            <a href="nonton.html"><i class="fas fa-tv"></i> Nonton</a>
+            <a href="wifi.html"><i class="fas fa-gamepad"></i> Layanan Wifi</a>
+            <a href="riwayat.html"><i class="fas fa-history"></i> Riwayat Top Up</a>
+            <a href="transaksi.html"><i class="fas fa-history"></i> Riwayat Transaksi</a>
+            <a href="help.html"><i class="fas fa-question-circle"></i> Bantuan</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MODIFIED NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil" id="profileLink">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        
+        <div class="navbar-center">
+            <div class="navbar-brand">Signalin</div>
+        </div>
+        
+        <div class="navbar-right">
+            <div class="balance-display" id="navbarBalance">
+                <i class="fas fa-wallet"></i>
+                <span id="balanceAmount">Saldo: Rp 328.500</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- LOADING -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <div class="main-container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">Paket Internet</h1>
+            <p class="page-description">
+                Pilih paket internet premium sesuai kebutuhan Anda. Kecepatan maksimal, harga kompetitif, dan jaringan terstabil!
+            </p>
+        </div>
+        
+        <!-- CATEGORY FILTER -->
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-layer-group"></i>
+                Semua
+            </button>
+            <button class="category-btn" data-category="harian">
+                <i class="fas fa-sun"></i>
+                Harian
+            </button>
+            <button class="category-btn" data-category="mingguan">
+                <i class="fas fa-calendar-week"></i>
+                Mingguan
+            </button>
+            <button class="category-btn" data-category="bulanan">
+                <i class="fas fa-calendar-alt"></i>
+                Bulanan
+            </button>
+            <button class="category-btn" data-category="mahasiswa">
+                <i class="fas fa-user-graduate"></i>
+                Mahasiswa
+            </button>
+            <button class="category-btn" data-category="premium">
+                <i class="fas fa-crown"></i>
+                Premium
+            </button>
+        </div>
+        
+        <!-- PACKAGES GRID -->
+        <div class="packages-grid" id="packagesGrid">
+            <!-- Packages will be loaded here -->
+        </div>
+    </div>
+    
+    <script>
+        // ==================== PACKAGE DATA ====================
+        const internetPackages = [
+            {
+                id: 'internet_1',
+                name: 'Paket Harian 1GB',
+                category: 'harian',
+                description: 'Cocok untuk kebutuhan sehari-hari dengan kecepatan premium',
+                icon: 'fas fa-bolt',
+                price: 15000,
+                dataAmount: 1,
+                duration: '1 Hari',
+                features: [
+                    '1 GB Kuota Utama',
+                    'Kecepatan hingga 100 Mbps',
+                    'Akses 24 Jam Nonstop',
+                    'Masa aktif 1 hari',
+                    'Support Premium 24/7'
+                ],
+                badge: 'TERLARIS'
+            },
+            {
+                id: 'internet_2',
+                name: 'Paket Mingguan 5GB',
+                category: 'mingguan',
+                description: 'Solusi lengkap untuk aktivitas mingguan',
+                icon: 'fas fa-calendar-week',
+                price: 50000,
+                dataAmount: 5,
+                duration: '7 Hari',
+                features: [
+                    '5 GB Kuota Utama',
+                    '3 GB Kuota Malam (00-06)',
+                    'Akses media sosial unlimited',
+                    'Masa aktif 7 hari',
+                    'Priority Support'
+                ],
+                badge: 'EKONOMIS'
+            },
+            {
+                id: 'internet_3',
+                name: 'Paket Bulanan 20GB',
+                category: 'bulanan',
+                description: 'Paket lengkap premium untuk sebulan penuh',
+                icon: 'fas fa-calendar-alt',
+                price: 120000,
+                dataAmount: 20,
+                duration: '30 Hari',
+                features: [
+                    '20 GB Kuota Utama',
+                    '10 GB Kuota Malam',
+                    'Akses streaming HD',
+                    'Bonus 5 GB Weekend',
+                    'No Throttling'
+                ],
+                badge: 'REKOMENDASI'
+            },
+            {
+                id: 'internet_4',
+                name: 'Paket Mahasiswa 30GB',
+                category: 'mahasiswa',
+                description: 'Spesial untuk aktivitas akademik mahasiswa',
+                icon: 'fas fa-user-graduate',
+                price: 140000,
+                dataAmount: 30,
+                duration: '30 Hari',
+                features: [
+                    '30 GB Kuota Utama',
+                    '15 GB Kuota Kampus',
+                    'Akses jurnal online gratis',
+                    'Masa aktif 30 hari',
+                    'Edu Content Priority'
+                ],
+                badge: 'SPESIAL'
+            },
+            {
+                id: 'internet_5',
+                name: 'Paket Unlimited Pro',
+                category: 'premium',
+                description: 'Internet tanpa batas dengan kecepatan maksimal',
+                icon: 'fas fa-infinity',
+                price: 250000,
+                dataAmount: null,
+                isUnlimited: true,
+                duration: '30 Hari',
+                features: [
+                    'Unlimited Kuota Utama',
+                    'Kecepatan hingga 1 Gbps',
+                    'No Fair Usage Policy',
+                    'Priority Network Access',
+                    'VIP Support 24/7'
+                ],
+                badge: 'PREMIUM'
+            },
+            {
+                id: 'internet_6',
+                name: 'Paket Keluarga 100GB',
+                category: 'bulanan',
+                description: 'Solusi terbaik untuk kebutuhan keluarga modern',
+                icon: 'fas fa-users',
+                price: 350000,
+                dataAmount: 100,
+                duration: '30 Hari',
+                features: [
+                    '100 GB Kuota Utama',
+                    'Sharing hingga 8 device',
+                    'Parental Control Premium',
+                    'Family Safety Features',
+                    '24/7 Priority Support'
+                ],
+                badge: 'FAMILY'
+            },
+            {
+                id: 'internet_7',
+                name: 'Paket Bisnis 50GB',
+                category: 'premium',
+                description: 'Untuk kebutuhan profesional dan bisnis',
+                icon: 'fas fa-briefcase',
+                price: 200000,
+                dataAmount: 50,
+                duration: '30 Hari',
+                features: [
+                    '50 GB Kuota Utama',
+                    'VPN Access Included',
+                    'Cloud Storage 50GB',
+                    'Business Support 24/7',
+                    'Multiple Device Support'
+                ],
+                badge: 'BISNIS'
+            },
+            {
+                id: 'internet_8',
+                name: 'Paket Gamer 15GB',
+                category: 'premium',
+                description: 'Optimized untuk gaming dengan ping terendah',
+                icon: 'fas fa-gamepad',
+                price: 80000,
+                dataAmount: 15,
+                duration: '30 Hari',
+                features: [
+                    '15 GB Kuota Gaming',
+                    'Low Latency Network',
+                    'Game Server Priority',
+                    'No Data Throttling',
+                    'Gaming Support Special'
+                ],
+                badge: 'GAMING'
+            }
+        ];
+        
+        // ==================== SIDEBAR FUNCTIONS ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== RENDER PACKAGES ====================
+        function renderPackages(category = 'all') {
+            const grid = document.getElementById('packagesGrid');
+            grid.innerHTML = '';
+            
+            const filteredPackages = category === 'all' 
+                ? internetPackages 
+                : internetPackages.filter(pkg => pkg.category === category);
+            
+            if (filteredPackages.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-secondary);">
+                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 20px; color: var(--accent-gold);"></i>
+                        <h3 style="margin-bottom: 10px; color: var(--text-main);">Belum Ada Paket Tersedia</h3>
+                        <p>Tidak ada paket tersedia untuk kategori ini. Silakan pilih kategori lain.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredPackages.forEach(pkg => {
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.innerHTML = `
+                    ${pkg.badge ? `<div class="package-badge">${pkg.badge}</div>` : ''}
+                    <div class="package-icon">
+                        <i class="${pkg.icon}"></i>
+                    </div>
+                    <h3 class="package-name">${pkg.name}</h3>
+                    <p class="package-description">${pkg.description}</p>
+                    <div class="package-features">
+                        <ul>
+                            ${pkg.features.map(feature => `
+                                <li>${feature}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="package-footer">
+                        <div class="package-price">Rp ${pkg.price.toLocaleString('id-ID')}</div>
+                        <button class="btn-buy" onclick="buyPackage('${pkg.id}', '${pkg.name}', ${pkg.price})">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Beli Sekarang</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        // ==================== BUY PACKAGE ====================
+        function buyPackage(packageId, packageName, price) {
+            // Simpan data paket yang dipilih ke localStorage agar payment page dapat memprosesnya
+            const pkg = internetPackages.find(p => p.id === packageId) || {};
+            const packageData = {
+                id: packageId,
+                name: packageName,
+                price: price,
+                type: 'internet',
+                date: new Date().toISOString(),
+                category: pkg.category || 'internet',
+                dataAmount: pkg.dataAmount || null,
+                isUnlimited: !!pkg.isUnlimited,
+                duration: pkg.duration || '30 Hari',
+                packageQuota: pkg.dataAmount ? (pkg.dataAmount + 'GB') : (pkg.isUnlimited ? 'Unlimited' : '')
+            };
+
+            localStorage.setItem('selectedPackage', JSON.stringify(packageData));
+            localStorage.setItem('purchaseType', 'internet');
+
+            // Cek saldo user
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 328500);
+            if (userBalance < price) {
+                if (confirm(`Saldo Anda tidak cukup (Rp ${userBalance.toLocaleString('id-ID')}). Ingin top up saldo sekarang?`)) {
+                    window.location.href = 'topup.html';
+                }
+                return;
+            }
+
+            // Redirect ke payment.html
+            window.location.href = 'payment.html';
+        }
+        
+        // ==================== HELPER FUNCTIONS ====================
+        function updateBalanceDisplay() {
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 328500);
+            const balanceElement = document.getElementById('balanceAmount');
+            balanceElement.textContent = 'Saldo: Rp ' + userBalance.toLocaleString('id-ID');
+            
+            // Add warning animation if balance is low
+            if (userBalance < 50000) {
+                const balanceDiv = document.getElementById('navbarBalance');
+                balanceDiv.style.animation = 'pulseGold 1.5s infinite';
+            }
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
+        function logout() {
+            // Clear all user data from localStorage except registration data
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        }
+        
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                const isRegistered = localStorage.getItem('isRegistered');
+                if (!isRegistered) {
+                    window.location.href = 'login.html';
+                }
+            }
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Update user balance
+            updateBalanceDisplay();
+            
+            // Render all packages initially
+            renderPackages();
+            
+            // Category filter event listeners
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Show loading overlay
+                    document.getElementById('loadingOverlay').classList.add('active');
+                    
+                    // Render packages for selected category
+                    const category = this.getAttribute('data-category');
+                    
+                    // Simulate loading delay
+                    setTimeout(() => {
+                        renderPackages(category);
+                        document.getElementById('loadingOverlay').classList.remove('active');
+                    }, 300);
+                });
+            });
+            
+            // Handle keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Esc to close sidebar
+                if (e.key === 'Escape') {
+                    const sidebar = document.getElementById('sidebar');
+                    const sidebarOverlay = document.getElementById('sidebarOverlay');
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

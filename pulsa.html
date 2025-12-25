@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signalin - Paket Pulsa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="transactions.js"></script>
+    <style>
+        /* ==================== ROOT VARIABLES (FROM HOME.HTML) ==================== */
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --primary-gray-light: #1A1A1A;
+            --primary-gray: #2D2D2D;
+            --primary-gray-dark: #121212;
+            --accent-gold: #D4AF37;
+            --accent-gold-dark: #B8860B;
+            --accent-gold-light: #FFD700;
+            --accent-gold-glow: rgba(212, 175, 55, 0.3);
+            --text-main: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-dim: #808080;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --shadow-dark: 0 15px 35px rgba(0, 0, 0, 0.7);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --border-radius-xl: 24px;
+            
+            /* Operator Colors */
+            --telkomsel-red: #E60012;
+            --indosat-orange: #FF6B00;
+            --xl-purple: #6700A3;
+            --three-blue: #00A2FF;
+            --smartfren-yellow: #FFD700;
+            --axis-violet: #7B0099;
+        }
+        
+        /* ==================== BASE STYLES ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--primary-black);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        /* ==================== MODIFIED NAVBAR ==================== */
+        .navbar {
+            width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            min-height: 80px;
+            transition: all var(--transition-normal);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .navbar.scrolled {
+            min-height: 70px;
+            box-shadow: var(--shadow-medium);
+            background: rgba(18, 18, 18, 0.98);
+        }
+        
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .navbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .balance-display {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            min-width: 150px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-normal);
+        }
+        
+        .balance-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .balance-display i {
+            font-size: 1rem;
+        }
+        
+        .mobile-menu-btn {
+            display: flex;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            cursor: pointer;
+            padding: 8px;
+            transition: all var(--transition-fast);
+            background: var(--primary-gray);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu-btn:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: scale(1.05);
+        }
+        
+        .profile-menu {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-light);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .profile-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+        }
+        
+        .profile-menu:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .profile-menu:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .profile-menu-icon {
+            font-size: 1.5rem;
+            color: var(--primary-black);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .navbar-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2.2rem;
+            color: var(--primary-black);
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all var(--transition-normal);
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            text-shadow: 0 5px 15px var(--accent-gold-glow);
+        }
+        
+        .navbar-brand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 40%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+            transition: width var(--transition-normal);
+        }
+        
+        .navbar-brand:hover::after {
+            width: 100%;
+        }
+        
+        /* ==================== SIDEBAR MOBILE ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .sidebar-mobile {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 320px;
+            height: 100%;
+            background: var(--primary-gray-dark);
+            z-index: 1000;
+            padding: 30px;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .sidebar-mobile.active {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        
+        .sidebar-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dim);
+            transition: all var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-submenu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-left: 20px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        
+        .sidebar-submenu.active {
+            display: flex;
+        }
+        
+        .sidebar-submenu a {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .sidebar-logout-btn {
+            margin-top: auto;
+            background: linear-gradient(135deg, var(--primary-gray), #3a3a3a);
+            color: var(--accent-gold);
+            border: none;
+            padding: 16px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-normal);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .sidebar-logout-btn:hover {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            color: var(--primary-black);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* ==================== MAIN CONTENT AREA ==================== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        /* ==================== PAGE HEADER ==================== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 2px;
+        }
+        
+        .page-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* ==================== OPERATOR FILTER ==================== */
+        .operator-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .operator-filter-btn {
+            padding: 12px 25px;
+            border-radius: var(--border-radius-xl);
+            background: var(--primary-gray);
+            color: var(--text-secondary);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+        
+        .operator-filter-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+        
+        .operator-filter-btn:hover:not(.active) {
+            background: var(--primary-gray-light);
+            color: var(--text-main);
+            transform: translateY(-2px);
+        }
+        
+        /* ==================== PACKAGES CONTAINER ==================== */
+        .packages-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        @media (max-width: 1200px) {
+            .packages-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .packages-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
+        .package-card {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-normal);
+            text-align: center;
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .package-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-dark);
+            border-color: var(--accent-gold);
+        }
+        
+        .package-header {
+            margin-bottom: 25px;
+        }
+        
+        .operator-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-white);
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-medium);
+            transition: transform var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .operator-logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .package-card:hover .operator-logo {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .package-card:hover .operator-logo::before {
+            opacity: 1;
+        }
+        
+        .telkomsel { 
+            background: linear-gradient(135deg, var(--telkomsel-red), #CC0000);
+        }
+        
+        .indosat { 
+            background: linear-gradient(135deg, var(--indosat-orange), #CC5500);
+        }
+        
+        .xl { 
+            background: linear-gradient(135deg, var(--xl-purple), #4B0076);
+        }
+        
+        .three { 
+            background: linear-gradient(135deg, var(--three-blue), #0080CC);
+        }
+        
+        .smartfren { 
+            background: linear-gradient(135deg, var(--smartfren-yellow), #B8860B);
+            color: var(--primary-black);
+        }
+        
+        .axis { 
+            background: linear-gradient(135deg, var(--axis-violet), #5A0073);
+        }
+        
+        .package-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 5px;
+        }
+        
+        .operator-name {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+        
+        .package-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin: 20px 0;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .package-price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+        
+        .package-benefits {
+            text-align: left;
+            margin: 25px 0;
+            flex-grow: 1;
+        }
+        
+        .package-benefits ul {
+            list-style: none;
+        }
+        
+        .package-benefits li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .package-benefits li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+        
+        .buy-button {
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            color: var(--primary-black);
+            border: none;
+            padding: 16px 30px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            width: 100%;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .buy-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+        }
+        
+        .buy-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+        
+        .buy-button:hover::after {
+            opacity: 1;
+        }
+        
+        .buy-button span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ==================== NOTIFICATION ==================== */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--primary-black);
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-dark);
+            z-index: 9999;
+            font-weight: 600;
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 1.7s forwards;
+            max-width: 300px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        /* ==================== FOOTER ==================== */
+        .footer {
+            background: linear-gradient(145deg, #1a1a1a, #121212);
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+        
+        .footer-brand {
+            font-family: 'Alfa Slab One', cursive;
+            font-size: 2rem;
+            background: linear-gradient(45deg, var(--accent-gold), var(--accent-gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .footer-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-white);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+            border-radius: 3px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-gold);
+            transform: translateX(5px);
+        }
+        
+        .footer-contact {
+            list-style: none;
+        }
+        
+        .footer-contact li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .footer-contact i {
+            color: var(--accent-gold);
+            font-size: 1rem;
+            margin-top: 2px;
+        }
+        
+        .footer-contact span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .footer-copyright {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+        
+        .footer-social a:hover {
+            background: var(--accent-gold);
+            color: var(--primary-black);
+            transform: translateY(-3px);
+        }
+        
+        /* ==================== RESPONSIVE STYLES ==================== */
+        @media (max-width: 1024px) {
+            .navbar-brand {
+                font-size: 1.8rem;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .balance-display {
+                min-width: 130px;
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .page-description {
+                font-size: 1rem;
+            }
+            
+            .navbar {
+                padding: 0 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .balance-display {
+                min-width: 120px;
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 0 10px;
+                min-height: 70px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.4rem;
+                position: static;
+                transform: none;
+                left: auto;
+            }
+            
+            .navbar-center {
+                position: static;
+                transform: none;
+            }
+            
+            .balance-display {
+                display: none;
+            }
+            
+            .profile-menu {
+                width: 42px;
+                height: 42px;
+            }
+            
+            .main-container {
+                padding: 0 10px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .package-price {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .operator-filter {
+                gap: 10px;
+            }
+            
+            .operator-filter-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .packages-container {
+                gap: 15px;
+            }
+            
+            .package-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NOTIFICATION -->
+    <div class="notification" id="notification">
+        <div class="notification-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="notification-content">
+            <div class="notification-title" id="notificationTitle">Berhasil</div>
+            <div class="notification-message" id="notificationMessage">Operasi berhasil diselesaikan.</div>
+        </div>
+    </div>
+    
+    <!-- MODIFIED NAVBAR WITH BALANCE ON RIGHT -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-left">
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            <a href="profile.html" class="profile-menu" title="Profil" id="profileLink">
+                <span class="profile-menu-icon"><i class="fas fa-user"></i></span>
+            </a>
+        </div>
+        
+        <div class="navbar-center">
+            <div class="navbar-brand">Signalin</div>
+        </div>
+        
+        <div class="navbar-right">
+            <div class="balance-display" id="navbarBalance">
+                <i class="fas fa-wallet"></i>
+                <span id="balanceAmount">Saldo: Rp 328.500</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- SIDEBAR MOBILE -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="sidebar-mobile" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Menu</div>
+            <div class="close-btn" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="home.html"><i class="fas fa-home"></i> Home</a>
+            <a href="pulsa.html" class="active"><i class="fas fa-mobile-alt"></i> Pulsa</a>
+            <a href="internet.html"><i class="fas fa-wifi"></i> Paket Data</a>
+            <a href="streaming.html"><i class="fas fa-video"></i> Streaming</a>
+            <a href="nonton.html"><i class="fas fa-tv"></i> Nonton</a>
+            <a href="wifi.html"><i class="fas fa-gamepad"></i> Layanan Wifi</a>
+            <a href="riwayat.html"><i class="fas fa-history"></i> Riwayat Top Up</a>
+            <a href="transaksi.html"><i class="fas fa-history"></i> Riwayat Transaksi</a>
+            <a href="help.html"><i class="fas fa-question-circle"></i> Bantuan</a>
+        </div>
+        <button class="sidebar-logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+    
+    <!-- MAIN CONTENT -->
+    <div class="main-container">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h1 class="page-title">Paket Pulsa</h1>
+            <p class="page-description">
+                Pilih paket pulsa berkualitas premium sesuai kebutuhan Anda. Pembelian akan diproses melalui sistem kami yang aman dan cepat.
+            </p>
+        </div>
+        
+        <!-- OPERATOR FILTER -->
+        <div class="operator-filter">
+            <button class="operator-filter-btn active" onclick="filterPackages('all')">
+                <i class="fas fa-layer-group"></i>
+                Semua Operator
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('telkomsel')">
+                <i class="fas fa-bolt"></i>
+                Telkomsel
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('indosat')">
+                <i class="fas fa-fire"></i>
+                Indosat
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('xl')">
+                <i class="fas fa-star"></i>
+                XL Axiata
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('three')">
+                <i class="fas fa-infinity"></i>
+                Tri (3)
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('smartfren')">
+                <i class="fas fa-tachometer-alt"></i>
+                Smartfren
+            </button>
+            <button class="operator-filter-btn" onclick="filterPackages('axis')">
+                <i class="fas fa-rocket"></i>
+                Axis
+            </button>
+        </div>
+        
+        <!-- PACKAGES CONTAINER - NOW WITH 5 PACKAGES PER OPERATOR -->
+        <div class="packages-container" id="packagesContainer">
+            <!-- Paket Telkomsel 1 -->
+            <div class="package-card" data-operator="telkomsel">
+                <div class="package-header">
+                    <div class="operator-logo telkomsel">TS</div>
+                    <h3 class="package-name">Telkomsel Basic</h3>
+                    <div class="operator-name">Telkomsel</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Dukungan 24/7</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Telkomsel Basic Rp 5.000" data-price="5000" data-operator="telkomsel">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Telkomsel 2 -->
+            <div class="package-card" data-operator="telkomsel">
+                <div class="package-header">
+                    <div class="operator-logo telkomsel">TS</div>
+                    <h3 class="package-name">Telkomsel Medium</h3>
+                    <div class="operator-name">Telkomsel</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Bonus pulsa 1%</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Dukungan 24/7</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Telkomsel Medium Rp 10.000" data-price="10000" data-operator="telkomsel">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Telkomsel 3 -->
+            <div class="package-card" data-operator="telkomsel">
+                <div class="package-header">
+                    <div class="operator-logo telkomsel">TS</div>
+                    <h3 class="package-name">Telkomsel Standard</h3>
+                    <div class="operator-name">Telkomsel</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 7 hari</li>
+                        <li>Bonus 100MB internet</li>
+                        <li>Gratis 10 SMS</li>
+                        <li>Dukungan 24/7</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Telkomsel Standard Rp 25.000" data-price="25000" data-operator="telkomsel">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Telkomsel 4 -->
+            <div class="package-card" data-operator="telkomsel">
+                <div class="package-header">
+                    <div class="operator-logo telkomsel">TS</div>
+                    <h3 class="package-name">Telkomsel Premium</h3>
+                    <div class="operator-name">Telkomsel</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 1GB internet</li>
+                        <li>Gratis 30 SMS</li>
+                        <li>Gratis nelpon 30 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Telkomsel Premium Rp 50.000" data-price="50000" data-operator="telkomsel">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Telkomsel 5 -->
+            <div class="package-card" data-operator="telkomsel">
+                <div class="package-header">
+                    <div class="operator-logo telkomsel">TS</div>
+                    <h3 class="package-name">Telkomsel Ultimate</h3>
+                    <div class="operator-name">Telkomsel</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 3GB internet</li>
+                        <li>Gratis 100 SMS</li>
+                        <li>Gratis nelpon 60 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Telkomsel Ultimate Rp 100.000" data-price="100000" data-operator="telkomsel">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Indosat 1 -->
+            <div class="package-card" data-operator="indosat">
+                <div class="package-header">
+                    <div class="operator-logo indosat">IS</div>
+                    <h3 class="package-name">Indosat Basic</h3>
+                    <div class="operator-name">Indosat Ooredoo</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus pulsa 1%</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Indosat Basic Rp 5.000" data-price="5000" data-operator="indosat">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Indosat 2 -->
+            <div class="package-card" data-operator="indosat">
+                <div class="package-header">
+                    <div class="operator-logo indosat">IS</div>
+                    <h3 class="package-name">Indosat Medium</h3>
+                    <div class="operator-name">Indosat Ooredoo</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus pulsa 2%</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Indosat Medium Rp 10.000" data-price="10000" data-operator="indosat">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Indosat 3 -->
+            <div class="package-card" data-operator="indosat">
+                <div class="package-header">
+                    <div class="operator-logo indosat">IS</div>
+                    <h3 class="package-name">Indosat Standard</h3>
+                    <div class="operator-name">Indosat Ooredoo</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 7 hari</li>
+                        <li>Bonus 200MB internet</li>
+                        <li>Gratis 15 SMS</li>
+                        <li>Bonus pulsa 3%</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Indosat Standard Rp 25.000" data-price="25000" data-operator="indosat">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Indosat 4 -->
+            <div class="package-card" data-operator="indosat">
+                <div class="package-header">
+                    <div class="operator-logo indosat">IS</div>
+                    <h3 class="package-name">Indosat Premium</h3>
+                    <div class="operator-name">Indosat Ooredoo</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 1.5GB internet</li>
+                        <li>Gratis 50 SMS</li>
+                        <li>Gratis nelpon 45 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Indosat Premium Rp 50.000" data-price="50000" data-operator="indosat">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Indosat 5 -->
+            <div class="package-card" data-operator="indosat">
+                <div class="package-header">
+                    <div class="operator-logo indosat">IS</div>
+                    <h3 class="package-name">Indosat Ultimate</h3>
+                    <div class="operator-name">Indosat Ooredoo</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 4GB internet</li>
+                        <li>Gratis 150 SMS</li>
+                        <li>Gratis nelpon 90 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Indosat Ultimate Rp 100.000" data-price="100000" data-operator="indosat">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket XL 1 -->
+            <div class="package-card" data-operator="xl">
+                <div class="package-header">
+                    <div class="operator-logo xl">XL</div>
+                    <h3 class="package-name">XL Basic</h3>
+                    <div class="operator-name">XL Axiata</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus 50MB internet</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="XL Basic Rp 5.000" data-price="5000" data-operator="xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket XL 2 -->
+            <div class="package-card" data-operator="xl">
+                <div class="package-header">
+                    <div class="operator-logo xl">XL</div>
+                    <h3 class="package-name">XL Medium</h3>
+                    <div class="operator-name">XL Axiata</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Bonus 100MB internet</li>
+                        <li>Gratis 5 SMS</li>
+                        <li>Proses instan & langsung masuk</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="XL Medium Rp 10.000" data-price="10000" data-operator="xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket XL 3 -->
+            <div class="package-card" data-operator="xl">
+                <div class="package-header">
+                    <div class="operator-logo xl">XL</div>
+                    <h3 class="package-name">XL Standard</h3>
+                    <div class="operator-name">XL Axiata</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 1GB data internet</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Gratis 30 SMS</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="XL Standard Rp 25.000" data-price="25000" data-operator="xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket XL 4 -->
+            <div class="package-card" data-operator="xl">
+                <div class="package-header">
+                    <div class="operator-logo xl">XL</div>
+                    <h3 class="package-name">XL Premium</h3>
+                    <div class="operator-name">XL Axiata</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 2.5GB internet</li>
+                        <li>Gratis 75 SMS</li>
+                        <li>Gratis nelpon 50 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="XL Premium Rp 50.000" data-price="50000" data-operator="xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket XL 5 -->
+            <div class="package-card" data-operator="xl">
+                <div class="package-header">
+                    <div class="operator-logo xl">XL</div>
+                    <h3 class="package-name">XL Ultimate</h3>
+                    <div class="operator-name">XL Axiata</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 5GB internet</li>
+                        <li>Gratis 200 SMS</li>
+                        <li>Gratis nelpon 120 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="XL Ultimate Rp 100.000" data-price="100000" data-operator="xl">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket 3 1 -->
+            <div class="package-card" data-operator="three">
+                <div class="package-header">
+                    <div class="operator-logo three">3</div>
+                    <h3 class="package-name">Tri Basic</h3>
+                    <div class="operator-name">Tri (3)</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus 75MB internet</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Tri Basic Rp 5.000" data-price="5000" data-operator="three">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket 3 2 -->
+            <div class="package-card" data-operator="three">
+                <div class="package-header">
+                    <div class="operator-logo three">3</div>
+                    <h3 class="package-name">Tri Medium</h3>
+                    <div class="operator-name">Tri (3)</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Bonus 150MB internet</li>
+                        <li>Gratis 10 SMS</li>
+                        <li>Proses instan & langsung masuk</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Tri Medium Rp 10.000" data-price="10000" data-operator="three">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket 3 3 -->
+            <div class="package-card" data-operator="three">
+                <div class="package-header">
+                    <div class="operator-logo three">3</div>
+                    <h3 class="package-name">Tri Standard</h3>
+                    <div class="operator-name">Tri (3)</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 7 hari</li>
+                        <li>Bonus 1.2GB internet</li>
+                        <li>Gratis 40 SMS</li>
+                        <li>Gratis nelpon 20 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Tri Standard Rp 25.000" data-price="25000" data-operator="three">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket 3 4 -->
+            <div class="package-card" data-operator="three">
+                <div class="package-header">
+                    <div class="operator-logo three">3</div>
+                    <h3 class="package-name">Tri Premium</h3>
+                    <div class="operator-name">Tri (3)</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 2GB data internet</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Gratis nelpon 60 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Tri Premium Rp 50.000" data-price="50000" data-operator="three">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket 3 5 -->
+            <div class="package-card" data-operator="three">
+                <div class="package-header">
+                    <div class="operator-logo three">3</div>
+                    <h3 class="package-name">Tri Ultimate</h3>
+                    <div class="operator-name">Tri (3)</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 6GB internet</li>
+                        <li>Gratis 250 SMS</li>
+                        <li>Gratis nelpon 150 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Tri Ultimate Rp 100.000" data-price="100000" data-operator="three">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Smartfren 1 -->
+            <div class="package-card" data-operator="smartfren">
+                <div class="package-header">
+                    <div class="operator-logo smartfren">SF</div>
+                    <h3 class="package-name">Smartfren Basic</h3>
+                    <div class="operator-name">Smartfren</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus 100MB internet</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Smartfren Basic Rp 5.000" data-price="5000" data-operator="smartfren">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Smartfren 2 -->
+            <div class="package-card" data-operator="smartfren">
+                <div class="package-header">
+                    <div class="operator-logo smartfren">SF</div>
+                    <h3 class="package-name">Smartfren Medium</h3>
+                    <div class="operator-name">Smartfren</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Bonus 250MB internet</li>
+                        <li>Gratis 20 SMS</li>
+                        <li>Proses instan & langsung masuk</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Smartfren Medium Rp 10.000" data-price="10000" data-operator="smartfren">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Smartfren 3 -->
+            <div class="package-card" data-operator="smartfren">
+                <div class="package-header">
+                    <div class="operator-logo smartfren">SF</div>
+                    <h3 class="package-name">Smartfren Standard</h3>
+                    <div class="operator-name">Smartfren</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 7 hari</li>
+                        <li>Bonus 1.5GB internet</li>
+                        <li>Gratis 60 SMS</li>
+                        <li>Gratis nelpon 30 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Smartfren Standard Rp 25.000" data-price="25000" data-operator="smartfren">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Smartfren 4 -->
+            <div class="package-card" data-operator="smartfren">
+                <div class="package-header">
+                    <div class="operator-logo smartfren">SF</div>
+                    <h3 class="package-name">Smartfren Premium</h3>
+                    <div class="operator-name">Smartfren</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 3GB internet</li>
+                        <li>Gratis nelpon sesama Smartfren</li>
+                        <li>Gratis 100 SMS</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Smartfren Premium Rp 50.000" data-price="50000" data-operator="smartfren">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Smartfren 5 -->
+            <div class="package-card" data-operator="smartfren">
+                <div class="package-header">
+                    <div class="operator-logo smartfren">SF</div>
+                    <h3 class="package-name">Smartfren Ultimate</h3>
+                    <div class="operator-name">Smartfren</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 5GB data internet</li>
+                        <li>Gratis nelpon sesama Smartfren</li>
+                        <li>Gratis SMS unlimited</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Smartfren Ultimate Rp 100.000" data-price="100000" data-operator="smartfren">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Axis 1 -->
+            <div class="package-card" data-operator="axis">
+                <div class="package-header">
+                    <div class="operator-logo axis">AX</div>
+                    <h3 class="package-name">Axis Basic</h3>
+                    <div class="operator-name">Axis</div>
+                </div>
+                <div class="package-price">Rp 5.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 1 hari</li>
+                        <li>Tanpa potongan biaya</li>
+                        <li>Proses instan & langsung masuk</li>
+                        <li>Bonus 125MB internet</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Axis Basic Rp 5.000" data-price="5000" data-operator="axis">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Axis 2 -->
+            <div class="package-card" data-operator="axis">
+                <div class="package-header">
+                    <div class="operator-logo axis">AX</div>
+                    <h3 class="package-name">Axis Medium</h3>
+                    <div class="operator-name">Axis</div>
+                </div>
+                <div class="package-price">Rp 10.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 3 hari</li>
+                        <li>Bonus 300MB internet</li>
+                        <li>Gratis 25 SMS</li>
+                        <li>Proses instan & langsung masuk</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Axis Medium Rp 10.000" data-price="10000" data-operator="axis">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Axis 3 -->
+            <div class="package-card" data-operator="axis">
+                <div class="package-header">
+                    <div class="operator-logo axis">AX</div>
+                    <h3 class="package-name">Axis Standard</h3>
+                    <div class="operator-name">Axis</div>
+                </div>
+                <div class="package-price">Rp 25.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 7 hari</li>
+                        <li>Bonus 2GB internet</li>
+                        <li>Gratis 80 SMS</li>
+                        <li>Gratis nelpon 40 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Axis Standard Rp 25.000" data-price="25000" data-operator="axis">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Axis 4 -->
+            <div class="package-card" data-operator="axis">
+                <div class="package-header">
+                    <div class="operator-logo axis">AX</div>
+                    <h3 class="package-name">Axis Premium</h3>
+                    <div class="operator-name">Axis</div>
+                </div>
+                <div class="package-price">Rp 50.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 30 hari</li>
+                        <li>Bonus 4GB internet</li>
+                        <li>Gratis 150 SMS</li>
+                        <li>Gratis nelpon 80 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Axis Premium Rp 50.000" data-price="50000" data-operator="axis">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+            
+            <!-- Paket Axis 5 -->
+            <div class="package-card" data-operator="axis">
+                <div class="package-header">
+                    <div class="operator-logo axis">AX</div>
+                    <h3 class="package-name">Axis Ultimate</h3>
+                    <div class="operator-name">Axis</div>
+                </div>
+                <div class="package-price">Rp 100.000</div>
+                <div class="package-benefits">
+                    <ul>
+                        <li>Masa aktif 60 hari</li>
+                        <li>Bonus 8GB internet</li>
+                        <li>Gratis 300 SMS</li>
+                        <li>Gratis nelpon 150 menit</li>
+                    </ul>
+                </div>
+                <button class="buy-button" data-package="Axis Ultimate Rp 100.000" data-price="100000" data-operator="axis">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Beli Sekarang</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">Signalin</div>
+                    <p class="footer-description">
+                        Platform penyedia layanan digital terpercaya dengan berbagai pilihan paket internet, pulsa, voucher, dan layanan digital lainnya.
+                    </p>
+                    <div class="footer-contact">
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>Customer Service: 1500-123</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>Email: support@signalin.com</span>
+                        </li>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Layanan</h3>
+                    <ul class="footer-links">
+                        <li><a href="internet.html"><i class="fas fa-chevron-right"></i> Paket Data</a></li>
+                        <li><a href="pulsa.html"><i class="fas fa-chevron-right"></i> Pulsa & Paket Telepon</a></li>
+                        <li><a href="streaming.html"><i class="fas fa-chevron-right"></i> Layanan Streaming</a></li>
+                        <li><a href="nonton.html"><i class="fas fa-chevron-right"></i> Paket Nonton</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3 class="footer-title">Bantuan</h3>
+                    <ul class="footer-links">
+                        <li><a href="help.html"><i class="fas fa-chevron-right"></i> Pusat Bantuan</a></li>
+                        <li><a href="faq.html"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                        <li><a href="terms.html"><i class="fas fa-chevron-right"></i> Syarat & Ketentuan</a></li>
+                        <li><a href="privacy.html"><i class="fas fa-chevron-right"></i> Kebijakan Privasi</a></li>
+                        <li><a href="security.html"><i class="fas fa-chevron-right"></i> Keamanan</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    &copy; 2024 Signalin. All rights reserved.
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check login status
+            checkLoginStatus();
+            
+            // Load user data
+            loadUserData();
+            
+            // Initialize mobile menu
+            initMobileMenu();
+            
+            // Initialize filter buttons
+            initFilterButtons();
+            
+            // Add event listeners to buy buttons
+            const buyButtons = document.querySelectorAll('.buy-button');
+            
+            buyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageName = this.getAttribute('data-package');
+                    const packagePrice = parseInt(this.getAttribute('data-price'));
+                    const operator = this.getAttribute('data-operator');
+                    
+                    buyPackage(packageName, packagePrice, operator);
+                });
+            });
+            
+            // Check for purchase notification
+            const purchaseNotification = localStorage.getItem('purchaseNotification');
+            if (purchaseNotification) {
+                showNotification('info', 'Notifikasi', purchaseNotification);
+                localStorage.removeItem('purchaseNotification');
+            }
+            
+            // Navbar scroll effect
+            initNavbarScroll();
+        });
+        
+        // ==================== LOGIN STATUS CHECK ====================
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isRegistered = localStorage.getItem('isRegistered');
+            
+            if (!isLoggedIn && !isRegistered) {
+                // Redirect to login if not logged in
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // ==================== LOAD USER DATA ====================
+        function loadUserData() {
+            // Get user data from localStorage
+            const userPhone = localStorage.getItem('user_phone') || '081234567890';
+            const userBalance = localStorage.getItem('user_balance') || '328500';
+            
+            // Update balance in navbar
+            const formattedBalance = 'Saldo: Rp ' + parseInt(userBalance).toLocaleString('id-ID');
+            document.getElementById('balanceAmount').textContent = formattedBalance;
+            
+            // Check if balance is low
+            const balance = parseInt(userBalance);
+            if (balance < 50000) {
+                const balanceElement = document.getElementById('navbarBalance');
+                balanceElement.style.animation = 'pulseGold 1.5s infinite';
+            }
+        }
+        
+        // ==================== MOBILE MENU ====================
+        function initMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', () => {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+            
+            if (closeSidebarBtn) {
+                closeSidebarBtn.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+        }
+        
+        // ==================== NAVBAR SCROLL EFFECT ====================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // ==================== FILTER BUTTONS ====================
+        function initFilterButtons() {
+            const filterButtons = document.querySelectorAll('.operator-filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        function filterPackages(operator) {
+            const packages = document.querySelectorAll('.package-card');
+            
+            packages.forEach(package => {
+                if (operator === 'all') {
+                    package.style.display = 'flex';
+                } else {
+                    if (package.getAttribute('data-operator') === operator) {
+                        package.style.display = 'flex';
+                    } else {
+                        package.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Show notification
+            if (operator === 'all') {
+                showNotification('info', 'Filter', 'Menampilkan semua operator');
+            } else {
+                const operatorNames = {
+                    'telkomsel': 'Telkomsel',
+                    'indosat': 'Indosat',
+                    'xl': 'XL Axiata',
+                    'three': 'Tri (3)',
+                    'smartfren': 'Smartfren',
+                    'axis': 'Axis'
+                };
+                showNotification('info', 'Filter', `Menampilkan paket ${operatorNames[operator]}`);
+            }
+        }
+        
+        // ==================== BUY PACKAGE FUNCTION ====================
+        function buyPackage(packageName, packagePrice, operator) {
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 328500);
+            
+            // Check if user has enough balance
+            if (userBalance < packagePrice) {
+                showNotification('error', 'Saldo Tidak Cukup', 
+                    `Saldo Anda tidak cukup (Rp ${userBalance.toLocaleString('id-ID')}). Ingin top up saldo sekarang?`);
+                
+                // Ask user to top up
+                setTimeout(() => {
+                    if (confirm('Saldo tidak cukup. Ingin top up saldo sekarang?')) {
+                        window.location.href = 'topup.html';
+                    }
+                }, 500);
+                return;
+                
+            }
+            
+            // Save package data for payment page
+            const packageData = {
+                id: 'PULSA-' + Date.now(),
+                name: packageName,
+                price: packagePrice,
+                type: 'pulsa',
+                operator: operator,
+                date: new Date().toISOString(),
+                packageQuota: 'Rp ' + packagePrice.toLocaleString('id-ID')
+            };
+            
+            localStorage.setItem('selectedPackage', JSON.stringify(packageData));
+            
+            // Show success notification
+            showNotification('success', 'Pembelian', `Paket ${packageName} akan dibeli`);
+            
+            // Redirect to payment page after delay
+            setTimeout(() => {
+                window.location.href = 'payment.html';
+            }, 1500);
+            
+        }
+        
+        // ==================== ACTION FUNCTIONS ====================
+        function topUp() {
+            window.location.href = 'topup.html';
+        }
+        
+        function transferBalance() {
+            showNotification('info', 'Transfer Saldo', 'Fitur transfer saldo akan segera tersedia.');
+        }
+        
+        // ==================== LOGOUT FUNCTION ====================
+        function logout() {
+            // Clear all user data from localStorage except registration data
+            const keysToKeep = ['isRegistered', 'user_name', 'user_email', 'user_phone', 'user_password'];
+            const allKeys = Object.keys(localStorage);
+            
+            allKeys.forEach(key => {
+                if (!keysToKeep.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            // Set login status to false
+            localStorage.setItem('isLoggedIn', 'false');
+            
+            // Show notification
+            showNotification('success', 'Logout Berhasil', 'Anda telah keluar dari akun.');
+            
+            // Redirect to login page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        // ==================== NOTIFICATION SYSTEM ====================
+        function showNotification(type, title, message) {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = notification.querySelector('.notification-icon i');
+            
+            // Set content
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message;
+            
+            // Set type styling
+            notification.className = 'notification';
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark))';
+                notification.style.color = 'var(--primary-black)';
+                notificationIcon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #FF6B6B, #EF476F)';
+                notification.style.color = 'var(--primary-white)';
+                notificationIcon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                notification.style.background = 'linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark))';
+                notification.style.color = 'var(--primary-black)';
+                notificationIcon.className = 'fas fa-info-circle';
+            }
+            
+            // Show notification
+            notification.style.display = 'flex';
+            notification.style.animation = 'slideIn 0.3s ease';
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+        
+        // Handle keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Esc to close sidebar
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('sidebar');
+                const sidebarOverlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher Saya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .balance-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .balance-info h3 {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .btn-get-voucher {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-get-voucher:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            margin-bottom: 2px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+        
+        .voucher-section {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 20px;
+            min-height: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .voucher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .voucher-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .voucher-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .voucher-card.used {
+            opacity: 0.6;
+            background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+        }
+        
+        .voucher-card.expired {
+            opacity: 0.6;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        
+        .voucher-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .voucher-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .voucher-code {
+            font-family: monospace;
+            background: rgba(0,0,0,0.2);
+            padding: 8px 12px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        
+        .voucher-details {
+            margin: 10px 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .voucher-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-use, .btn-copy, .btn-redeem {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-use {
+            background: white;
+            color: #667eea;
+        }
+        
+        .btn-copy {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-redeem {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-use:hover, .btn-copy:hover, .btn-redeem:hover {
+            transform: scale(1.05);
+        }
+        
+        .no-vouchers {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .no-vouchers i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .input-group input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn-cancel, .btn-submit {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-cancel:hover, .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1001;
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        .notification.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-ticket-alt"></i> Voucher Saya</h1>
+            <p>Kelola dan gunakan voucher yang Anda miliki</p>
+        </div>
+        
+        <div class="balance-card">
+            <div class="balance-info">
+                <h3>Saldo Anda</h3>
+                <div class="balance-amount">Rp <span id="userBalance">50.000</span></div>
+            </div>
+            <button class="btn-get-voucher" onclick="showRedeemModal()">
+                <i class="fas fa-plus-circle"></i> Klaim Voucher Baru
+            </button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('active')">Voucher Aktif</div>
+            <div class="tab" onclick="showTab('used')">Sudah Digunakan</div>
+            <div class="tab" onclick="showTab('expired')">Kadaluarsa</div>
+        </div>
+        
+        <div class="voucher-section">
+            <div id="activeVouchers" class="voucher-list">
+                <!-- Voucher aktif akan ditampilkan di sini -->
+            </div>
+            
+            <div id="usedVouchers" class="voucher-list" style="display: none;">
+                <!-- Voucher sudah digunakan akan ditampilkan di sini -->
+            </div>
+            
+            <div id="expiredVouchers" class="voucher-list" style="display: none;">
+                <!-- Voucher kadaluarsa akan ditampilkan di sini -->
+            </div>
+        </div>
+        
+        <div class="nav-links">
+            <a href="home.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="topup.html" class="nav-link"><i class="fas fa-wallet"></i> Top Up</a>
+            <a href="profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+            <a href="riwayat.html" class="nav-link"><i class="fas fa-history"></i> Riwayat</a>
+            <a href="hadiah.html" class="nav-link"><i class="fas fa-gift"></i> Hadiah</a>
+        </div>
+    </div>
+    
+    <!-- Modal untuk klaim voucher -->
+    <div id="redeemModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-gift"></i> Klaim Voucher</h2>
+            <p>Masukkan kode voucher yang Anda dapatkan:</p>
+            
+            <div class="input-group">
+                <label for="voucherCode">Kode Voucher</label>
+                <input type="text" id="voucherCode" placeholder="Contoh: WELCOME50">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeRedeemModal()">Batal</button>
+                <button class="btn-submit" onclick="redeemVoucher()">Klaim Voucher</button>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                <h4><i class="fas fa-lightbulb"></i> Tips Mendapatkan Voucher:</h4>
+                <ul style="margin-top: 10px; padding-left: 20px;">
+                    <li>Kunjungi halaman <a href="hadiah.html" style="color: #667eea;">Hadiah</a> untuk voucher gratis</li>
+                    <li>Selesaikan misi di halaman <a href="games.html" style="color: #667eea;">Games</a></li>
+                    <li>Cek promo di halaman <a href="home.html" style="color: #667eea;">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal untuk menggunakan voucher -->
+    <div id="useModal" class="modal">
+        <div class="modal-content">
+            <h2><i class="fas fa-shopping-cart"></i> Gunakan Voucher</h2>
+            <p id="voucherDetail">Detail voucher akan muncul di sini</p>
+            
+            <div class="input-group">
+                <label for="useAmount">Jumlah yang akan digunakan</label>
+                <input type="number" id="useAmount" placeholder="Masukkan jumlah">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeUseModal()">Batal</button>
+                <button class="btn-submit" onclick="confirmUseVoucher()">Gunakan Voucher</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notifikasi -->
+    <div id="notification" class="notification">
+        <span id="notificationText">Pesan notifikasi</span>
+    </div>
+    
+    <script>
+        // Data awal voucher (disimpan di localStorage)
+        const initialVouchers = [
+            {
+                id: "v001",
+                name: "Voucher Pulsa 10K",
+                code: "PULSA10",
+                value: 10000,
+                type: "pulsa",
+                status: "active",
+                expiry: "2024-12-31",
+                description: "Potongan Rp 10.000 untuk pembelian pulsa minimal Rp 20.000"
+            },
+            {
+                id: "v002",
+                name: "Voucher Top Up 20%",
+                code: "TOPUP20",
+                value: 20, // persentase
+                type: "topup",
+                status: "active",
+                expiry: "2024-11-30",
+                description: "Diskon 20% untuk top up saldo (maksimal Rp 5.000)"
+            },
+            {
+                id: "v003",
+                name: "Voucher Internet 5GB",
+                code: "NET5GB",
+                value: 0,
+                type: "internet",
+                status: "active",
+                expiry: "2024-10-15",
+                description: "Paket internet 5GB gratis untuk 7 hari"
+            },
+            {
+                id: "v004",
+                name: "Voucher Streaming 1 Bulan",
+                code: "STREAM1",
+                value: 0,
+                type: "streaming",
+                status: "used",
+                expiry: "2024-09-30",
+                description: "Akses premium layanan streaming selama 1 bulan"
+            },
+            {
+                id: "v005",
+                name: "Voucher Game 15K",
+                code: "GAME15K",
+                value: 15000,
+                type: "games",
+                status: "expired",
+                expiry: "2024-08-01",
+                description: "Voucher senilai Rp 15.000 untuk pembelian item game"
+            }
+        ];
+        
+        // Data awal saldo pengguna
+        const initialBalance = 50000;
+        
+        // Voucher yang sedang dipilih untuk digunakan
+        let selectedVoucher = null;
+        
+        // Inisialisasi data
+        function initData() {
+            // Cek apakah data sudah ada di localStorage
+            if (!localStorage.getItem('vouchers')) {
+                localStorage.setItem('vouchers', JSON.stringify(initialVouchers));
+            }
+            
+            if (!localStorage.getItem('userBalance')) {
+                localStorage.setItem('userBalance', initialBalance);
+            }
+            
+            // Tampilkan saldo
+            document.getElementById('userBalance').textContent = 
+                new Intl.NumberFormat('id-ID').format(localStorage.getItem('userBalance'));
+            
+            // Tampilkan voucher
+            renderVouchers();
+        }
+        
+        // Render voucher berdasarkan status
+        function renderVouchers() {
+            const vouchers = JSON.parse(localStorage.getItem('vouchers'));
+            const today = new Date().toISOString().split('T')[0];
+            
+            const activeVouchers = vouchers.filter(v => 
+                v.status === 'active' && v.expiry >= today
+            );
+            
+            const usedVouchers = vouchers.filter(v => v.status === 'used');
+            
+            const expiredVouchers = vouchers.filter(v => 
+                (v.status === 'expired') || (v.status === 'active' && v.expiry < today)
+            );
+            
+            // Render voucher aktif
+            renderVoucherList('activeVouchers', activeVouchers, 'active');
+            
+            // Render voucher sudah digunakan
+            renderVoucherList('usedVouchers', usedVouchers, 'used');
+            
+            // Render voucher kadaluarsa
+            renderVoucherList('expiredVouchers', expiredVouchers, 'expired');
+        }
+        
+        // Render daftar voucher
+        function renderVoucherList(containerId, vouchers, status) {
+            const container = document.getElementById(containerId);
+            
+            if (vouchers.length === 0) {
+                container.innerHTML = `
+                    <div class="no-vouchers">
+                        <i class="fas fa-ticket-alt"></i>
+                        <h3>Tidak ada voucher</h3>
+                        <p>${status === 'active' ? 'Anda belum memiliki voucher aktif' : 
+                           status === 'used' ? 'Belum ada voucher yang digunakan' : 
+                           'Tidak ada voucher yang kadaluarsa'}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="voucher-grid">';
+            
+            vouchers.forEach(voucher => {
+                const isExpired = new Date(voucher.expiry) < new Date();
+                const statusClass = voucher.status === 'used' ? 'used' : 
+                                   isExpired ? 'expired' : '';
+                
+                html += `
+                    <div class="voucher-card ${statusClass}">
+                        <div class="voucher-badge">
+                            ${voucher.type === 'pulsa' ? '📱 Pulsa' : 
+                              voucher.type === 'topup' ? '💰 Top Up' : 
+                              voucher.type === 'internet' ? '🌐 Internet' : 
+                              voucher.type === 'streaming' ? '🎬 Streaming' : 
+                              voucher.type === 'games' ? '🎮 Games' : '🎫 Voucher'}
+                        </div>
+                        
+                        <div class="voucher-title">${voucher.name}</div>
+                        
+                        <div class="voucher-code">${voucher.code}</div>
+                        
+                        <div class="voucher-details">
+                            <p><i class="fas fa-info-circle"></i> ${voucher.description}</p>
+                            <p><i class="fas fa-calendar-alt"></i> Berlaku hingga: ${formatDate(voucher.expiry)}</p>
+                            ${voucher.value > 0 ? 
+                                `<p><i class="fas fa-tag"></i> Nilai: ${voucher.type === 'topup' ? voucher.value + '%' : 'Rp ' + new Intl.NumberFormat('id-ID').format(voucher.value)}</p>` : 
+                                ''}
+                        </div>
+                        
+                        <div class="voucher-actions">
+                            ${status === 'active' && !isExpired ? 
+                                `<button class="btn-use" onclick="useVoucher('${voucher.id}')">
+                                    <i class="fas fa-shopping-cart"></i> Gunakan
+                                </button>` : 
+                                ''}
+                            
+                            <button class="btn-copy" onclick="copyVoucherCode('${voucher.code}')">
+                                <i class="fas fa-copy"></i> Salin Kode
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // Tampilkan tab yang dipilih
+        function showTab(tabName) {
+            // Update tab aktif
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            // Tampilkan konten yang sesuai
+            document.getElementById('activeVouchers').style.display = 'none';
+            document.getElementById('usedVouchers').style.display = 'none';
+            document.getElementById('expiredVouchers').style.display = 'none';
+            
+            document.getElementById(tabName + 'Vouchers').style.display = 'block';
+        }
+        
+        // Tampilkan modal klaim voucher
+        function showRedeemModal() {
+            document.getElementById('redeemModal').style.display = 'flex';
+        }
+        
+        // Tutup modal klaim voucher
+        function closeRedeemModal() {
+            document.getElementById('redeemModal').style.display = 'none';
+            document.getElementById('voucherCode').value = '';
+        }
+        
+        // Proses klaim voucher
+        function redeemVoucher() {
+            const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+            
+            if (!code) {
+                showNotification('Masukkan kode voucher', 'error');
+                return;
+            }
+            
+            // Cek voucher yang tersedia (dalam aplikasi nyata, ini akan dicek ke database)
+            const availableVouchers = [
+                { code: "WELCOME50", name: "Voucher Welcome 50%", value: 50, type: "topup", expiry: "2024-12-31" },
+                { code: "PULSA5K", name: "Voucher Pulsa 5K", value: 5000, type: "pulsa", expiry: "2024-11-30" },
+                { code: "NETFREE", name: "Internet Gratis 1GB", value: 0, type: "internet", expiry: "2024-10-31" }
+            ];
+            
+            const voucher = availableVouchers.find(v => v.code === code);
+            
+            if (!voucher) {
+                showNotification('Kode voucher tidak valid atau sudah kadaluarsa', 'error');
+                return;
+            }
+            
+            // Tambahkan voucher ke daftar pengguna
+            const userVouchers = JSON.parse(localStorage.getItem('vouchers'));
+            
+            // Cek apakah voucher sudah pernah diklaim
+            if (userVouchers.some(v => v.code === code)) {
+                showNotification('Anda sudah memiliki voucher ini', 'error');
+                return;
+            }
+            
+            // Tambahkan voucher baru
+            const newVoucher = {
+                id: 'v' + Date.now(),
+                name: voucher.name,
+                code: voucher.code,
+                value: voucher.value,
+                type: voucher.type,
+                status: 'active',
+                expiry: voucher.expiry,
+                description: `Voucher ${voucher.type === 'topup' ? 'diskon ' + voucher.value + '%' : 
+                             voucher.value > 0 ? 'senilai Rp ' + new Intl.NumberFormat('id-ID').format(voucher.value) : 
+                             'gratis'}`
+            };
+            
+            userVouchers.push(newVoucher);
+            localStorage.setItem('vouchers', JSON.stringify(userVouchers));
+            
+            showNotification(`Voucher ${voucher.name} berhasil diklaim!`);
+            closeRedeemModal();
+            renderVouchers();
+        }
+        
+        // Gunakan voucher
+        function useVoucher(voucherId) {
+            const vouchers = JSON.parse(localStorage.getItem('vouchers'));
+            const voucher = vouchers.find(v => v.id === voucherId);
+            
+            if (!voucher) return;
+            
+            selectedVoucher = voucher;
+            
+            // Tampilkan modal penggunaan
+            document.getElementById('useModal').style.display = 'flex';
+            
+            let detailText = `<strong>${voucher.name}</strong><br>`;
+            detailText += `Kode: <strong>${voucher.code}</strong><br>`;
+            detailText += `${voucher.description}<br>`;
+            
+            if (voucher.value > 0) {
+                if (voucher.type === 'topup') {
+                    detailText += `Diskon: <strong>${voucher.value}%</strong> (maksimal Rp 5.000)`;
+                } else {
+                    detailText += `Nilai: <strong>Rp ${new Intl.NumberFormat('id-ID').format(voucher.value)}</strong>`;
+                }
+            }
+            
+            document.getElementById('voucherDetail').innerHTML = detailText;
+            
+            // Set nilai default untuk input jumlah
+            if (voucher.type === 'topup') {
+                document.getElementById('useAmount').placeholder = "Masukkan jumlah top up";
+            } else if (voucher.value > 0) {
+                document.getElementById('useAmount').value = voucher.value;
+                document.getElementById('useAmount').readOnly = true;
+            } else {
+                document.getElementById('useAmount').style.display = 'none';
+                document.querySelector('.input-group label').style.display = 'none';
+            }
+        }
+        
+        // Tutup modal penggunaan voucher
+        function closeUseModal() {
+            document.getElementById('useModal').style.display = 'none';
+            selectedVoucher = null;
+            document.getElementById('useAmount').value = '';
+            document.getElementById('useAmount').readOnly = false;
+            document.getElementById('useAmount').style.display = 'block';
+            document.querySelector('.input-group label').style.display = 'block';
+        }
+        
+        // Konfirmasi penggunaan voucher
+        function confirmUseVoucher() {
+            if (!selectedVoucher) return;
+            
+            const amountInput = document.getElementById('useAmount').value;
+            
+            // Simulasi penggunaan voucher
+            const vouchers = JSON.parse(localStorage.getItem('vouchers'));
+            const voucherIndex = vouchers.findIndex(v => v.id === selectedVoucher.id);
+            
+            if (voucherIndex !== -1) {
+                // Update status voucher menjadi digunakan
+                vouchers[voucherIndex].status = 'used';
+                localStorage.setItem('vouchers', JSON.stringify(vouchers));
+                
+                // Update saldo jika voucher memiliki nilai
+                if (selectedVoucher.value > 0 && selectedVoucher.type !== 'topup') {
+                    let currentBalance = parseInt(localStorage.getItem('userBalance'));
+                    currentBalance += selectedVoucher.value;
+                    localStorage.setItem('userBalance', currentBalance);
+                    
+                    // Update tampilan saldo
+                    document.getElementById('userBalance').textContent = 
+                        new Intl.NumberFormat('id-ID').format(currentBalance);
+                }
+                
+                showNotification(`Voucher ${selectedVoucher.name} berhasil digunakan!`);
+                
+                // Tambahkan ke riwayat (dalam aplikasi nyata, ini akan disimpan di riwayat transaksi)
+                const transaction = {
+                    id: 't' + Date.now(),
+                    type: 'voucher_used',
+                    voucherName: selectedVoucher.name,
+                    voucherCode: selectedVoucher.code,
+                    value: selectedVoucher.value,
+                    date: new Date().toISOString()
+                };
+                
+                // Simpan riwayat
+                let history = JSON.parse(localStorage.getItem('transactionHistory') || '[]');
+                history.push(transaction);
+                localStorage.setItem('transactionHistory', JSON.stringify(history));
+            }
+            
+            closeUseModal();
+            renderVouchers();
+        }
+        
+        // Salin kode voucher
+        function copyVoucherCode(code) {
+            navigator.clipboard.writeText(code)
+                .then(() => {
+                    showNotification(`Kode ${code} berhasil disalin!`);
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin kode: ', err);
+                    showNotification('Gagal menyalin kode', 'error');
+                });
+        }
+        
+        // Tampilkan notifikasi
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Format tanggal
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+        
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', initData);
+        
+        // Tutup modal jika klik di luar konten
+        window.onclick = function(event) {
+            const redeemModal = document.getElementById('redeemModal');
+            const useModal = document.getElementById('useModal');
+            
+            if (event.target === redeemModal) {
+                closeRedeemModal();
+            }
+            
+            if (event.target === useModal) {
+                closeUseModal();
+            }
+        };
+    </script>
+</body>
+</html>
