@@ -2933,15 +2933,42 @@
             document.getElementById('userActiveDays').textContent = userActiveDays;
         }
         
-        // =========== LOAD TRANSACTION STATISTICS ===========
+        // =========== LOAD TRANSACTION STATISTICS (DYNAMIC) ===========
         function loadTransactionStats() {
-            // Load from localStorage or use defaults
-            const transaksiCount = localStorage.getItem('transaction_count') || '12';
-            const totalSpent = localStorage.getItem('total_spent') || '245000';
-            
-            document.getElementById('transaksiCount').textContent = transaksiCount;
-            document.getElementById('totalSpent').textContent = 'Rp ' + (parseInt(totalSpent) / 1000).toFixed(0) + 'K';
+            try {
+                const purchases = JSON.parse(localStorage.getItem('user_purchase_history') || '[]');
+                const simpleTx = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+
+                const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+                let todayCount = 0;
+                let monthTotal = 0;
+
+                // Prefer profile-style purchase records if available
+                const records = purchases.length ? purchases : simpleTx.map(tx => ({ price: tx.amount, purchaseDate: tx.date }));
+
+                records.forEach(r => {
+                    const d = new Date(r.purchaseDate || r.date || r.purchase_date || null);
+                    if (isNaN(d)) return;
+                    if (d >= todayStart) todayCount++;
+                    if (d >= monthStart) monthTotal += Number(r.price || r.amount || 0);
+                });
+
+                document.getElementById('transaksiCount').textContent = todayCount;
+                document.getElementById('totalSpent').textContent = 'Rp ' + monthTotal.toLocaleString('id-ID');
+            } catch (err) {
+                console.error('Error loading transaction stats:', err);
+            }
         }
+
+        // Listen for storage changes (update stats when transactions change)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'user_purchase_history' || e.key === 'user_transactions') {
+                loadTransactionStats();
+            }
+        });
         
         // =========== ACTION FUNCTIONS ===========
         function topUp() {
