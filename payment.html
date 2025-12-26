@@ -1513,6 +1513,9 @@
                     <button class="btn btn-success" onclick="window.location.href='home.html'">
                         <i class="fas fa-home"></i> Kembali ke Home
                     </button>
+                    <button class="btn btn-primary" onclick="window.location.href='profile.html'">
+                        <i class="fas fa-user"></i> Lihat Riwayat di Profile
+                    </button>
                 </div>
             </div>
             
@@ -1619,7 +1622,22 @@
             
             // Initialize PIN modal
             initializePinModal();
+            
+            // Clean up any existing transaction locks
+            cleanupTransactionLocks();
         });
+        
+        // ==================== FIX 1: CLEANUP TRANSACTION LOCKS ====================
+        function cleanupTransactionLocks() {
+            // Hapus semua lock yang tersisa (jika ada crash sebelumnya)
+            const locks = ['tx_lock', 'processing_payment', 'transaction_in_progress'];
+            locks.forEach(lock => {
+                if (localStorage.getItem(lock)) {
+                    console.log(`Cleaning up stale lock: ${lock}`);
+                    localStorage.removeItem(lock);
+                }
+            });
+        }
         
         function loadUserData() {
             // Load user balance from localStorage
@@ -1988,14 +2006,37 @@
         }
         
         // ==================== PAYMENT PROCESSING ====================
+        // ==================== FIX 2: TRANSACTION LOCK SYSTEM ====================
         function processPayment() {
+            // VALIDASI: Cek apakah transaksi sedang diproses
+            if (localStorage.getItem('tx_lock')) {
+                showNotification('Transaksi sedang diproses, tunggu sebentar...', 'error');
+                return;
+            }
+            
+            // VALIDASI: Cek duplikasi transaksi untuk paket yang sama dalam 5 detik terakhir
+            if (checkRecentDuplicateTransaction()) {
+                showNotification('Transaksi serupa baru saja diproses. Tunggu beberapa saat.', 'error');
+                return;
+            }
+            
             // Validate based on payment method
             if (!validatePayment()) {
                 return;
             }
             
+            // SET LOCK: Mencegah multiple clicks
+            localStorage.setItem('tx_lock', Date.now().toString());
+            
             // Show loading
             showLoading('Memproses pembayaran...');
+            
+            // DEBUG LOG
+            console.log('=== START TRANSACTION ===');
+            console.log('Package:', paymentState.package.name);
+            console.log('Price:', paymentState.package.price);
+            console.log('Method:', paymentState.paymentMethod);
+            console.log('Timestamp:', new Date().toISOString());
             
             // Simulate API call
             setTimeout(() => {
@@ -2033,10 +2074,34 @@
                 if (success) {
                     completePayment();
                 } else {
+                    // RELEASE LOCK jika gagal
+                    localStorage.removeItem('tx_lock');
                     hideLoading();
                     showNotification(message, 'error');
                 }
             }, 2000);
+        }
+        
+        // ==================== FIX 3: DUPLICATE TRANSACTION CHECK ====================
+        function checkRecentDuplicateTransaction() {
+            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            if (transactions.length === 0) return false;
+            
+            const now = Date.now();
+            const fiveSecondsAgo = now - 5000; // 5 detik
+            
+            // Cek transaksi dengan paket yang sama dalam 5 detik terakhir
+            for (const tx of transactions) {
+                const txTime = new Date(tx.date).getTime();
+                if (tx.package === paymentState.package.name && 
+                    tx.amount === paymentState.package.price &&
+                    txTime > fiveSecondsAgo) {
+                    console.log('Duplicate transaction detected:', tx);
+                    return true;
+                }
+            }
+            
+            return false;
         }
         
         function validatePayment() {
@@ -2085,11 +2150,35 @@
             return true;
         }
         
+        // ==================== FIX 4: ENHANCED processBalancePayment WITH LOGGING ====================
         function processBalancePayment() {
+            console.log('=== processBalancePayment START ===');
+            
             const userBalance = parseInt(localStorage.getItem('user_balance') || 0);
-            const newBalance = userBalance - paymentState.package.price;
+            const packagePrice = paymentState.package.price;
+            
+            // DEBUG LOG
+            console.log('User Balance:', userBalance);
+            console.log('Package Price:', packagePrice);
+            console.log('Balance After:', userBalance - packagePrice);
+            
+            // Cek duplikasi pemotongan
+            const recentTx = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            const recentSimilarTx = recentTx.filter(tx => 
+                tx.package === paymentState.package.name && 
+                tx.amount === packagePrice &&
+                (Date.now() - new Date(tx.date).getTime()) < 10000 // 10 detik
+            );
+            
+            if (recentSimilarTx.length > 0) {
+                console.warn('Possible duplicate transaction detected!', recentSimilarTx);
+                return false;
+            }
+            
+            const newBalance = userBalance - packagePrice;
             
             if (newBalance < 0) {
+                console.error('Insufficient balance');
                 return false;
             }
             
@@ -2101,62 +2190,23 @@
             userHomeData.balance = newBalance;
             localStorage.setItem('user_homeData', JSON.stringify(userHomeData));
             
-            // Catat transaksi
-            const transactionId = 'SGN' + new Date().getFullYear() + 
-                String(new Date().getMonth() + 1).padStart(2, '0') +
-                String(new Date().getDate()).padStart(2, '0') +
-                String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-            
-            const transaction = {
-                id: transactionId,
-                package: paymentState.package.name,
-                amount: paymentState.package.price,
-                type: paymentState.package.type || 'package',
-                method: 'balance',
-                date: new Date().toISOString(),
-                status: 'success'
-            };
-            
-            // Save transaction
-            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
-            transactions.unshift(transaction);
-            
-            // Keep only last 20 transactions
-            if (transactions.length > 20) {
-                transactions.pop();
-            }
-            
-            localStorage.setItem('user_transactions', JSON.stringify(transactions));
-            
             return true;
         }
         
         function completePayment() {
-            // Generate transaction data
+            console.log('=== completePayment START ===');
+            
+            // Generate transaction data dengan timestamp unik
             const transactionId = 'SGN' + new Date().getFullYear() + 
                 String(new Date().getMonth() + 1).padStart(2, '0') +
                 String(new Date().getDate()).padStart(2, '0') +
-                String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-            
-            const transactionData = {
-                id: transactionId,
-                package: paymentState.package.name,
-                amount: paymentState.package.price,
-                type: paymentState.package.type || 'package',
-                method: paymentState.paymentMethod,
-                ewalletType: paymentState.ewalletType,
-                bankType: paymentState.bankType,
-                date: new Date().toISOString(),
-                status: paymentState.paymentMethod === 'balance' ? 'success' : 'pending'
-            };
-            
-            // Save transaction
-            saveTransaction(transactionData);
+                String(Date.now()).slice(-6);
             
             // Jika pembayaran dengan Saldo Signalin, kurangi saldo
-            if (paymentState.paymentMethod === 'balance') {
-                processBalancePayment();
-            }
+            // (sudah dilakukan di processBalancePayment)
+            
+            // Save transaction dengan struktur yang kompatibel dengan profile.html
+            const transactionData = saveTransactionToProfile(transactionId);
             
             // Update user data (add package to active packages)
             addPackageToUser(transactionData);
@@ -2178,6 +2228,9 @@
             }
             document.getElementById('successText').textContent = successText;
             
+            // RELEASE LOCK
+            localStorage.removeItem('tx_lock');
+            
             hideLoading();
             
             // Show success notification
@@ -2185,39 +2238,92 @@
             
             // Reload transaction history
             loadTransactionHistory();
+            
+            console.log('=== completePayment END ===');
         }
         
-        function saveTransaction(transaction) {
-            // Get existing transactions
-            const transactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
-            // Add new transaction (front)
-            transactions.unshift(transaction);
-            if (transactions.length > 10) transactions.pop();
-            localStorage.setItem('user_transactions', JSON.stringify(transactions));
-
-            // Also save to profile-compatible purchase history key `user_purchase_history`
-            const history = JSON.parse(localStorage.getItem('user_purchase_history') || '[]');
-            const historyEntry = {
-                id: transaction.id || ('TRX-' + Date.now()),
-                transactionId: transaction.id || ('TRX-' + Date.now()),
-                packageId: transaction.packageId || transaction.package || '',
-                packageName: transaction.package || transaction.packageName || '',
-                packageQuota: transaction.packageQuota || transaction.quota || '',
-                price: transaction.amount || transaction.price || 0,
-                type: transaction.type || transaction.packageType || 'package',
-                purchaseDate: transaction.date || new Date().toISOString(),
-                status: transaction.status || 'completed'
+        // ==================== KONEKSI KE PROFILE.HTML ====================
+        function saveTransactionToProfile(transactionId) {
+            console.log('=== saveTransactionToProfile START ===');
+            
+            // Get package details from localStorage
+            const selectedPackage = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
+            
+            // Create transaction object compatible with profile.html
+            const transactionData = {
+                id: transactionId,
+                packageId: selectedPackage.id || paymentState.package.id || '',
+                packageName: paymentState.package.name || selectedPackage.name || 'Paket Data',
+                packageQuota: selectedPackage.packageQuota || paymentState.package.quota || '',
+                price: paymentState.package.price,
+                type: paymentState.package.type || selectedPackage.type || 'internet',
+                purchaseDate: new Date().toISOString(),
+                status: paymentState.paymentMethod === 'balance' ? 'completed' : 'pending',
+                paymentMethod: paymentState.paymentMethod,
+                ewalletType: paymentState.ewalletType,
+                bankType: paymentState.bankType,
+                duration: selectedPackage.duration || paymentState.package.duration || '30 Hari',
+                dataAmount: selectedPackage.dataAmount || 0,
+                isUnlimited: selectedPackage.isUnlimited || false,
+                pulsaAmount: selectedPackage.pulsaAmount || 0,
+                transactionId: transactionId
             };
-            history.unshift(historyEntry);
-            if (history.length > 50) history.pop();
-            localStorage.setItem('user_purchase_history', JSON.stringify(history));
+            
+            // Simpan ke localStorage dengan key yang digunakan di profile.html
+            const purchaseHistory = JSON.parse(localStorage.getItem('user_purchase_history') || '[]');
+            
+            // Cek duplikasi
+            const isDuplicate = purchaseHistory.some(tx => 
+                tx.id === transactionId || 
+                (tx.packageName === transactionData.packageName && 
+                 tx.price === transactionData.price &&
+                 Math.abs(new Date(tx.purchaseDate).getTime() - new Date(transactionData.purchaseDate).getTime()) < 1000)
+            );
+            
+            if (!isDuplicate) {
+                // Tambahkan ke depan array
+                purchaseHistory.unshift(transactionData);
+                
+                // Simpan maksimal 50 transaksi
+                if (purchaseHistory.length > 50) {
+                    purchaseHistory.pop();
+                }
+                
+                localStorage.setItem('user_purchase_history', JSON.stringify(purchaseHistory));
+                console.log('Transaction saved to user_purchase_history:', transactionData);
+            } else {
+                console.warn('Duplicate transaction prevented:', transactionData);
+            }
+            
+            // Juga simpan ke key alternatif untuk kompatibilitas
+            const userTransactions = JSON.parse(localStorage.getItem('user_transactions') || '[]');
+            const simpleTransaction = {
+                id: transactionId,
+                package: transactionData.packageName,
+                amount: transactionData.price,
+                type: transactionData.type,
+                method: transactionData.paymentMethod,
+                date: transactionData.purchaseDate,
+                status: transactionData.status
+            };
+            
+            userTransactions.unshift(simpleTransaction);
+            if (userTransactions.length > 20) {
+                userTransactions.pop();
+            }
+            
+            localStorage.setItem('user_transactions', JSON.stringify(userTransactions));
+            
+            console.log('=== saveTransactionToProfile END ===');
+            
+            return transactionData;
         }
         
         function addPackageToUser(transaction) {
             // Standardize package info and add to profile-compatible keys
             const selectedPackage = JSON.parse(localStorage.getItem('selectedPackage') || '{}');
 
-            // Determine expiry days (try to parse if duration exists)
+            // Determine expiry days
             function parseDurationToDays(durationStr) {
                 if (!durationStr) return 30;
                 const s = String(durationStr).toLowerCase();
@@ -2233,8 +2339,8 @@
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + days);
 
-            const packageQuotaStr = transaction.packageQuota || paymentState.package.quota || selectedPackage.packageQuota || (selectedPackage.dataAmount ? (selectedPackage.dataAmount + 'GB') : '');
-            const packageId = transaction.packageId || paymentState.package.id || selectedPackage.id || '';
+            const packageQuotaStr = transaction.packageQuota || selectedPackage.packageQuota || (selectedPackage.dataAmount ? (selectedPackage.dataAmount + 'GB') : '');
+            const packageId = transaction.packageId || selectedPackage.id || '';
 
             // Determine numeric data amount (GB) and unlimited flag
             let dataAmountGB = 0;
@@ -2259,7 +2365,7 @@
             // Add to generic storage (kept for compatibility)
             const userPackages = JSON.parse(localStorage.getItem('user_packages') || '[]');
             const userPackage = {
-                name: transaction.package || paymentState.package.name || selectedPackage.name || '',
+                name: transaction.packageName || selectedPackage.name || '',
                 purchaseDate: new Date().toISOString(),
                 expiryDate: expiryDate.toISOString(),
                 status: 'active',
@@ -2273,22 +2379,23 @@
             const activeEntry = {
                 id: 'AP-' + Date.now(),
                 packageId: packageId,
-                packageName: transaction.package || paymentState.package.name || selectedPackage.name || '',
+                packageName: transaction.packageName || selectedPackage.name || '',
                 packageQuota: packageQuotaStr,
                 // store numeric GB value and unlimited flag for reliable aggregation
                 packageQuotaGB: isUnlimited ? null : dataAmountGB,
                 isUnlimited: isUnlimited,
-                price: transaction.amount || transaction.price || paymentState.package.price || selectedPackage.price || 0,
-                type: transaction.type || paymentState.package.type || selectedPackage.type || 'internet',
-                purchaseDate: transaction.date || new Date().toISOString(),
+                price: transaction.price || selectedPackage.price || 0,
+                type: transaction.type || selectedPackage.type || 'internet',
+                purchaseDate: transaction.purchaseDate || new Date().toISOString(),
                 expiryDate: expiryDate.toISOString(),
-                status: transaction.status || 'active'
+                status: transaction.status || 'active',
+                transactionId: transaction.id
             };
             active.push(activeEntry);
             localStorage.setItem('user_active_packages', JSON.stringify(active));
 
             // If internet package: update numeric user_data_left or set unlimited flag
-            const pkgType = (transaction.type || paymentState.package.type || selectedPackage.type || '').toLowerCase();
+            const pkgType = (transaction.type || selectedPackage.type || '').toLowerCase();
             if (pkgType === 'internet' || pkgType === 'data' || pkgType === 'package') {
                 if (isUnlimited) {
                     localStorage.setItem('user_data_unlimited', 'true');
@@ -2312,11 +2419,28 @@
                     // try parse from packageQuotaStr like 'Rp 50.000'
                     const digits = String(packageQuotaStr || selectedPackage.packageQuota || '').replace(/[^0-9]/g, '');
                     if (digits) pulsaCredit = parseInt(digits, 10);
-                    else pulsaCredit = parseInt(transaction.amount || transaction.price || paymentState.package.price || selectedPackage.price || 0);
+                    else pulsaCredit = parseInt(transaction.price || selectedPackage.price || 0);
                 }
 
                 localStorage.setItem('user_pulsa', String(pulsaCurrent + pulsaCredit));
             }
+            
+            // Update saldo pengguna di profile data
+            updateProfileBalance();
+            
+            console.log('Package added to user:', activeEntry);
+        }
+        
+        function updateProfileBalance() {
+            // Update user balance in profile data
+            const userBalance = parseInt(localStorage.getItem('user_balance') || 0);
+            
+            // Update profile data
+            const userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+            userProfile.balance = userBalance;
+            localStorage.setItem('user_profile', JSON.stringify(userProfile));
+            
+            console.log('Profile balance updated:', userBalance);
         }
         
         // ==================== TRANSACTION HISTORY ====================
@@ -2344,7 +2468,7 @@
                     minute: '2-digit'
                 });
                 
-                const statusClass = transaction.status === 'success' ? 'transaction-success' : 
+                const statusClass = transaction.status === 'success' || transaction.status === 'completed' ? 'transaction-success' : 
                                   transaction.status === 'pending' ? 'transaction-pending' : 'transaction-failed';
                 
                 item.innerHTML = `
